@@ -1,0 +1,12 @@
+.git
+.venv
+venv
+__pycache__
+.env
+.env.*
+!.env.example
+data/vector_store
+data/model_cache
+data/quarantine
+data/archive
+eval/results/*.tmp

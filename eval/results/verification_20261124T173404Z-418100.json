@@ -1,0 +1,299 @@
+{
+  "run_id": "20261124T173404Z-418100",
+  "timestamp": "2026-11-24T17:35:03.410363+00:00",
+  "data_dir": "D:\\SCD\\ragops\\data\\batch_a",
+  "collection": "ragops",
+  "verification": [
+    {
+      "doc_id": "citations-abstention",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\citations-abstention-v1.0.md",
+      "title": "Citation and Abstention Standard",
+      "doc_version": "1.0",
+      "sha256": "e149096b616e2c6a8a6ce0aa8b20934754e462d9e862d22341c189517dc48035",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.0 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.581981,
+      "near_duplicate_match": "service-charter"
+    },
+    {
+      "doc_id": "evaluation-protocol",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\evaluation-protocol-v1.2.md",
+      "title": "Offline Evaluation Protocol",
+      "doc_version": "1.2",
+      "sha256": "1937bc8e5de30cc0a792e0e1a72cdff017a716aa3427c0db5bc92844a3c9cfb8",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.2 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.63072,
+      "near_duplicate_match": "retrieval-quality"
+    },
+    {
+      "doc_id": "incident-recovery",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\incident-recovery-v1.3.md",
+      "title": "Incident and Recovery Runbook",
+      "doc_version": "1.3",
+      "sha256": "d2e4c40841702db70abc08c28d06b64b2fcff30941ee92e82abf74b29465ef14",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.3 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.676427,
+      "near_duplicate_match": "versioning-standard"
+    },
+    {
+      "doc_id": "intake-standard",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\intake-standard-v1.4.md",
+      "title": "Document Intake Standard",
+      "doc_version": "1.4",
+      "sha256": "c2cbdd652ccaf57b356e1a78fcf411dfecc69fc172e18d5cdbcd81ae2805220c",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.4 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.614262,
+      "near_duplicate_match": "incident-recovery"
+    },
+    {
+      "doc_id": "prompt-safety",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\prompt-safety-v1.5.md",
+      "title": "Prompt Safety Standard",
+      "doc_version": "1.5",
+      "sha256": "bdfd9b36b346c6e23371d2fd4694a2064b94ccfa0d0d84dfa2da31172900045e",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.5 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.556815,
+      "near_duplicate_match": "incident-recovery"
+    },
+    {
+      "doc_id": "release-gate",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\release-gate-v1.1.md",
+      "title": "Candidate Release Gate",
+      "doc_version": "1.1",
+      "sha256": "2ba3e7f9eba2841e2442b4e3c01ec3a27172ebd63d8cecedcd22b28bce03b8b0",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.1 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.555263,
+      "near_duplicate_match": "trace-observability"
+    },
+    {
+      "doc_id": "retrieval-quality",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\retrieval-quality-v1.3.md",
+      "title": "Retrieval Quality Standard",
+      "doc_version": "1.3",
+      "sha256": "015df3e228ac14ca868148df5d1883fc57a9227ba0edd5df74a8c0b8c2d56b6f",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.3 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.63072,
+      "near_duplicate_match": "evaluation-protocol"
+    },
+    {
+      "doc_id": "service-charter",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\service-charter-v1.0.md",
+      "title": "RAG Service Charter",
+      "doc_version": "1.0",
+      "sha256": "3b7be47f0b1dd0edfc712701b400389173ed59e19a2fbc7a6f1bf36f66d498c6",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.0 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.654715,
+      "near_duplicate_match": "incident-recovery"
+    },
+    {
+      "doc_id": "storage-backup",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\storage-backup-v1.1.md",
+      "title": "Persistent Storage and Backup Standard",
+      "doc_version": "1.1",
+      "sha256": "e3e5af068699890e94f754d6ff90fa2c2932ba4f17bb43c12484e1191bb6ffbf",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.1 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.560817,
+      "near_duplicate_match": "versioning-standard"
+    },
+    {
+      "doc_id": "trace-observability",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\trace-observability-v2.0.md",
+      "title": "Trace and Observability Standard",
+      "doc_version": "2.0",
+      "sha256": "3d0f72604159f113621f9f02688047726ad9e2d5e8ce050c244c7306d1cae6f5",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 2.0 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.588613,
+      "near_duplicate_match": "incident-recovery"
+    },
+    {
+      "doc_id": "verification-standard",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\verification-standard-v2.1.md",
+      "title": "Document Verification Standard",
+      "doc_version": "2.1",
+      "sha256": "9393f01d0a06a2f079514d63c0db43e309f862a80eed9180d0e5e55d30440f02",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 2.1 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.575369,
+      "near_duplicate_match": "incident-recovery"
+    },
+    {
+      "doc_id": "versioning-standard",
+      "path": "D:\\SCD\\ragops\\data\\batch_a\\versioning-standard-v1.2.md",
+      "title": "Version and Archive Standard",
+      "doc_version": "1.2",
+      "sha256": "761894b9f9d8cca19c172ba53cb9277e061c8c5f765f1e746ea7b5659d7b9ae5",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.2 matches the active record",
+        "uniqueness": "no exact duplicate detected; near-duplicate check pending"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.676427,
+      "near_duplicate_match": "incident-recovery"
+    }
+  ],
+  "counts": {
+    "discovered_docs": 12,
+    "passed_docs": 12,
+    "quarantined_docs": 0,
+    "indexed_docs": 0,
+    "added_chunks": 0,
+    "replaced_chunks": 0,
+    "embedded_chunks": 0,
+    "skipped_unchanged_chunks": 36,
+    "deleted_chunks": 0,
+    "archived_versions": [],
+    "embedding_ms": 0.0
+  },
+  "quarantine": [],
+  "deleted_chunks_by_doc_id": {}
+}
