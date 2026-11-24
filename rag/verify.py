@@ -21,7 +21,8 @@ def _existing_docs(rows: dict[str, Any]) -> dict[str, dict[str, Any]]:
     for chunk_id, text, metadata in zip(rows.get("ids", []), rows.get("documents", []), rows.get("metadatas", [])):
         if not metadata:
             continue
-        if bool(metadata.get("superseded", False)):
+        status = str(metadata.get("status", "archived" if metadata.get("superseded", False) else "active"))
+        if status != "active":
             continue
         item = grouped[str(metadata.get("doc_id", ""))]
         item["chunks"].append((str(chunk_id), text or "", metadata))

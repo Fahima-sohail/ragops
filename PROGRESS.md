@@ -33,3 +33,14 @@
 - Rollback demo (`verification_20261124T195336Z-403600.json`): restored archived `versioning-standard` v1.2 by reactivating 3 stored chunks and embedding 0. The trace-free read-only retriever returned v1.2 on pages 1 and 3, and Chroma metadata shows v1.2 active (3 chunks) and v1.3 superseded (3 chunks).
 - Added by-document counts to ingestion reports and a regression test for scoped replacement/idempotency. `python -m pytest -q`: **13 passed**.
 - Model cache remained offline throughout these runs; no model files were downloaded.
+
+### Part A2 manifest, status filtering, and combined demo
+
+- Added a per-collection JSON manifest beside the Chroma database. It records document id, content hash, version, active/archived status, and sorted chunk ids; ingestion refreshes it after indexing, sync deletion, and rollback.
+- Chunk metadata now uses `status=active` or `status=archived`; retrieval filters to active chunks. The CLI accepts `python -m rag.ingest --restore DOC_ID VERSION` and `--count-by-doc`, including `--doc-id ID` to show a zero count after deletion.
+- Added Batch B `verification-standard` v2.2, which changes the near-duplicate threshold fact from Batch A v2.1's 0.94 to 0.91. Batch B now has 14 source files; `PLANTED.md` lists each planted fixture and the changed fact.
+- The complete real run is recorded in `eval/results/A_demo_log.txt`. Collection `a-demo-20261125-012139` indexed Batch A's 12 documents / 36 chunks, then reported 12 unchanged documents, 36 unchanged chunks, and 0 embedded chunks on rerun.
+- Batch B reported 6 new documents, 2 updated documents, 24 embedded chunks, and 6 quarantined documents. The full-snapshot sync removed 3 chunks for the deleted `source-provenance` document; `--count-by-doc --doc-id source-provenance` printed `source-provenance: 0`.
+- The demo restored archived `verification-standard` v2.1 with 3 reactivated chunks and 0 embedded chunks. A real read-only retrieval returned v2.2 / 0.91 before rollback and v2.1 / 0.94 afterward. The CLI also records a v1.2 restore of `versioning-standard`.
+- `SCREENSHOTS.md` gives the Part A commands in order; `scripts/run_a_demo.ps1` repeats the end-to-end sequence and writes its real console output under `eval/results/` with model cache offline.
+- With `MODEL_CACHE_OFFLINE=1` and `HF_HUB_OFFLINE=1`, `python -m pytest -q` passed: **15 passed**.

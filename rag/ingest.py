@@ -16,7 +16,16 @@ from rag.chunking import make_chunks
 from rag.config import ROOT, get_settings
 from rag.documents import Document, discover_documents, load_document
 from rag.embeddings import embed_texts
-from rag.store import collection_rows, mark_generation, open_collection, remove_ids, update_metadata, upsert_chunks
+from rag.store import (
+    collection_rows,
+    mark_generation,
+    open_collection,
+    open_read_collection,
+    remove_ids,
+    update_metadata,
+    upsert_chunks,
+    write_manifest,
+)
 from rag.verify import verify_batch
 
 
@@ -28,7 +37,9 @@ def _active_metadata(rows: dict[str, Any], doc_id: str) -> list[tuple[str, dict[
     return [
         (chunk_id, metadata)
         for chunk_id, metadata in zip(rows.get("ids", []), rows.get("metadatas", []))
-        if metadata and metadata.get("doc_id") == doc_id and not bool(metadata.get("superseded", False))
+        if metadata
+        and metadata.get("doc_id") == doc_id
+        and str(metadata.get("status", "archived" if metadata.get("superseded", False) else "active")) == "active"
     ]
 
 
@@ -57,7 +68,7 @@ def _archive_active(collection, settings, doc_id: str, report: dict[str, Any]) -
                     "path": str(destination),
                 })
     ids = [chunk_id for chunk_id, _ in active]
-    metadata = [dict(old, superseded=True) for _, old in active]
+    metadata = [dict(old, status="archived", superseded=True) for _, old in active]
     update_metadata(collection, ids, metadata)
 
 
@@ -103,8 +114,10 @@ def _restore(collection, settings, doc_id: str, version: str) -> dict[str, Any]:
         updated = []
         for metadata in rows["metadatas"]:
             copied = dict(metadata)
-            copied["superseded"] = str(copied.get("doc_version")) != version
-            if str(copied.get("doc_version")) == version:
+            is_target = str(copied.get("doc_version")) == version
+            copied["status"] = "active" if is_target else "archived"
+            copied["superseded"] = not is_target
+            if is_target:
                 copied["source_path"] = str(target)
             updated.append(copied)
         update_metadata(collection, list(rows["ids"]), updated)
@@ -139,6 +152,13 @@ def _ingest_valid(collection, settings, documents: list[Document], outcomes: lis
         "embedded_chunks": 0,
         "skipped_unchanged_chunks": 0,
         "deleted_chunks": 0,
+        "new_docs": 0,
+        "updated_docs": 0,
+        "unchanged_docs": 0,
+        "deleted_docs": 0,
+        "new_chunks": 0,
+        "updated_chunks": 0,
+        "unchanged_chunks": 0,
         "archived_versions": [],
         "by_doc_id": {},
     }
@@ -168,6 +188,8 @@ def _ingest_valid(collection, settings, documents: list[Document], outcomes: lis
             if str(current_metadata[index].get("doc_sha256", "")) == digest
         ]
         if exact_unchanged and len(exact_unchanged) == len(exact_version) and not rollback:
+            report["unchanged_docs"] += 1
+            report["unchanged_chunks"] += len(exact_unchanged)
             report["skipped_unchanged_chunks"] += len(exact_unchanged)
             doc_counts(doc_id)["skipped_unchanged_chunks"] += len(exact_unchanged)
             continue
@@ -182,6 +204,7 @@ def _ingest_valid(collection, settings, documents: list[Document], outcomes: lis
 
         # A same-version content update replaces only that version's own chunks.
         current = _doc_rows(collection, doc_id)
+        is_new_document = not current.get("ids")
         same_version_ids = [
             chunk_id for chunk_id, metadata in zip(current.get("ids", []), current.get("metadatas", []))
             if metadata and str(metadata.get("doc_version")) == version
@@ -204,6 +227,7 @@ def _ingest_valid(collection, settings, documents: list[Document], outcomes: lis
                 "source": str(document.metadata.get("source", document.path.name)),
                 "title": chunk.title,
                 "page": int(chunk.page),
+                "status": "active",
                 "superseded": False,
                 "source_path": str(document.path.resolve()),
                 "source_root": str(source_root.resolve()),
@@ -211,6 +235,12 @@ def _ingest_valid(collection, settings, documents: list[Document], outcomes: lis
             metadatas.append(meta)
         to_write.append((document, chunks, ids, metadatas))
         report["indexed_docs"] += 1
+        if is_new_document:
+            report["new_docs"] += 1
+            report["new_chunks"] += len(chunks)
+        else:
+            report["updated_docs"] += 1
+            report["updated_chunks"] += len(chunks)
 
     flat_chunks = [chunk for _, chunks, _, _ in to_write for chunk in chunks]
     vectors, embed_ms = embed_texts([chunk.text for chunk in flat_chunks], settings.embed_model, settings.local_device)
@@ -241,13 +271,19 @@ def ingest(data_dir: Path, collection_name: str, sync: bool = False, restore_doc
 
     if restore_doc:
         if not restore_version:
-            raise ValueError("--restore requires --version")
+            raise ValueError("--restore requires a document id and version")
         summary = _restore(collection, settings, restore_doc, restore_version)
+        manifest = write_manifest(collection, settings.vector_dir)
+        summary["manifest_path"] = str(manifest)
         report = {"run_id": run_id, "timestamp": datetime.now(timezone.utc).isoformat(), "collection": collection_name, **summary}
         report_path = _write_report(report)
         report["report_path"] = str(report_path)
         report["elapsed_ms"] = round((time.perf_counter() - started) * 1000, 2)
-        print(json.dumps(report, indent=2, ensure_ascii=False))
+        print(
+            f"restore collection={collection_name} doc_id={restore_doc} version={restore_version} "
+            f"reactivated_chunks={summary.get('reactivated_chunks', summary.get('added_chunks', 0))} "
+            f"embedded_chunks={summary.get('embedded_chunks', 0)} report={report_path} manifest={manifest}"
+        )
         return report
 
     paths = discover_documents(data_dir)
@@ -278,6 +314,7 @@ def ingest(data_dir: Path, collection_name: str, sync: bool = False, restore_doc
                 deleted_by_doc[doc_id] = deleted_by_doc.get(doc_id, 0) + 1
         remove_ids(collection, deleted_ids)
         summary["deleted_chunks"] += len(deleted_ids)
+        summary["deleted_docs"] = len(deleted_by_doc)
         for doc_id, count in deleted_by_doc.items():
             per_doc = summary["by_doc_id"].setdefault(doc_id, {
                 "added_chunks": 0,
@@ -289,6 +326,7 @@ def ingest(data_dir: Path, collection_name: str, sync: bool = False, restore_doc
 
     if summary.get("added_chunks") or summary.get("deleted_chunks") or moved:
         summary["index_generation"] = mark_generation(collection, settings.vector_dir)
+    manifest = write_manifest(collection, settings.vector_dir)
 
     report = {
         "run_id": run_id,
@@ -304,11 +342,20 @@ def ingest(data_dir: Path, collection_name: str, sync: bool = False, restore_doc
         },
         "quarantine": moved,
         "deleted_chunks_by_doc_id": deleted_by_doc,
+        "manifest_path": str(manifest),
     }
     report_path = _write_report(report)
     report["report_path"] = str(report_path)
     report["elapsed_ms"] = round((time.perf_counter() - started) * 1000, 2)
-    print(json.dumps(report, indent=2, ensure_ascii=False))
+    print(
+        f"ingest collection={collection_name} "
+        f"new_docs={summary['new_docs']} updated_docs={summary['updated_docs']} "
+        f"unchanged_docs={summary['unchanged_docs']} deleted_docs={summary['deleted_docs']} "
+        f"new_chunks={summary['new_chunks']} updated_chunks={summary['updated_chunks']} "
+        f"unchanged_chunks={summary['unchanged_chunks']} deleted_chunks={summary['deleted_chunks']} "
+        f"embedded_chunks={summary['embedded_chunks']} quarantined_docs={len(moved)} "
+        f"report={report_path} manifest={manifest}"
+    )
     return report
 
 
@@ -318,11 +365,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--data", default=str(settings.data_dir), help="input snapshot or incremental batch directory")
     parser.add_argument("--collection", default=settings.collection)
     parser.add_argument("--sync", action="store_true", help="delete collection rows absent from this complete snapshot")
-    parser.add_argument("--restore", metavar="DOC_ID", help="restore an archived document version")
-    parser.add_argument("--version", help="version used with --restore")
+    parser.add_argument("--count-by-doc", action="store_true", help="print stored chunk counts grouped by document id")
+    parser.add_argument("--doc-id", help="with --count-by-doc, also print this id when its count is zero")
+    parser.add_argument("--restore", nargs=2, metavar=("DOC_ID", "VERSION"), help="restore an archived document version")
     args = parser.parse_args(argv)
     try:
-        ingest(Path(args.data).resolve(), args.collection, args.sync, args.restore, args.version)
+        if args.count_by_doc:
+            _, collection = open_read_collection(settings, args.collection)
+            counts: dict[str, int] = {}
+            for metadata in collection_rows(collection).get("metadatas", []):
+                if metadata:
+                    doc_id = str(metadata.get("doc_id", "unknown"))
+                    counts[doc_id] = counts.get(doc_id, 0) + 1
+            if args.doc_id:
+                counts.setdefault(args.doc_id, 0)
+            for doc_id in sorted(counts):
+                print(f"{doc_id}: {counts[doc_id]}")
+            return 0
+        restore_doc, restore_version = args.restore if args.restore else (None, None)
+        ingest(Path(args.data).resolve(), args.collection, args.sync, restore_doc, restore_version)
         return 0
     except Exception as exc:
         print(json.dumps({"error": type(exc).__name__, "message": str(exc)}), file=sys.stderr)

@@ -1,0 +1,13 @@
+{
+  "run_id": "20261124T202455Z-655700",
+  "timestamp": "2026-11-24T20:24:56.310003+00:00",
+  "collection": "a-demo-20261125-012139",
+  "restored": true,
+  "doc_id": "versioning-standard",
+  "version": "1.2",
+  "embedded_chunks": 0,
+  "reactivated_chunks": 3,
+  "index_generation": "1795551896248324600",
+  "manifest_path": "D:\\SCD\\ragops\\data\\vector_store\\a-demo-20261125-012139.manifest.json",
+  "source": "D:\\SCD\\ragops\\data\\archive\\versioning-standard\\1.2__versioning-standard-v1.2.md"
+}

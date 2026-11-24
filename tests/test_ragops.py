@@ -3,6 +3,10 @@ from __future__ import annotations
 import tempfile
 import unittest
 import gc
+import json
+import os
+from contextlib import redirect_stdout
+from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
@@ -10,9 +14,9 @@ from eval.gate import evaluate
 from rag.chunking import make_chunks
 from rag.config import get_settings
 from rag.documents import Document, discover_documents, load_document
-from rag.ingest import _ingest_valid
+from rag.ingest import _ingest_valid, ingest, main as ingest_main
 from rag.guardrail import contains_injection
-from rag.store import collection_generation, mark_generation, open_collection, open_read_collection, upsert_chunks
+from rag.store import collection_generation, count_by_doc, manifest_path, mark_generation, open_collection, open_read_collection, upsert_chunks
 from rag.verify import verify_batch
 
 
@@ -34,6 +38,17 @@ class PipelineContractTests(unittest.TestCase):
         self.assertGreaterEqual(len(paths), 12)
         self.assertNotIn("PLANTED.md", {path.name for path in paths})
         self.assertTrue((root / "PLANTED.md").is_file())
+        planted = (root / "PLANTED.md").read_text(encoding="utf-8")
+        for fixture in (
+            "duplicate-intake.md", "duplicate-charter.md", "near-duplicate-intake.md",
+            "corrupt-extraction.txt", "truncated-fragment.md", "missing-metadata.md",
+            "versioning-standard-v1.3.md", "verification-standard-v2.2.md",
+            "injection-test-record-v1.0.md",
+        ):
+            self.assertIn(f"`{fixture}`", planted)
+        changed_version = load_document(root / "verification-standard-v2.2.md")
+        self.assertEqual(changed_version.doc_id, "verification-standard")
+        self.assertIn("0.91", changed_version.body)
 
     def test_chunk_size_overlap_and_page_are_preserved(self) -> None:
         source = Document(
@@ -123,7 +138,7 @@ class PipelineContractTests(unittest.TestCase):
         rows = {
             "ids": ["old-chunk"],
             "documents": [text],
-            "metadatas": [{"doc_id": "original", "doc_version": "1.0", "doc_sha256": "same-hash", "superseded": False}],
+            "metadatas": [{"doc_id": "original", "doc_version": "1.0", "doc_sha256": "same-hash", "status": "active", "superseded": False}],
         }
         outcome = verify_batch([duplicate], rows, get_settings())[0]
         self.assertFalse(outcome["checks"]["uniqueness"])
@@ -162,14 +177,122 @@ class PipelineContractTests(unittest.TestCase):
         self.assertEqual(replaced["replaced_chunks"], 3)
         self.assertEqual(replaced["added_chunks"], 3)
         self.assertEqual(replaced["by_doc_id"]["changed-doc"]["replaced_chunks"], 3)
+        self.assertEqual(replaced["updated_docs"], 1)
+        self.assertEqual(replaced["updated_chunks"], 3)
         self.assertEqual(set(collection.get(where={"doc_id": "unrelated-doc"})["ids"]), unrelated_before)
         self.assertFalse(old_changed_ids & set(collection.get(where={"doc_id": "changed-doc"})["ids"]))
 
         with patch("rag.ingest.embed_texts", side_effect=embed) as embed_call:
             unchanged = _ingest_valid(collection, settings, [changed, unrelated], passed, vector_dir)
         self.assertEqual(unchanged["embedded_chunks"], 0)
+        self.assertEqual(unchanged["unchanged_docs"], 2)
+        self.assertEqual(unchanged["unchanged_chunks"], 6)
         self.assertEqual(unchanged["skipped_unchanged_chunks"], 6)
         self.assertEqual(embed_call.call_args.args[0], [])
+
+    def test_manifest_tracks_versions_and_restore_sets_active_status(self) -> None:
+        temp_root = Path(__file__).resolve().parents[1] / "tmp"
+        temp_root.mkdir(exist_ok=True)
+        root = Path(tempfile.mkdtemp(dir=temp_root))
+        vector_dir = root / "vectors"
+        archive_dir = root / "archive"
+        quarantine_dir = root / "quarantine"
+        old_dir, new_dir = root / "old", root / "new"
+        old_dir.mkdir()
+        new_dir.mkdir()
+
+        def write_doc(directory: Path, version: str, fact: str) -> None:
+            body = (f"The policy version {version} states {fact}. This is operational guidance for document retrieval, indexing, and evidence review. " * 5)
+            (directory / f"policy-v{version}.md").write_text(
+                f"---\ndoc_id: versioned-policy\nsource: test archive\ntitle: Versioned Policy\nversion: '{version}'\ndate: 2026-11-01\npage_count: 1\n---\n\n## Page 1\n\n{body}\n",
+                encoding="utf-8",
+            )
+
+        write_doc(old_dir, "1.0", "the review threshold is 0.94")
+        write_doc(new_dir, "2.0", "the review threshold is 0.91")
+        env = {
+            "VECTOR_DIR": str(vector_dir),
+            "ARCHIVE_DIR": str(archive_dir),
+            "QUARANTINE_DIR": str(quarantine_dir),
+            "MODEL_CACHE_OFFLINE": "1",
+            "HF_HUB_OFFLINE": "1",
+        }
+
+        def fake_embed(texts, *_args):
+            return ([[1.0, 0.0] for _ in texts], 0.1)
+
+        report_stub = root / "report.json"
+        with patch.dict(os.environ, env), patch("rag.verify.embed_texts", side_effect=fake_embed), patch("rag.ingest.embed_texts", side_effect=fake_embed), patch("rag.ingest._write_report", return_value=report_stub), redirect_stdout(StringIO()):
+            ingest(old_dir, "restoretest")
+            ingest(new_dir, "restoretest")
+            _, collection = open_collection(get_settings(), "restoretest")
+            rows = collection.get(where={"doc_id": "versioned-policy"}, include=["metadatas"])
+            status_by_version = {str(metadata["doc_version"]): metadata["status"] for metadata in rows["metadatas"]}
+            self.assertEqual(status_by_version, {"1.0": "archived", "2.0": "active"})
+
+            output = StringIO()
+            with redirect_stdout(output):
+                exit_code = ingest_main(["--restore", "versioned-policy", "1.0", "--collection", "restoretest"])
+            self.assertEqual(exit_code, 0)
+            self.assertIn("reactivated_chunks=1", output.getvalue())
+            restored = collection.get(where={"doc_id": "versioned-policy"}, include=["metadatas"])
+            status_by_version = {str(metadata["doc_version"]): metadata["status"] for metadata in restored["metadatas"]}
+            self.assertEqual(status_by_version, {"1.0": "active", "2.0": "archived"})
+            manifest_file = manifest_path(vector_dir, "restoretest")
+            manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+            versions = {item["version"]: item for item in manifest["documents"]}
+            self.assertEqual(versions["1.0"]["status"], "active")
+            self.assertTrue(versions["1.0"]["content_hash"])
+            expected_old_ids = [chunk_id for chunk_id, metadata in zip(restored["ids"], restored["metadatas"]) if metadata["doc_version"] == "1.0"]
+            self.assertEqual(versions["1.0"]["chunk_ids"], sorted(expected_old_ids))
+            active_ids = collection.query(query_embeddings=[[1.0, 0.0]], n_results=collection.count(), where={"status": "active"})["ids"][0]
+            self.assertTrue(active_ids)
+            self.assertTrue(all("-1.0-" in chunk_id for chunk_id in active_ids))
+
+    def test_sync_deletion_has_zero_chunks_and_cli_reports_zero(self) -> None:
+        temp_root = Path(__file__).resolve().parents[1] / "tmp"
+        temp_root.mkdir(exist_ok=True)
+        root = Path(tempfile.mkdtemp(dir=temp_root))
+        data_dir = root / "snapshot"
+        data_dir.mkdir()
+        vector_dir = root / "vectors"
+
+        def write_doc(doc_id: str, title: str, marker: str) -> Path:
+            body = (f"{marker} policy document describes stable ingestion, retrieval, indexing, and source review behavior. " * 6)
+            path = data_dir / f"{doc_id}.md"
+            path.write_text(
+                f"---\ndoc_id: {doc_id}\nsource: test archive\ntitle: {title}\nversion: '1.0'\ndate: 2026-11-01\npage_count: 1\n---\n\n## Page 1\n\n{body}\n",
+                encoding="utf-8",
+            )
+            return path
+
+        write_doc("alpha-doc", "Alpha Policy", "Alpha-specific")
+        beta_path = write_doc("beta-doc", "Beta Policy", "Beta-specific")
+        env = {
+            "VECTOR_DIR": str(vector_dir),
+            "ARCHIVE_DIR": str(root / "archive"),
+            "QUARANTINE_DIR": str(root / "quarantine"),
+            "MODEL_CACHE_OFFLINE": "1",
+            "HF_HUB_OFFLINE": "1",
+        }
+
+        def fake_embed(texts, *_args):
+            vectors = [[1.0, 0.0] if "alpha-specific" in text.lower() else [0.0, 1.0] for text in texts]
+            return vectors, 0.1
+
+        with patch.dict(os.environ, env), patch("rag.verify.embed_texts", side_effect=fake_embed), patch("rag.ingest.embed_texts", side_effect=fake_embed), patch("rag.ingest._write_report", return_value=root / "report.json"), redirect_stdout(StringIO()):
+            ingest(data_dir, "deletiontest", sync=True)
+            beta_path.unlink()
+            result = ingest(data_dir, "deletiontest", sync=True)
+            _, collection = open_collection(get_settings(), "deletiontest")
+            self.assertEqual(result["counts"]["deleted_docs"], 1)
+            self.assertGreater(result["counts"]["deleted_chunks"], 0)
+            self.assertEqual(count_by_doc(collection, "beta-doc"), 0)
+            output = StringIO()
+            with redirect_stdout(output):
+                exit_code = ingest_main(["--count-by-doc", "--collection", "deletiontest", "--doc-id", "beta-doc"])
+            self.assertEqual(exit_code, 0)
+            self.assertIn("beta-doc: 0", output.getvalue())
 
     def test_chroma_persistent_collection_is_queryable_read_only(self) -> None:
         temp_root = Path(__file__).resolve().parents[1] / "tmp"
@@ -179,14 +302,17 @@ class PipelineContractTests(unittest.TestCase):
         client, collection = open_collection(settings)
         upsert_chunks(
             collection,
-            ["chunk-one"],
-            ["document text"],
-            [{"doc_id": "doc-one", "doc_version": "1.0", "superseded": False, "page": 1}],
-            [[1.0, 0.0]],
+            ["chunk-one", "chunk-archived"],
+            ["active document text", "archived document text"],
+            [
+                {"doc_id": "doc-one", "doc_version": "1.0", "status": "active", "superseded": False, "page": 1},
+                {"doc_id": "doc-one", "doc_version": "0.9", "status": "archived", "superseded": True, "page": 1},
+            ],
+            [[1.0, 0.0], [0.99, 0.01]],
         )
         before = collection.count()
         reader_client, reader = open_read_collection(settings)
-        result = reader.query(query_embeddings=[[1.0, 0.0]], n_results=1, where={"superseded": False})
+        result = reader.query(query_embeddings=[[1.0, 0.0]], n_results=2, where={"status": "active"})
         self.assertEqual(before, reader.count())
         self.assertEqual(result["ids"][0], ["chunk-one"])
         del reader, reader_client, collection, client

@@ -53,6 +53,7 @@ python -m rag.ingest --data data/batch_a --collection ragops_initial_demo
 ```
 
 Ingest Batch B as an incremental batch. Verification failures are moved to `data/quarantine/<run-id>/`; the newer `versioning-standard` revision is archived and the active Chroma metadata is updated. The verification report is written to `eval/results/verification_<run-id>.json`.
+Each collection also has a `<collection>.manifest.json` next to Chroma, recording each document id, content hash, version, active or archived status, and chunk ids. Repeated unchanged runs report zero embedded chunks. Use `--count-by-doc` to inspect stored counts, including an explicit zero for a requested id.
 
 ```powershell
 New-Item -ItemType Directory -Force tmp\batch-b-run | Out-Null
@@ -93,8 +94,18 @@ python -m rag.ingest --data tmp\change-revised --collection a2-change-demo --syn
 To restore an archived version after Batch B:
 
 ```powershell
-python -m rag.ingest --restore versioning-standard --version 1.2 --collection $env:COLLECTION
+python -m rag.ingest --count-by-doc --collection $env:COLLECTION
+python -m rag.ingest --count-by-doc --collection $env:COLLECTION --doc-id source-provenance
+python -m rag.ingest --restore verification-standard 2.1 --collection $env:COLLECTION
 ```
+
+For the complete, repeatable Part A sequence with real console output captured at `eval/results/A_demo_log.txt`, run:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_a_demo.ps1
+```
+
+`SCREENSHOTS.md` lists the individual commands in screenshot order.
 
 ## Part B - Offline evaluation
 

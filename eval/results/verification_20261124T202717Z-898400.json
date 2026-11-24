@@ -1,0 +1,13 @@
+{
+  "run_id": "20261124T202717Z-898400",
+  "timestamp": "2026-11-24T20:27:17.954716+00:00",
+  "collection": "a-demo-20261125-012139",
+  "restored": true,
+  "doc_id": "verification-standard",
+  "version": "2.1",
+  "embedded_chunks": 0,
+  "reactivated_chunks": 3,
+  "index_generation": "1795552037912207500",
+  "manifest_path": "D:\\SCD\\ragops\\data\\vector_store\\a-demo-20261125-012139.manifest.json",
+  "source": "D:\\SCD\\ragops\\data\\archive\\verification-standard\\2.1__verification-standard-v2.1.md"
+}

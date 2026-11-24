@@ -1,0 +1,55 @@
+﻿Part A2 demo | collection=a-demo-20261125-012139 | MODEL_CACHE_OFFLINE=1 | HF_HUB_OFFLINE=1
+
+PS> python scripts/build_sample_corpus.py
+Batch A documents: 12
+Batch B documents: 14
+Sample documents are fictional operational scenarios, not institutional policy.
+
+PS> python -m rag.ingest --data data/batch_a --collection a-demo-20261125-012139
+ingest collection=a-demo-20261125-012139 new_docs=12 updated_docs=0 unchanged_docs=0 deleted_docs=0 new_chunks=36 updated_chunks=0 unchanged_chunks=0 deleted_chunks=0 embedded_chunks=36 quarantined_docs=0 report=D:\SCD\ragops\eval\results\verification_20261124T202143Z-572200.json manifest=D:\SCD\ragops\data\vector_store\a-demo-20261125-012139.manifest.json
+
+PS> python -m rag.ingest --data data/batch_a --collection a-demo-20261125-012139
+ingest collection=a-demo-20261125-012139 new_docs=0 updated_docs=0 unchanged_docs=12 deleted_docs=0 new_chunks=0 updated_chunks=0 unchanged_chunks=36 deleted_chunks=0 embedded_chunks=0 quarantined_docs=0 report=D:\SCD\ragops\eval\results\verification_20261124T202225Z-337300.json manifest=D:\SCD\ragops\data\vector_store\a-demo-20261125-012139.manifest.json
+
+PS> python -m rag.ingest --data tmp\a-demo-20261125-012139\batch-b --collection a-demo-20261125-012139
+ingest collection=a-demo-20261125-012139 new_docs=6 updated_docs=2 unchanged_docs=0 deleted_docs=0 new_chunks=18 updated_chunks=6 unchanged_chunks=0 deleted_chunks=0 embedded_chunks=24 quarantined_docs=6 report=D:\SCD\ragops\eval\results\verification_20261124T202300Z-275000.json manifest=D:\SCD\ragops\data\vector_store\a-demo-20261125-012139.manifest.json
+
+PS> python -c "from rag.config import get_settings; from rag.retrieve import retrieve; passages, *_ = retrieve('What is the near-duplicate similarity threshold?', get_settings()); print('\n'.join('%s v%s: %s' % (p.doc_id, p.doc_version, p.text) for p in passages if p.doc_id == 'verification-standard'))"
+verification-standard v2.2: Completeness verification requires source, title, a date or version, and page count. The declared page count must match extracted pages. Exact duplicates use SHA-256 over normalized body text. Near duplicates use cosine similarity between local document embeddings. Version 2.2 changes the near-duplicate quarantine threshold from 0.94 to 0.91; the new value applies to candidates in this revision and later revisions.
+verification-standard v2.2: A pair at or above the active threshold is quarantined unless both records share a document identifier and are versions of the same source. The report includes the matching document id and measured similarity. A report must identify the verification-standard version used so an operator can distinguish historical outcomes calculated under the prior 0.94 threshold.
+
+PS> python -m rag.ingest --data tmp\a-demo-20261125-012139\full-snapshot --collection a-demo-20261125-012139 --sync
+ingest collection=a-demo-20261125-012139 new_docs=0 updated_docs=0 unchanged_docs=17 deleted_docs=1 new_chunks=0 updated_chunks=0 unchanged_chunks=51 deleted_chunks=3 embedded_chunks=0 quarantined_docs=8 report=D:\SCD\ragops\eval\results\verification_20261124T202410Z-088500.json manifest=D:\SCD\ragops\data\vector_store\a-demo-20261125-012139.manifest.json
+
+PS> python -m rag.ingest --count-by-doc --collection a-demo-20261125-012139 --doc-id source-provenance
+citations-abstention: 3
+document-repair: 3
+evaluation-protocol: 3
+feedback-loop: 3
+incident-recovery: 3
+injection-test-record: 3
+intake-standard: 3
+latency-runbook: 3
+prompt-safety: 3
+release-gate: 3
+retrieval-quality: 3
+review-register: 3
+service-charter: 3
+source-provenance: 0
+storage-backup: 3
+trace-observability: 3
+verification-standard: 6
+versioning-standard: 6
+
+PS> python -m rag.ingest --restore versioning-standard 1.2 --collection a-demo-20261125-012139
+restore collection=a-demo-20261125-012139 doc_id=versioning-standard version=1.2 reactivated_chunks=3 embedded_chunks=0 report=D:\SCD\ragops\eval\results\verification_20261124T202455Z-655700.json manifest=D:\SCD\ragops\data\vector_store\a-demo-20261125-012139.manifest.json
+
+PS> python -c "from rag.config import get_settings; from rag.retrieve import retrieve; passages, *_ = retrieve('What is the near-duplicate similarity threshold?', get_settings()); print('\n'.join('%s v%s: %s' % (p.doc_id, p.doc_version, p.text) for p in passages if p.doc_id == 'verification-standard'))"
+verification-standard v2.2: Completeness verification requires source, title, a date or version, and page count. The declared page count must match extracted pages. Exact duplicates use SHA-256 over normalized body text. Near duplicates use cosine similarity between local document embeddings. Version 2.2 changes the near-duplicate quarantine threshold from 0.94 to 0.91; the new value applies to candidates in this revision and later revisions.
+verification-standard v2.2: A pair at or above the active threshold is quarantined unless both records share a document identifier and are versions of the same source. The report includes the matching document id and measured similarity. A report must identify the verification-standard version used so an operator can distinguish historical outcomes calculated under the prior 0.94 threshold.
+
+PS> .\.venv\Scripts\python.exe -m rag.ingest --restore verification-standard 2.1 --collection a-demo-20261125-012139
+restore collection=a-demo-20261125-012139 doc_id=verification-standard version=2.1 reactivated_chunks=3 embedded_chunks=0 report=D:\SCD\ragops\eval\results\verification_20261124T202717Z-898400.json manifest=D:\SCD\ragops\data\vector_store\a-demo-20261125-012139.manifest.json
+
+PS> python -c "from rag.config import get_settings; from rag.retrieve import retrieve; passages, *_ = retrieve('What is the near-duplicate similarity threshold?', get_settings()); print('\\n'.join('%s v%s: %s' % (p.doc_id, p.doc_version, p.text) for p in passages if p.doc_id == 'verification-standard'))"
+verification-standard v2.1: Exact duplicates are detected with SHA-256 over normalized extracted body text. Near duplicates are detected with cosine similarity between local document embeddings. The test threshold is 0.94; a pair at or above that value is quarantined unless both records share a document identifier and are versions of the same source. The report includes the matching document id and the measured similarity so an operator can explain the decision.

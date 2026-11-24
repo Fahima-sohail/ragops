@@ -44,7 +44,7 @@ def retrieve(query: str, settings: Settings, top_k: int | None = None) -> tuple[
     result = collection.query(
         query_embeddings=[vector],
         n_results=min(top_k or settings.top_k, count),
-        where={"superseded": False},
+        where={"status": "active"},
         include=["documents", "metadatas", "distances"],
     )
     retrieve_ms = (time.perf_counter() - started) * 1000.0
