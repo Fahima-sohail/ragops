@@ -6,19 +6,39 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 import statistics
+import threading
 from typing import Any
+
+TRACE_FIELDS = {
+    "trace_id", "timestamp", "user_query", "rewritten_query", "embedding_model", "embedding_version",
+    "collection", "retrieved", "filters", "reranked_order", "prompt_hash", "prompt", "model", "params",
+    "response", "citations", "guardrail_actions", "latency_ms", "cache_hit",
+}
+RETRIEVED_FIELDS = {"chunk_id", "doc_id", "doc_version", "score"}
+GUARDRAIL_ACTION_FIELDS = {"rule_name", "chunk_id", "doc_id", "action_taken"}
+LATENCY_FIELDS = {"embed", "retrieve", "rerank", "generate", "total"}
+_TRACE_LOCK = threading.Lock()
 
 
 def append_trace(record: dict[str, Any], trace_dir: Path) -> Path:
+    if set(record) != TRACE_FIELDS:
+        missing = sorted(TRACE_FIELDS - set(record))
+        extra = sorted(set(record) - TRACE_FIELDS)
+        raise ValueError(f"trace schema mismatch; missing={missing}, extra={extra}")
+    if any(set(item) != RETRIEVED_FIELDS for item in record["retrieved"]):
+        raise ValueError("retrieved trace entries must contain chunk_id, doc_id, doc_version, and score")
+    if any(set(item) != GUARDRAIL_ACTION_FIELDS for item in record["guardrail_actions"]):
+        raise ValueError("guardrail actions must contain rule_name, chunk_id, doc_id, and action_taken")
+    if set(record["latency_ms"]) != LATENCY_FIELDS:
+        raise ValueError("latency_ms must contain embed, retrieve, rerank, generate, and total")
     trace_dir.mkdir(parents=True, exist_ok=True)
-    date = datetime.now(timezone.utc).strftime("%Y%m%d")
-    path = trace_dir / f"queries_{date}.jsonl"
+    path = trace_dir / "traces.jsonl"
     line = json.dumps(record, ensure_ascii=False, separators=(",", ":"))
-    with path.open("a", encoding="utf-8") as handle:
-        handle.write(line + "\n")
-    example = trace_dir / "example.jsonl"
-    if not example.exists():
-        example.write_text(line + "\n", encoding="utf-8")
+    with _TRACE_LOCK:
+        with path.open("a", encoding="utf-8", newline="\n") as handle:
+            handle.write(line + "\n")
+            handle.flush()
+        print(line, flush=True)
     return path
 
 
@@ -38,7 +58,10 @@ def read_traces(trace_dir: Path, since: datetime | None = None) -> list[dict[str
     records: list[dict[str, Any]] = []
     if not trace_dir.exists():
         return records
-    for path in sorted(trace_dir.glob("queries_*.jsonl")):
+    paths = {trace_dir / "traces.jsonl", *trace_dir.glob("queries_*.jsonl")}
+    for path in sorted(paths):
+        if not path.is_file():
+            continue
         for line in path.read_text(encoding="utf-8").splitlines():
             try:
                 record = json.loads(line)
@@ -61,10 +84,17 @@ def summarize_traces(trace_dir: Path, since: datetime | None = None) -> dict[str
         }
         for key in latency_keys
     }
-    injection_count = sum(
+    flagged_chunks = {
+        (str(action.get("doc_id", "")), str(action.get("chunk_id", "")))
+        for row in records
+        for action in row.get("guardrail_actions", [])
+        if isinstance(action, dict) and action.get("action_taken") in {"removed", "neutralized"} and action.get("chunk_id")
+    }
+    injection_count = len(flagged_chunks)
+    injection_count += sum(
         1 for row in records
         for action in row.get("guardrail_actions", [])
-        if "injection_blocked" in str(action) or "injection_attempt" in str(action)
+        if isinstance(action, str) and ("injection_blocked" in action or "injection_attempt" in action)
     )
     count = len(records)
     cache_hits = sum(bool(row.get("cache_hit")) for row in records)

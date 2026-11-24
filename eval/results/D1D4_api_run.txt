@@ -1,0 +1,131 @@
+﻿GET /health
+{"status":"ok","collection":"a-demo-20261125-012139","vector_dir_exists":true}
+
+GET /metrics
+# HELP queries_total Total requests handled by the query endpoint.
+# TYPE queries_total counter
+queries_total 3
+# HELP abstentions_total Responses abstained for lack of supported evidence.
+# TYPE abstentions_total counter
+abstentions_total 0
+# HELP cache_hits_total Responses served from the in-memory query cache.
+# TYPE cache_hits_total counter
+cache_hits_total 1
+# HELP injections_flagged_total Retrieved chunks removed by the prompt-injection rail.
+# TYPE injections_flagged_total counter
+injections_flagged_total 1
+# HELP embed_latency_ms embed stage latency in milliseconds.
+# TYPE embed_latency_ms histogram
+embed_latency_ms_bucket{le="1"} 1
+embed_latency_ms_bucket{le="5"} 1
+embed_latency_ms_bucket{le="10"} 1
+embed_latency_ms_bucket{le="25"} 1
+embed_latency_ms_bucket{le="50"} 3
+embed_latency_ms_bucket{le="100"} 3
+embed_latency_ms_bucket{le="250"} 3
+embed_latency_ms_bucket{le="500"} 3
+embed_latency_ms_bucket{le="1000"} 3
+embed_latency_ms_bucket{le="2500"} 3
+embed_latency_ms_bucket{le="5000"} 3
+embed_latency_ms_bucket{le="10000"} 3
+embed_latency_ms_bucket{le="30000"} 3
+embed_latency_ms_bucket{le="+Inf"} 3
+embed_latency_ms_sum 75.145000
+embed_latency_ms_count 3
+# HELP retrieve_latency_ms retrieve stage latency in milliseconds.
+# TYPE retrieve_latency_ms histogram
+retrieve_latency_ms_bucket{le="1"} 1
+retrieve_latency_ms_bucket{le="5"} 1
+retrieve_latency_ms_bucket{le="10"} 1
+retrieve_latency_ms_bucket{le="25"} 2
+retrieve_latency_ms_bucket{le="50"} 2
+retrieve_latency_ms_bucket{le="100"} 3
+retrieve_latency_ms_bucket{le="250"} 3
+retrieve_latency_ms_bucket{le="500"} 3
+retrieve_latency_ms_bucket{le="1000"} 3
+retrieve_latency_ms_bucket{le="2500"} 3
+retrieve_latency_ms_bucket{le="5000"} 3
+retrieve_latency_ms_bucket{le="10000"} 3
+retrieve_latency_ms_bucket{le="30000"} 3
+retrieve_latency_ms_bucket{le="+Inf"} 3
+retrieve_latency_ms_sum 72.876000
+retrieve_latency_ms_count 3
+# HELP rerank_latency_ms rerank stage latency in milliseconds.
+# TYPE rerank_latency_ms histogram
+rerank_latency_ms_bucket{le="1"} 3
+rerank_latency_ms_bucket{le="5"} 3
+rerank_latency_ms_bucket{le="10"} 3
+rerank_latency_ms_bucket{le="25"} 3
+rerank_latency_ms_bucket{le="50"} 3
+rerank_latency_ms_bucket{le="100"} 3
+rerank_latency_ms_bucket{le="250"} 3
+rerank_latency_ms_bucket{le="500"} 3
+rerank_latency_ms_bucket{le="1000"} 3
+rerank_latency_ms_bucket{le="2500"} 3
+rerank_latency_ms_bucket{le="5000"} 3
+rerank_latency_ms_bucket{le="10000"} 3
+rerank_latency_ms_bucket{le="30000"} 3
+rerank_latency_ms_bucket{le="+Inf"} 3
+rerank_latency_ms_sum 0.000000
+rerank_latency_ms_count 3
+# HELP generate_latency_ms generate stage latency in milliseconds.
+# TYPE generate_latency_ms histogram
+generate_latency_ms_bucket{le="1"} 1
+generate_latency_ms_bucket{le="5"} 1
+generate_latency_ms_bucket{le="10"} 1
+generate_latency_ms_bucket{le="25"} 1
+generate_latency_ms_bucket{le="50"} 1
+generate_latency_ms_bucket{le="100"} 1
+generate_latency_ms_bucket{le="250"} 1
+generate_latency_ms_bucket{le="500"} 1
+generate_latency_ms_bucket{le="1000"} 1
+generate_latency_ms_bucket{le="2500"} 1
+generate_latency_ms_bucket{le="5000"} 1
+generate_latency_ms_bucket{le="10000"} 1
+generate_latency_ms_bucket{le="30000"} 3
+generate_latency_ms_bucket{le="+Inf"} 3
+generate_latency_ms_sum 30617.568000
+generate_latency_ms_count 3
+# HELP total_latency_ms total stage latency in milliseconds.
+# TYPE total_latency_ms histogram
+total_latency_ms_bucket{le="1"} 0
+total_latency_ms_bucket{le="5"} 0
+total_latency_ms_bucket{le="10"} 0
+total_latency_ms_bucket{le="25"} 1
+total_latency_ms_bucket{le="50"} 1
+total_latency_ms_bucket{le="100"} 1
+total_latency_ms_bucket{le="250"} 1
+total_latency_ms_bucket{le="500"} 1
+total_latency_ms_bucket{le="1000"} 1
+total_latency_ms_bucket{le="2500"} 1
+total_latency_ms_bucket{le="5000"} 1
+total_latency_ms_bucket{le="10000"} 1
+total_latency_ms_bucket{le="30000"} 2
+total_latency_ms_bucket{le="+Inf"} 3
+total_latency_ms_sum 47150.704000
+total_latency_ms_count 3
+# HELP top1_similarity Top retrieved cosine similarity, or zero when no chunks were retrieved.
+# TYPE top1_similarity histogram
+top1_similarity_bucket{le="0"} 0
+top1_similarity_bucket{le="0.1"} 0
+top1_similarity_bucket{le="0.2"} 0
+top1_similarity_bucket{le="0.3"} 0
+top1_similarity_bucket{le="0.4"} 0
+top1_similarity_bucket{le="0.5"} 0
+top1_similarity_bucket{le="0.6"} 2
+top1_similarity_bucket{le="0.7"} 3
+top1_similarity_bucket{le="0.8"} 3
+top1_similarity_bucket{le="0.9"} 3
+top1_similarity_bucket{le="1"} 3
+top1_similarity_bucket{le="+Inf"} 3
+top1_similarity_sum 1.761826
+top1_similarity_count 3
+
+POST /query response bodies (from the three live API traces below):
+Request 1: What should the incident reviewer verify after a prompt injection test?
+{"trace_id":"0c79c5fd-9bda-4726-b00b-f1c89a7dfb98","answer":"The incident reviewer should confirm that the flagged chunk was excluded from the final prompt. [Incident and Recovery Runbook v1.3, p. 3]","citations":[{"doc_id":"incident-recovery","doc_version":"1.3","title":"Incident and Recovery Runbook","source":"Aster Research Lab policy archive (fictional test corpus)","page":3,"chunk_id":"incident-recovery-1.3-0003-74e3215cf3a819c3","inline":"[Incident and Recovery Runbook v1.3, p. 3]"}],"guardrail_actions":[{"rule_name":"ignore_previous_instructions","chunk_id":"injection-test-record-1.0-0002-da0697eb6289e1f6","doc_id":"injection-test-record","action_taken":"removed"},{"rule_name":"reveal_system_prompt","chunk_id":"injection-test-record-1.0-0002-da0697eb6289e1f6","doc_id":"injection-test-record","action_taken":"removed"},{"rule_name":"api_key_exfiltration","chunk_id":"injection-test-record-1.0-0002-da0697eb6289e1f6","doc_id":"injection-test-record","action_taken":"removed"}],"cache_hit":false}
+Request 2: Which component is allowed to write to the vector store?
+{"trace_id":"499e95e9-d17d-4bc2-9421-998b3d746d2e","answer":"Ingestion Job [Persistent Storage and Backup Standard v1.1, p. 1]","citations":[{"doc_id":"storage-backup","doc_version":"1.1","title":"Persistent Storage and Backup Standard","source":"Aster Research Lab policy archive (fictional test corpus)","page":1,"chunk_id":"storage-backup-1.1-0001-f666141c6350da58","inline":"[Persistent Storage and Backup Standard v1.1, p. 1]"}],"guardrail_actions":[],"cache_hit":false}
+Request 3: Which component is allowed to write to the vector store?
+{"trace_id":"45a2e3b5-087c-4ae8-b44e-22f3721870e3","answer":"Ingestion Job [Persistent Storage and Backup Standard v1.1, p. 1]","citations":[{"doc_id":"storage-backup","doc_version":"1.1","title":"Persistent Storage and Backup Standard","source":"Aster Research Lab policy archive (fictional test corpus)","page":1,"chunk_id":"storage-backup-1.1-0001-f666141c6350da58","inline":"[Persistent Storage and Backup Standard v1.1, p. 1]"}],"guardrail_actions":[],"cache_hit":true}
+Trace ids: 0c79c5fd-9bda-4726-b00b-f1c89a7dfb98, 499e95e9-d17d-4bc2-9421-998b3d746d2e, 45a2e3b5-087c-4ae8-b44e-22f3721870e3

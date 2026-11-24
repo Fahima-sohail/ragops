@@ -24,7 +24,7 @@
 
 Read settings from environment variables with local defaults in `rag/config.py`:
 
-`DATA_DIR`, `QUARANTINE_DIR`, `ARCHIVE_DIR`, `TRACE_DIR`, `VECTOR_DIR`, `COLLECTION`, `EMBED_MODEL`, `LLM_API_KEY`, `LLM_MODEL`, `TOP_K`, `CHUNK_SIZE`, `CHUNK_OVERLAP`, and `SEED`.
+`DATA_DIR`, `QUARANTINE_DIR`, `ARCHIVE_DIR`, `TRACE_DIR`, `VECTOR_DIR`, `COLLECTION`, `EMBED_MODEL`, `LLM_API_KEY`, `LLM_MODEL`, `TOP_K`, `SIMILARITY_THRESHOLD`, `CHUNK_SIZE`, `CHUNK_OVERLAP`, and `SEED`.
 
 Required commands:
 

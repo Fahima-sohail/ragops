@@ -30,6 +30,7 @@ $env:COLLECTION = 'ragops'
 $env:EMBED_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
 $env:LLM_MODEL = 'Qwen/Qwen2.5-0.5B-Instruct'
 $env:TOP_K = '5'
+$env:SIMILARITY_THRESHOLD = '0.28'
 $env:CHUNK_SIZE = '220'
 $env:CHUNK_OVERLAP = '40'
 $env:SEED = '4032'
@@ -148,11 +149,13 @@ In another PowerShell window:
 
 ```powershell
 Invoke-RestMethod http://127.0.0.1:8000/health
-Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/query -ContentType 'application/json' -Body '{"query":"Which component is allowed to write to the vector store?"}'
-Invoke-RestMethod http://127.0.0.1:8000/metrics
+New-Item -ItemType Directory -Force tmp | Out-Null
+Set-Content -LiteralPath tmp\api-query.json -Value '{"question":"Which component is allowed to write to the vector store?"}' -Encoding Ascii -NoNewline
+curl.exe -sS -X POST http://127.0.0.1:8000/query -H "Content-Type: application/json" --data-binary "@tmp\api-query.json"
+curl.exe -sS http://127.0.0.1:8000/metrics
 ```
 
-Every query is appended to `traces/queries_YYYYMMDD.jsonl`; the first real query also creates `traces/example.jsonl`. The trace writer includes the exact prompt, retrieved ids and versions, citations, guardrail actions, cache state, and stage latencies. Member 2 fills the trace inspection command.
+Every query is appended as one JSON line to `$TRACE_DIR/traces.jsonl` and the same line is printed to stdout. Traces include the full prompt and its SHA-256 hash, retrieved chunk ids, citations, structured guardrail actions, cache state, and latency for each stage. The API abstains with `I don't know based on the documents` when similarity is below `SIMILARITY_THRESHOLD` (default `0.28`) or the safe context does not support the question. `/metrics` returns Prometheus text with request counters and latency / similarity histograms. Member 2 fills the trace inspection command.
 
 ## Part E - Live-query coverage and drift
 

@@ -46,6 +46,7 @@ class Settings:
     seed: int
     local_device: str
     near_duplicate_threshold: float
+    similarity_threshold: float
 
 
 def get_settings(**overrides: object) -> Settings:
@@ -69,6 +70,7 @@ def get_settings(**overrides: object) -> Settings:
         "seed": int(os.environ.get("SEED", "4032")),
         "local_device": os.environ.get("LLM_DEVICE", "cpu"),
         "near_duplicate_threshold": float(os.environ.get("NEAR_DUPLICATE_THRESHOLD", "0.94")),
+        "similarity_threshold": float(os.environ.get("SIMILARITY_THRESHOLD", "0.28")),
     }
     values.update(overrides)
     settings = Settings(**values)  # type: ignore[arg-type]
@@ -78,4 +80,6 @@ def get_settings(**overrides: object) -> Settings:
         raise ValueError("CHUNK_SIZE must be positive and CHUNK_OVERLAP smaller than it")
     if not 0.0 <= settings.near_duplicate_threshold <= 1.0:
         raise ValueError("NEAR_DUPLICATE_THRESHOLD must be between zero and one")
+    if not 0.0 <= settings.similarity_threshold <= 1.0:
+        raise ValueError("SIMILARITY_THRESHOLD must be between zero and one")
     return settings

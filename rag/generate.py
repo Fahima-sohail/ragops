@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from functools import lru_cache
 import hashlib
 import re
+import threading
 import time
 import uuid
 from typing import Any
@@ -17,13 +17,14 @@ from rag.retrieve import Passage, retrieve
 from rag.store import collection_generation, open_read_collection
 from rag.trace import append_trace
 
-ABSTENTION = "The corpus does not provide enough information to answer this question reliably."
+ABSTENTION = "I don't know based on the documents"
 _STOP = {
     "a", "about", "an", "and", "are", "as", "at", "be", "by", "can", "does", "for", "from", "how",
     "in", "is", "it", "of", "on", "or", "that", "the", "this", "to", "what", "when", "where", "which", "who", "with",
 }
 _WORD = re.compile(r"[a-z0-9]+", re.I)
-_CACHE: dict[tuple[str, str, str, int], dict[str, Any]] = {}
+_CACHE: dict[tuple[str, str, str, int, str, float], dict[str, Any]] = {}
+_CACHE_LOCK = threading.RLock()
 
 
 def _meaningful(text: str) -> set[str]:
@@ -36,6 +37,17 @@ def _supported(answer: str, passages: list[Passage]) -> bool:
         return False
     evidence_terms = set().union(*(_meaningful(passage.text) for passage in passages)) if passages else set()
     return len(answer_terms & evidence_terms) / len(answer_terms) >= 0.38
+
+
+def _context_supports_question(question: str, passages: list[Passage]) -> bool:
+    query_terms = _meaningful(question)
+    if not query_terms or not passages:
+        return False
+    for passage in passages:
+        overlap = len(query_terms & _meaningful(passage.text))
+        if overlap >= min(2, len(query_terms)) and overlap / len(query_terms) >= 0.2:
+            return True
+    return False
 
 
 def _extractive_fallback(question: str, passages: list[Passage]) -> str | None:
@@ -57,9 +69,16 @@ def _citation(passage: Passage) -> dict[str, Any]:
     return result
 
 
-def _cached_result_key(query: str, settings: Settings, top_k: int) -> tuple[str, str, str, int]:
+def _cached_result_key(query: str, settings: Settings, top_k: int) -> tuple[str, str, str, int, str, float]:
     _, collection = open_read_collection(settings)
-    return (query.strip().casefold(), settings.collection, collection_generation(collection, settings.vector_dir), top_k)
+    return (
+        query.strip().casefold(),
+        settings.collection,
+        collection_generation(collection, settings.vector_dir),
+        top_k,
+        settings.embed_model,
+        settings.similarity_threshold,
+    )
 
 
 def run_query(query: str, settings: Settings | None = None, top_k: int | None = None) -> dict[str, Any]:
@@ -69,32 +88,38 @@ def run_query(query: str, settings: Settings | None = None, top_k: int | None = 
     trace_id = str(uuid.uuid4())
     safe_query, query_actions = screen_query(query)
     cache_hit = False
+    key: tuple[str, str, str, int, str, float] | None = None
 
-    if not safe_query:
-        key = _cached_result_key(query, settings, top_k)
-        cached = _CACHE.get(key)
+    if safe_query:
+        key = _cached_result_key(safe_query, settings, top_k)
+        with _CACHE_LOCK:
+            cached = _CACHE.get(key)
         if cached is not None:
             cache_hit = True
             result = dict(cached)
             result["trace_id"] = trace_id
+            result["timestamp"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+            result["user_query"] = query
+            result["rewritten_query"] = safe_query
             result["cache_hit"] = True
             result["latency_ms"] = {"embed": 0.0, "retrieve": 0.0, "rerank": 0.0, "generate": 0.0, "total": round((time.perf_counter() - started) * 1000.0, 3)}
-            result["timestamp"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
             append_trace(result, settings.trace_dir)
             return result
 
     passages: list[Passage] = []
     embed_ms = retrieve_ms = rerank_ms = generation_ms = 0.0
-    if not safe_query:
-        passages, embed_ms, retrieve_ms, _ = retrieve(query, settings, top_k)
+    if safe_query:
+        passages, embed_ms, retrieve_ms, _ = retrieve(safe_query, settings, top_k)
     safe_passages, passage_actions = screen_passages(passages)
     actions = query_actions + passage_actions
-    evidence = safe_passages if safe_passages and safe_passages[0].score >= 0.28 else []
+    top1_similarity = passages[0].score if passages else 0.0
+    evidence = safe_passages if top1_similarity >= settings.similarity_threshold and _context_supports_question(safe_query, safe_passages) else []
     prompt_items = [
         {"title": p.title, "version": p.doc_version, "page": str(p.page), "text": p.text}
         for p in evidence
     ]
-    prompt = build_prompt(query, prompt_items)
+    prompt_question = safe_query if safe_query else "[blocked prompt injection query]"
+    prompt = build_prompt(prompt_question, prompt_items)
 
     if not evidence:
         answer = ABSTENTION
@@ -140,13 +165,10 @@ def run_query(query: str, settings: Settings | None = None, top_k: int | None = 
                 "doc_id": p.doc_id,
                 "doc_version": p.doc_version,
                 "score": round(p.score, 6),
-                "title": p.title,
-                "page": p.page,
-                "source": p.source,
             }
             for p in passages
         ],
-        "filters": {"superseded": False, "top_k": top_k, "minimum_similarity": 0.28},
+        "filters": {"status": "active", "top_k": top_k, "minimum_similarity": settings.similarity_threshold},
         "reranked_order": [p.chunk_id for p in passages],
         "prompt_hash": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
         "prompt": prompt,
@@ -163,9 +185,9 @@ def run_query(query: str, settings: Settings | None = None, top_k: int | None = 
             "total": round(total_ms, 3),
         },
         "cache_hit": cache_hit,
-        "answered_from_context": answered_from_context,
     }
     append_trace(trace, settings.trace_dir)
-    if not safe_query:
-        _CACHE[key] = {**trace, "cache_hit": False}
+    if key is not None:
+        with _CACHE_LOCK:
+            _CACHE[key] = {**trace, "cache_hit": False}
     return trace

@@ -33,4 +33,5 @@ data/archive/**
 eval/results/*.tmp
 !eval/results/.gitkeep
 traces/*.tmp
+traces/traces.jsonl
 !traces/example.jsonl

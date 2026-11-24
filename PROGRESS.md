@@ -44,3 +44,13 @@
 - The demo restored archived `verification-standard` v2.1 with 3 reactivated chunks and 0 embedded chunks. A real read-only retrieval returned v2.2 / 0.91 before rollback and v2.1 / 0.94 afterward. The CLI also records a v1.2 restore of `versioning-standard`.
 - `SCREENSHOTS.md` gives the Part A commands in order; `scripts/run_a_demo.ps1` repeats the end-to-end sequence and writes its real console output under `eval/results/` with model cache offline.
 - With `MODEL_CACHE_OFFLINE=1` and `HF_HUB_OFFLINE=1`, `python -m pytest -q` passed: **15 passed**.
+
+### Part D1/D4 API, tracing, and retrieval guardrail
+
+- `rag.trace` now validates the exact 19-field AGENTS schema, appends one line per query to `$TRACE_DIR/traces.jsonl`, and prints the identical serialized line to stdout. Cache hits get a fresh trace id and zero per-stage work latency.
+- Added structured injection rules/actions (`rule_name`, `chunk_id`, `doc_id`, `action_taken`); matching retrieved chunks are removed before prompt construction. The `SIMILARITY_THRESHOLD` default is 0.28, and unsupported or low-similarity questions return exactly `I don't know based on the documents`.
+- The API accepts `POST /query` with `question` (and retains `query` as an input alias), exposes `/health`, and returns Prometheus counters plus per-stage latency and top-1 similarity histograms from `/metrics`. API retrieval uses the read-only Chroma path.
+- `tests/test_api_tracing.py` covers exact trace fields/stdout, injection removal, prompt exclusion, cache behavior, abstention, aliases, and metric output. Offline `python -m pytest -q`: **21 passed**.
+- Ingested the Batch B injection record into `a-demo-20261125-012139` (unchanged: 1 document, 0 embedded chunks), then ran the local API and three real curl requests. The first retrieved `injection-test-record`; three matching rules removed its malicious chunk, and that chunk is absent from the full prompt. The second grounded query cited the storage standard; the repeated query returned `cache_hit=true`.
+- The live API reported `queries_total=3`, `cache_hits_total=1`, `injections_flagged_total=1` (one distinct chunk), and `abstentions_total=0`. Health, Prometheus output, and the real response payloads are committed in `eval/results/D1D4_api_run.txt`.
+- Copied the three validated live records to `traces/sample_run.jsonl` and the D4 record to `traces/example.jsonl`. D4 trace id is `0c79c5fd-9bda-4726-b00b-f1c89a7dfb98`; it has three structured guardrail actions. No model downloads were attempted.

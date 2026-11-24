@@ -32,6 +32,7 @@ python scripts/download_models.py
 | `LLM_API_KEY` | empty | Optional hosted model credential; keep it in a Kubernetes Secret. |
 | `LLM_MODEL` | `Qwen/Qwen2.5-0.5B-Instruct` | Local Transformers model id or hosted API model name. |
 | `TOP_K` | `5` | Maximum active chunks returned by retrieval. |
+| `SIMILARITY_THRESHOLD` | `0.28` | Minimum top-1 cosine similarity required before generation. |
 | `CHUNK_SIZE` | `220` | Whitespace-token chunk size. |
 | `CHUNK_OVERLAP` | `40` | Chunk overlap in whitespace tokens. |
 | `SEED` | `4032` | Evaluation seed. |
@@ -63,7 +64,7 @@ Member 2 implementation:
 
 Each JSON line contains: `trace_id`, `timestamp`, `user_query`, `rewritten_query`, `embedding_model`, `embedding_version`, `collection`, `retrieved` entries with `chunk_id`, `doc_id`, `doc_version`, `score`, `title`, and `page`, `filters`, `reranked_order`, `prompt_hash`, `prompt`, `model`, `params`, `response`, `citations`, `guardrail_actions`, `latency_ms` (`embed`, `retrieve`, `rerank`, `generate`, `total`), and `cache_hit`.
 
-`traces/example.jsonl` is populated by the first real query. Member 2's trace tool should accept the trace id and display the prompt plus the exact text represented by retrieved chunk ids.
+`rag.trace` appends each real query to `$TRACE_DIR/traces.jsonl` and prints the same JSON line to stdout. `traces/example.jsonl` is a committed real example; Member 2's trace tool should accept the trace id and display the prompt plus the exact text represented by retrieved chunk ids.
 
 ## Kubernetes contract
 

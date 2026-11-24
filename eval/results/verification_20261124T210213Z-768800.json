@@ -1,0 +1,62 @@
+{
+  "run_id": "20261124T210213Z-768800",
+  "timestamp": "2026-11-24T21:02:43.109979+00:00",
+  "data_dir": "D:\\SCD\\ragops\\tmp\\d4-injection",
+  "collection": "a-demo-20261125-012139",
+  "verification": [
+    {
+      "doc_id": "injection-test-record",
+      "path": "D:\\SCD\\ragops\\tmp\\d4-injection\\injection-test-record-v1.0.md",
+      "title": "Prompt Injection Test Record",
+      "doc_version": "1.0",
+      "sha256": "9d73c8c28b8e99770350e2898b1a146cad6d9a1b4424072f76a98d7c81c7bee1",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.0 matches the active record",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.7474 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.747374,
+      "near_duplicate_match": "prompt-safety"
+    }
+  ],
+  "counts": {
+    "discovered_docs": 1,
+    "passed_docs": 1,
+    "quarantined_docs": 0,
+    "indexed_docs": 0,
+    "added_chunks": 0,
+    "replaced_chunks": 0,
+    "embedded_chunks": 0,
+    "skipped_unchanged_chunks": 3,
+    "deleted_chunks": 0,
+    "new_docs": 0,
+    "updated_docs": 0,
+    "unchanged_docs": 1,
+    "deleted_docs": 0,
+    "new_chunks": 0,
+    "updated_chunks": 0,
+    "unchanged_chunks": 3,
+    "archived_versions": [],
+    "by_doc_id": {
+      "injection-test-record": {
+        "added_chunks": 0,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 3,
+        "deleted_chunks": 0
+      }
+    },
+    "embedding_ms": 0.0
+  },
+  "quarantine": [],
+  "deleted_chunks_by_doc_id": {},
+  "manifest_path": "D:\\SCD\\ragops\\data\\vector_store\\a-demo-20261125-012139.manifest.json"
+}
