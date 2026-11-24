@@ -67,14 +67,30 @@ python -m rag.ingest --data tmp\combined-run --collection $env:COLLECTION
 Use `--sync` only when the selected directory is a complete corpus snapshot; it deletes indexed document ids missing from that snapshot. To show a deletion without disturbing the main collection, use a separate collection:
 
 ```powershell
-New-Item -ItemType Directory -Force tmp\delete-demo | Out-Null
-Copy-Item data/batch_a/service-charter-v1.0.md tmp\delete-demo\
-python -m rag.ingest --data tmp\delete-demo --collection delete-demo --sync
-Remove-Item tmp\delete-demo\service-charter-v1.0.md
-python -m rag.ingest --data tmp\delete-demo --collection delete-demo --sync
+New-Item -ItemType Directory -Force tmp\delete-initial | Out-Null
+Copy-Item data\batch_a\service-charter-v1.0.md -Destination tmp\delete-initial -Force
+Copy-Item data\batch_a\storage-backup-v1.1.md -Destination tmp\delete-initial -Force
+python -m rag.ingest --data tmp\delete-initial --collection a2-delete-demo --sync
+New-Item -ItemType Directory -Force tmp\delete-remaining | Out-Null
+Copy-Item data\batch_a\service-charter-v1.0.md -Destination tmp\delete-remaining -Force
+python -m rag.ingest --data tmp\delete-remaining --collection a2-delete-demo --sync
 ```
 
-The second verification result records the deleted chunk count by document id. To restore an archived version after Batch B:
+The second verification result records the deleted chunk count by document id. To demonstrate a same-version document replacement while preserving unrelated chunks:
+
+```powershell
+New-Item -ItemType Directory -Force tmp\change-initial | Out-Null
+Copy-Item data\batch_a\service-charter-v1.0.md -Destination tmp\change-initial -Force
+Copy-Item data\batch_a\storage-backup-v1.1.md -Destination tmp\change-initial -Force
+python -m rag.ingest --data tmp\change-initial --collection a2-change-demo --sync
+New-Item -ItemType Directory -Force tmp\change-revised | Out-Null
+Copy-Item data\batch_a\service-charter-v1.0.md -Destination tmp\change-revised -Force
+Copy-Item data\batch_a\storage-backup-v1.1.md -Destination tmp\change-revised -Force
+Add-Content tmp\change-revised\service-charter-v1.0.md 'A2 change fixture: owner records this replacement for the targeted source only.'
+python -m rag.ingest --data tmp\change-revised --collection a2-change-demo --sync
+```
+
+To restore an archived version after Batch B:
 
 ```powershell
 python -m rag.ingest --restore versioning-standard --version 1.2 --collection $env:COLLECTION

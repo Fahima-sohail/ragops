@@ -1,0 +1,84 @@
+{
+  "run_id": "20261124T195101Z-299500",
+  "timestamp": "2026-11-24T19:51:30.020817+00:00",
+  "data_dir": "D:\\SCD\\ragops\\tmp\\a2_change_revised",
+  "collection": "a2-change-demo",
+  "verification": [
+    {
+      "doc_id": "service-charter",
+      "path": "D:\\SCD\\ragops\\tmp\\a2_change_revised\\service-charter-v1.0.md",
+      "title": "RAG Service Charter",
+      "doc_version": "1.0",
+      "sha256": "8cbff870472731f56777284485e48686cb627dc651c7c98346ec780b4a055cc0",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.0 matches the active record",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.4766 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.476629,
+      "near_duplicate_match": "storage-backup"
+    },
+    {
+      "doc_id": "storage-backup",
+      "path": "D:\\SCD\\ragops\\tmp\\a2_change_revised\\storage-backup-v1.1.md",
+      "title": "Persistent Storage and Backup Standard",
+      "doc_version": "1.1",
+      "sha256": "e3e5af068699890e94f754d6ff90fa2c2932ba4f17bb43c12484e1191bb6ffbf",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.1 matches the active record",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.4766 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.476629,
+      "near_duplicate_match": "service-charter"
+    }
+  ],
+  "counts": {
+    "discovered_docs": 2,
+    "passed_docs": 2,
+    "quarantined_docs": 0,
+    "indexed_docs": 1,
+    "added_chunks": 3,
+    "replaced_chunks": 3,
+    "embedded_chunks": 3,
+    "skipped_unchanged_chunks": 3,
+    "deleted_chunks": 3,
+    "archived_versions": [],
+    "by_doc_id": {
+      "service-charter": {
+        "added_chunks": 3,
+        "replaced_chunks": 3,
+        "skipped_unchanged_chunks": 0,
+        "deleted_chunks": 3
+      },
+      "storage-backup": {
+        "added_chunks": 0,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 3,
+        "deleted_chunks": 0
+      }
+    },
+    "embedding_ms": 159.889,
+    "index_generation": "1795549890018649400"
+  },
+  "quarantine": [],
+  "deleted_chunks_by_doc_id": {}
+}

@@ -138,10 +138,19 @@ def _ingest_valid(collection, settings, documents: list[Document], outcomes: lis
         "replaced_chunks": 0,
         "embedded_chunks": 0,
         "skipped_unchanged_chunks": 0,
-        "replaced_chunks": 0,
         "deleted_chunks": 0,
         "archived_versions": [],
+        "by_doc_id": {},
     }
+
+    def doc_counts(doc_id: str) -> dict[str, int]:
+        return report["by_doc_id"].setdefault(doc_id, {
+            "added_chunks": 0,
+            "replaced_chunks": 0,
+            "skipped_unchanged_chunks": 0,
+            "deleted_chunks": 0,
+        })
+
     to_write: list[tuple[Document, list[Any], list[str], list[dict[str, Any]]]] = []
     for document, outcome in zip(documents, outcomes):
         if not outcome["passed"]:
@@ -160,6 +169,7 @@ def _ingest_valid(collection, settings, documents: list[Document], outcomes: lis
         ]
         if exact_unchanged and len(exact_unchanged) == len(exact_version) and not rollback:
             report["skipped_unchanged_chunks"] += len(exact_unchanged)
+            doc_counts(doc_id)["skipped_unchanged_chunks"] += len(exact_unchanged)
             continue
 
         active_versions = {str(meta.get("doc_version")) for _, meta in _active_metadata(current, doc_id)}
@@ -179,6 +189,8 @@ def _ingest_valid(collection, settings, documents: list[Document], outcomes: lis
         if same_version_ids and not rollback:
             report["deleted_chunks"] += len(same_version_ids)
             report["replaced_chunks"] += len(same_version_ids)
+            doc_counts(doc_id)["replaced_chunks"] += len(same_version_ids)
+            doc_counts(doc_id)["deleted_chunks"] += len(same_version_ids)
             remove_ids(collection, same_version_ids)
 
         chunks = make_chunks(document, settings.chunk_size, settings.chunk_overlap)
@@ -216,6 +228,7 @@ def _ingest_valid(collection, settings, documents: list[Document], outcomes: lis
             vectors[start:end],
         )
         report["_embedding_cursor"] = end
+        doc_counts(document.doc_id)["added_chunks"] += len(chunks)
     report.pop("_embedding_cursor", None)
     return report
 
@@ -265,6 +278,14 @@ def ingest(data_dir: Path, collection_name: str, sync: bool = False, restore_doc
                 deleted_by_doc[doc_id] = deleted_by_doc.get(doc_id, 0) + 1
         remove_ids(collection, deleted_ids)
         summary["deleted_chunks"] += len(deleted_ids)
+        for doc_id, count in deleted_by_doc.items():
+            per_doc = summary["by_doc_id"].setdefault(doc_id, {
+                "added_chunks": 0,
+                "replaced_chunks": 0,
+                "skipped_unchanged_chunks": 0,
+                "deleted_chunks": 0,
+            })
+            per_doc["deleted_chunks"] += count
 
     if summary.get("added_chunks") or summary.get("deleted_chunks") or moved:
         summary["index_generation"] = mark_generation(collection, settings.vector_dir)

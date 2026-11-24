@@ -10,6 +10,7 @@ from eval.gate import evaluate
 from rag.chunking import make_chunks
 from rag.config import get_settings
 from rag.documents import Document, discover_documents, load_document
+from rag.ingest import _ingest_valid
 from rag.guardrail import contains_injection
 from rag.store import collection_generation, mark_generation, open_collection, open_read_collection, upsert_chunks
 from rag.verify import verify_batch
@@ -127,6 +128,48 @@ class PipelineContractTests(unittest.TestCase):
         outcome = verify_batch([duplicate], rows, get_settings())[0]
         self.assertFalse(outcome["checks"]["uniqueness"])
         self.assertIn("exact duplicate", outcome["reasons"]["uniqueness"])
+
+    def test_incremental_replace_is_scoped_and_unchanged_batch_embeds_zero(self) -> None:
+        temp_root = Path(__file__).resolve().parents[1] / "tmp"
+        temp_root.mkdir(exist_ok=True)
+        vector_dir = Path(tempfile.mkdtemp(dir=temp_root))
+        settings = get_settings(vector_dir=vector_dir, collection="incrementaltest")
+        _, collection = open_collection(settings)
+
+        def document(doc_id: str, text: str, filename: str) -> Document:
+            pages = [(number, f"{text} Page {number}. " * 6) for number in range(1, 4)]
+            return Document(
+                vector_dir / filename,
+                {"doc_id": doc_id, "source": "test source", "title": doc_id, "version": "1.0", "page_count": 3},
+                pages,
+                "\n".join(page for _, page in pages),
+                f"hash-{doc_id}-{text}",
+            )
+
+        original = document("changed-doc", "Original policy content", "original.md")
+        unrelated = document("unrelated-doc", "Independent archival content", "unrelated.md")
+        passed = [{"passed": True}, {"passed": True}]
+        embed = lambda texts, *_: ([[1.0, 0.0] for _ in texts], 1.0)
+        with patch("rag.ingest.embed_texts", side_effect=embed):
+            initial = _ingest_valid(collection, settings, [original, unrelated], passed, vector_dir)
+        self.assertEqual(initial["added_chunks"], 6)
+        unrelated_before = set(collection.get(where={"doc_id": "unrelated-doc"})["ids"])
+        old_changed_ids = set(collection.get(where={"doc_id": "changed-doc"})["ids"])
+
+        changed = document("changed-doc", "Revised policy content", "revised.md")
+        with patch("rag.ingest.embed_texts", side_effect=embed):
+            replaced = _ingest_valid(collection, settings, [changed, unrelated], passed, vector_dir)
+        self.assertEqual(replaced["replaced_chunks"], 3)
+        self.assertEqual(replaced["added_chunks"], 3)
+        self.assertEqual(replaced["by_doc_id"]["changed-doc"]["replaced_chunks"], 3)
+        self.assertEqual(set(collection.get(where={"doc_id": "unrelated-doc"})["ids"]), unrelated_before)
+        self.assertFalse(old_changed_ids & set(collection.get(where={"doc_id": "changed-doc"})["ids"]))
+
+        with patch("rag.ingest.embed_texts", side_effect=embed) as embed_call:
+            unchanged = _ingest_valid(collection, settings, [changed, unrelated], passed, vector_dir)
+        self.assertEqual(unchanged["embedded_chunks"], 0)
+        self.assertEqual(unchanged["skipped_unchanged_chunks"], 6)
+        self.assertEqual(embed_call.call_args.args[0], [])
 
     def test_chroma_persistent_collection_is_queryable_read_only(self) -> None:
         temp_root = Path(__file__).resolve().parents[1] / "tmp"

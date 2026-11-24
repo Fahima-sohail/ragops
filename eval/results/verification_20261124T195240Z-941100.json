@@ -1,0 +1,63 @@
+{
+  "run_id": "20261124T195240Z-941100",
+  "timestamp": "2026-11-24T19:53:08.743873+00:00",
+  "data_dir": "D:\\SCD\\ragops\\tmp\\a2_delete_remaining",
+  "collection": "a2-delete-demo",
+  "verification": [
+    {
+      "doc_id": "service-charter",
+      "path": "D:\\SCD\\ragops\\tmp\\a2_delete_remaining\\service-charter-v1.0.md",
+      "title": "RAG Service Charter",
+      "doc_version": "1.0",
+      "sha256": "3b7be47f0b1dd0edfc712701b400389173ed59e19a2fbc7a6f1bf36f66d498c6",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "version 1.0 matches the active record",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.4766 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.476629,
+      "near_duplicate_match": "storage-backup"
+    }
+  ],
+  "counts": {
+    "discovered_docs": 1,
+    "passed_docs": 1,
+    "quarantined_docs": 0,
+    "indexed_docs": 0,
+    "added_chunks": 0,
+    "replaced_chunks": 0,
+    "embedded_chunks": 0,
+    "skipped_unchanged_chunks": 3,
+    "deleted_chunks": 3,
+    "archived_versions": [],
+    "by_doc_id": {
+      "service-charter": {
+        "added_chunks": 0,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 3,
+        "deleted_chunks": 0
+      },
+      "storage-backup": {
+        "added_chunks": 0,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 0,
+        "deleted_chunks": 3
+      }
+    },
+    "embedding_ms": 0.0,
+    "index_generation": "1795549988741737100"
+  },
+  "quarantine": [],
+  "deleted_chunks_by_doc_id": {
+    "storage-backup": 3
+  }
+}

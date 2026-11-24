@@ -1,0 +1,12 @@
+{
+  "run_id": "20261124T195336Z-403600",
+  "timestamp": "2026-11-24T19:53:37.567887+00:00",
+  "collection": "ragops_initial_demo",
+  "restored": true,
+  "doc_id": "versioning-standard",
+  "version": "1.2",
+  "embedded_chunks": 0,
+  "reactivated_chunks": 3,
+  "index_generation": "1795550017565709300",
+  "source": "D:\\SCD\\ragops\\data\\archive\\versioning-standard\\1.2__versioning-standard-v1.2.md"
+}
