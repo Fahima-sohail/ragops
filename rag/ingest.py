@@ -108,7 +108,7 @@ def _restore(collection, settings, doc_id: str, version: str) -> dict[str, Any]:
                 copied["source_path"] = str(target)
             updated.append(copied)
         update_metadata(collection, list(rows["ids"]), updated)
-        generation = mark_generation(collection)
+        generation = mark_generation(collection, settings.vector_dir)
         return {
             "restored": True,
             "doc_id": doc_id,
@@ -267,7 +267,7 @@ def ingest(data_dir: Path, collection_name: str, sync: bool = False, restore_doc
         summary["deleted_chunks"] += len(deleted_ids)
 
     if summary.get("added_chunks") or summary.get("deleted_chunks") or moved:
-        summary["index_generation"] = mark_generation(collection)
+        summary["index_generation"] = mark_generation(collection, settings.vector_dir)
 
     report = {
         "run_id": run_id,

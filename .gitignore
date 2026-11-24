@@ -27,7 +27,9 @@ data/model_cache/
 *.db
 *.log
 data/quarantine/**
+!data/quarantine/.gitkeep
 data/archive/**
+!data/archive/.gitkeep
 eval/results/*.tmp
 !eval/results/.gitkeep
 traces/*.tmp

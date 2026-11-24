@@ -55,8 +55,13 @@ python -m rag.ingest --data data/batch_a --collection ragops_initial_demo
 Ingest Batch B as an incremental batch. Verification failures are moved to `data/quarantine/<run-id>/`; the newer `versioning-standard` revision is archived and the active Chroma metadata is updated. The verification report is written to `eval/results/verification_<run-id>.json`.
 
 ```powershell
-python -m rag.ingest --data data/batch_b --collection $env:COLLECTION
-python -m rag.ingest --data data --collection $env:COLLECTION
+New-Item -ItemType Directory -Force tmp\batch-b-run | Out-Null
+Copy-Item data\batch_b\* tmp\batch-b-run -Force
+python -m rag.ingest --data tmp\batch-b-run --collection $env:COLLECTION
+New-Item -ItemType Directory -Force tmp\combined-run | Out-Null
+Copy-Item data\batch_a\* tmp\combined-run -Force
+Copy-Item data\batch_b\* tmp\combined-run -Force
+python -m rag.ingest --data tmp\combined-run --collection $env:COLLECTION
 ```
 
 Use `--sync` only when the selected directory is a complete corpus snapshot; it deletes indexed document ids missing from that snapshot. To show a deletion without disturbing the main collection, use a separate collection:

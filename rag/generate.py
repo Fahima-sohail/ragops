@@ -59,7 +59,7 @@ def _citation(passage: Passage) -> dict[str, Any]:
 
 def _cached_result_key(query: str, settings: Settings, top_k: int) -> tuple[str, str, str, int]:
     _, collection = open_read_collection(settings)
-    return (query.strip().casefold(), settings.collection, collection_generation(collection), top_k)
+    return (query.strip().casefold(), settings.collection, collection_generation(collection, settings.vector_dir), top_k)
 
 
 def run_query(query: str, settings: Settings | None = None, top_k: int | None = None) -> dict[str, Any]:

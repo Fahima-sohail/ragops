@@ -17,14 +17,23 @@ def version_key(value: str) -> tuple[int, ...] | None:
 
 
 def _existing_docs(rows: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    grouped: dict[str, dict[str, Any]] = defaultdict(lambda: {"texts": [], "metadatas": []})
-    for text, metadata in zip(rows.get("documents", []), rows.get("metadatas", [])):
+    grouped: dict[str, dict[str, Any]] = defaultdict(lambda: {"chunks": []})
+    for chunk_id, text, metadata in zip(rows.get("ids", []), rows.get("documents", []), rows.get("metadatas", [])):
         if not metadata:
             continue
+        if bool(metadata.get("superseded", False)):
+            continue
         item = grouped[str(metadata.get("doc_id", ""))]
-        item["texts"].append(text or "")
-        item["metadatas"].append(metadata)
-    return dict(grouped)
+        item["chunks"].append((str(chunk_id), text or "", metadata))
+    result: dict[str, dict[str, Any]] = {}
+    for doc_id, record in grouped.items():
+        chunks = sorted(record["chunks"], key=lambda item: item[0])
+        result[doc_id] = {
+            "ids": [item[0] for item in chunks],
+            "texts": [item[1] for item in chunks],
+            "metadatas": [item[2] for item in chunks],
+        }
+    return result
 
 
 def verify_batch(documents: list[Document], rows: dict[str, Any], settings: Settings) -> list[dict[str, Any]]:
@@ -33,16 +42,27 @@ def verify_batch(documents: list[Document], rows: dict[str, Any], settings: Sett
     existing_texts: dict[str, str] = {}
     for doc_id, record in existing.items():
         metadata = record["metadatas"]
-        active = [value for value in metadata if not bool(value.get("superseded", False))]
-        if active:
-            existing_hash_to_id[str(active[0].get("doc_sha256", ""))] = doc_id
+        if metadata:
+            existing_hash_to_id[str(metadata[0].get("doc_sha256", ""))] = doc_id
             existing_texts[doc_id] = "\n".join(record["texts"])
 
+    versions_in_batch: dict[str, list[tuple[str, str]]] = defaultdict(list)
+    version_hashes: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for document in documents:
+        versions_in_batch[document.doc_id].append((document.doc_version, document.sha256))
+        version_hashes[(document.doc_id, document.doc_version)].add(document.sha256)
+    newest_batch_version: dict[str, tuple[str, tuple[int, ...]]] = {}
+    for doc_id, versions in versions_in_batch.items():
+        numeric = [(version, version_key(version)) for version, _ in versions]
+        numeric = [(version, key) for version, key in numeric if key is not None]
+        if numeric:
+            newest_batch_version[doc_id] = max(numeric, key=lambda item: item[1])  # type: ignore[arg-type]
+
     batch_hash_to_id: dict[str, str] = {}
-    valid_for_similarity: list[Document] = []
+    candidate_indices: list[int] = []
     outcomes: list[dict[str, Any]] = []
 
-    for doc in documents:
+    for index, doc in enumerate(documents):
         metadata = doc.metadata
         reasons: dict[str, str] = {}
         checks: dict[str, bool] = {}
@@ -86,13 +106,23 @@ def verify_batch(documents: list[Document], rows: dict[str, Any], settings: Sett
         active_versions = [
             str(value.get("doc_version", "unknown"))
             for value in existing.get(doc_id, {}).get("metadatas", [])
-            if not bool(value.get("superseded", False))
         ]
         current_version = active_versions[0] if active_versions else None
         candidate_key, current_key = version_key(version), version_key(current_version or "")
-        if current_version and candidate_key and current_key and candidate_key < current_key:
+        latest_batch = newest_batch_version.get(doc_id)
+        version_conflict = len(version_hashes[(doc_id, version)]) > 1
+        if version_conflict:
+            recency_ok = False
+            reasons["recency"] = f"conflicting contents share document version {version} in this batch"
+        elif latest_batch and candidate_key and candidate_key < latest_batch[1]:
+            recency_ok = False
+            reasons["recency"] = f"candidate {version} is older than {latest_batch[0]} in this batch"
+        elif current_version and candidate_key and current_key and candidate_key < current_key:
             recency_ok = False
             reasons["recency"] = f"candidate {version} is older than active {current_version}"
+        elif current_version and candidate_key and current_key and candidate_key == current_key and version != current_version:
+            recency_ok = False
+            reasons["recency"] = f"candidate version {version} conflicts with active version {current_version}"
         elif current_version and version != current_version:
             recency_ok = True
             reasons["recency"] = f"newer version {version} detected; prior {current_version} will be archived and superseded"
@@ -116,7 +146,7 @@ def verify_batch(documents: list[Document], rows: dict[str, Any], settings: Sett
             batch_hash_to_id.setdefault(doc.sha256, doc_id)
             reasons["uniqueness"] = "no exact duplicate detected; near-duplicate check pending"
             unique_ok = True
-            valid_for_similarity.append(doc)
+            candidate_indices.append(index)
         else:
             unique_ok = False
             reasons["uniqueness"] = "cannot calculate a content hash"
@@ -137,11 +167,10 @@ def verify_batch(documents: list[Document], rows: dict[str, Any], settings: Sett
     # The whole-document embedding check is deterministic and uses the same local
     # model as chunk embedding. Same-id revisions are intentionally exempt because
     # their similarity is expected and their version is checked above.
-    candidates = [item for item in outcomes if item["checks"]["uniqueness"] and item["sha256"]]
+    candidates = [index for index in candidate_indices if outcomes[index]["checks"]["uniqueness"]]
     if candidates:
-        candidate_docs = [doc for doc in valid_for_similarity if any(item["doc_id"] == doc.doc_id and item["sha256"] == doc.sha256 for item in candidates)]
-        vectors, _ = embed_texts([doc.body for doc in candidate_docs], settings.embed_model, settings.local_device)
-        candidate_vector = {doc.doc_id: vector for doc, vector in zip(candidate_docs, vectors)}
+        vectors, _ = embed_texts([documents[index].body for index in candidates], settings.embed_model, settings.local_device)
+        candidate_vector = {index: vector for index, vector in zip(candidates, vectors)}
         active_existing = [(doc_id, text) for doc_id, text in existing_texts.items()]
         similarity_texts = [text for _, text in active_existing]
         if similarity_texts:
@@ -150,14 +179,16 @@ def verify_batch(documents: list[Document], rows: dict[str, Any], settings: Sett
         else:
             existing_vector = {}
 
-        accepted_vectors: dict[str, list[float]] = dict(existing_vector)
-        for item in outcomes:
-            if item["doc_id"] not in candidate_vector or not item["checks"]["uniqueness"]:
+        accepted_vectors: dict[str, tuple[str, list[float]]] = {
+            doc_id: (doc_id, vector) for doc_id, vector in existing_vector.items()
+        }
+        for index, item in enumerate(outcomes):
+            if index not in candidate_vector or not item["checks"]["uniqueness"]:
                 continue
-            vector = candidate_vector[item["doc_id"]]
+            vector = candidate_vector[index]
             similarities = [
                 (other_id, cosine(vector, other_vector))
-                for other_id, other_vector in accepted_vectors.items()
+                for other_key, (other_id, other_vector) in accepted_vectors.items()
                 if other_id != item["doc_id"]
             ]
             if similarities:
@@ -167,8 +198,12 @@ def verify_batch(documents: list[Document], rows: dict[str, Any], settings: Sett
                 if score >= settings.near_duplicate_threshold:
                     item["checks"]["uniqueness"] = False
                     item["reasons"]["uniqueness"] = f"near duplicate of {other_id}: cosine={score:.4f} >= {settings.near_duplicate_threshold:.2f}"
+                else:
+                    item["reasons"]["uniqueness"] = f"no exact or near duplicate detected; closest cosine={score:.4f} < {settings.near_duplicate_threshold:.2f}"
+            else:
+                item["reasons"]["uniqueness"] = "no exact or near duplicate detected"
             if item["checks"]["uniqueness"]:
-                accepted_vectors[item["doc_id"]] = vector
+                accepted_vectors[f"{item['doc_id']}:{index}"] = (item["doc_id"], vector)
             item["passed"] = all(item["checks"].values())
 
     return outcomes

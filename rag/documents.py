@@ -91,7 +91,7 @@ def discover_documents(root: Path) -> list[Path]:
             continue
         if any(part.lower() in excluded for part in path.relative_to(root).parts[:-1]):
             continue
-        if path.name.startswith(".") or path.name.lower().startswith("readme"):
+        if path.name.startswith(".") or path.name.lower().startswith(("readme", "planted.md")):
             continue
         found.append(path)
     return sorted(found, key=lambda item: item.as_posix().casefold())

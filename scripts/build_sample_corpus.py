@@ -177,12 +177,42 @@ def main() -> None:
             "Draft labels are not final labels. A question that has not been reviewed is reported as pending and excluded from any claim that the assignment's human-review requirement is complete. Reviewers may correct the expected source or mark a question ambiguous. The evaluation result retains the draft status so a reader can distinguish a pipeline run from an approved dataset.",
             "The final review response is recorded in the repository with the date and scope of approval. After approval, the golden JSONL and judge comparison file receive final review labels, and the suite runs again. A change to question wording or expected source reopens review for that item.",
         ]),
+        "document-repair": ("Document Repair Procedure", "1.0", [
+            "A quarantined source is repaired from a trusted original, not reconstructed from a generated answer. The curator compares its title, source, version, page count, and extracted pages with that original. A corrected source receives a new hash and an updated verification record. The original failed copy stays in quarantine for audit until the corrected version passes intake.",
+            "The operator reruns verification on the repaired document before it reaches chunking. Quality checks readable extraction, completeness checks required metadata and truncation, recency checks active revisions, and uniqueness checks exact and near copies. A single failed check is enough to keep the source out of the active collection.",
+            "Once the document passes, the ingestion writer replaces only that document's chunks and records the inserted and removed chunk counts. The query owner then runs a targeted question and checks the retrieved page and document version. If the repair changes an answer, the evaluation result records the change and the trace shows the supporting passage.",
+        ]),
+        "source-provenance": ("Source Provenance Register", "1.0", [
+            "Every source entry records a stable document id, source location, title, version or publication date, page count, and content hash. A provenance entry describes whether the file was supplied as a fixture, exported from an approved archive, or copied from an original PDF. The sample Aster Research Lab records in this repository are fictional test content and are not official institutional policies.",
+            "The manifest stores the original filename and the intake batch identifier. It records the extraction parser and the embedding model version used for the index run. A document with uncertain authorship or missing source context fails completeness rather than being promoted as an authoritative policy.",
+            "When a source is replaced, the manifest links the new version to the previous version and the verification report for that run. Archived versions keep their original hashes. Restoring an older version adds a rollback event without deleting the newer provenance record.",
+        ]),
     }
     for doc_id, (title, version, pages) in extra.items():
         write_once(batch_b / f"{doc_id}-v{version}.md", render(meta(doc_id, title, version, "2026-11-12"), pages))
 
+    planted_manifest = """# Batch B planted problems
+
+This manifest describes the fixtures in Batch B. It is not an ingestion document; the discovery stage excludes this file by name.
+
+| Requirement | Fixture | Expected verification outcome |
+| --- | --- | --- |
+| Exact duplicate 1 | `duplicate-intake.md` | Quarantine: SHA-256 duplicate of the active Document Intake Standard. |
+| Exact duplicate 2 | `duplicate-charter.md` | Quarantine: SHA-256 duplicate of the active RAG Service Charter. |
+| Near duplicate | `near-duplicate-intake.md` | Quarantine when local embedding cosine similarity reaches the configured 0.94 threshold. |
+| Corrupt extraction | `corrupt-extraction.txt` | Quality and uniqueness fail because UTF-8 extraction fails. |
+| Truncated source | `truncated-fragment.md` | Completeness fails because the manifest marks the text truncated. |
+| Missing metadata | `missing-metadata.md` | Completeness fails for source, date or version, and page count. |
+| Newer version | `versioning-standard-v1.3.md` | Pass and supersede/archive active version 1.2 for the same document id. |
+| Prompt injection | `injection-test-record-v1.0.md` | Pass ingestion; the query-time guardrail blocks the planted instruction and records the action. |
+
+Other valid Batch B sources exercise evaluation coverage, latency, document repair, and source provenance. All content is fictional operational test material.
+"""
+    write_once(batch_b / "PLANTED.md", planted_manifest)
+
     print(f"Batch A documents: {len(list(batch_a.glob('*.md')))}")
-    print(f"Batch B documents: {len(list(batch_b.iterdir()))}")
+    batch_b_documents = [path for path in batch_b.iterdir() if path.is_file() and path.name.upper() != "PLANTED.MD"]
+    print(f"Batch B documents: {len(batch_b_documents)}")
     print("Sample documents are fictional operational scenarios, not institutional policy.")
 
 

@@ -53,15 +53,20 @@ def count_by_doc(collection, doc_id: str) -> int:
     return len(rows.get("ids", []))
 
 
-def collection_generation(collection) -> str:
+def collection_generation(collection, vector_dir: Path | None = None) -> str:
     metadata = collection.metadata or {}
+    if vector_dir is not None:
+        marker = vector_dir / ".generation" / f"{collection.name}.txt"
+        if marker.is_file():
+            return marker.read_text(encoding="utf-8").strip() or "0"
     return str(metadata.get("index_generation", "0"))
 
 
-def mark_generation(collection) -> str:
-    current = collection.metadata or {}
+def mark_generation(collection, vector_dir: Path) -> str:
     generation = f"{time.time_ns()}"
-    collection.modify(metadata={**current, "index_generation": generation})
+    marker_dir = vector_dir / ".generation"
+    marker_dir.mkdir(parents=True, exist_ok=True)
+    (marker_dir / f"{collection.name}.txt").write_text(generation, encoding="utf-8")
     return generation
 
 

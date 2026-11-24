@@ -11,7 +11,7 @@ from rag.chunking import make_chunks
 from rag.config import get_settings
 from rag.documents import Document, discover_documents, load_document
 from rag.guardrail import contains_injection
-from rag.store import open_collection, open_read_collection, upsert_chunks
+from rag.store import collection_generation, mark_generation, open_collection, open_read_collection, upsert_chunks
 from rag.verify import verify_batch
 
 
@@ -26,6 +26,13 @@ class PipelineContractTests(unittest.TestCase):
         self.assertEqual(len(document.pages), 3)
         for field in ("source", "title", "version"):
             self.assertTrue(document.metadata[field])
+
+    def test_batch_b_has_twelve_plus_documents_and_manifest_is_not_ingested(self) -> None:
+        root = Path(__file__).resolve().parents[1] / "data" / "batch_b"
+        paths = discover_documents(root)
+        self.assertGreaterEqual(len(paths), 12)
+        self.assertNotIn("PLANTED.md", {path.name for path in paths})
+        self.assertTrue((root / "PLANTED.md").is_file())
 
     def test_chunk_size_overlap_and_page_are_preserved(self) -> None:
         source = Document(
@@ -81,6 +88,46 @@ class PipelineContractTests(unittest.TestCase):
         self.assertFalse(outcomes[1]["checks"]["uniqueness"])
         self.assertIn("near duplicate", outcomes[1]["reasons"]["uniqueness"])
 
+    def test_newer_version_in_same_batch_rejects_older_candidate(self) -> None:
+        documents = []
+        for version, suffix in (("1.2", "old"), ("1.3", "new")):
+            text = f"This is a sufficiently long versioned document that describes active indexing rules. {suffix}. " * 4
+            documents.append(Document(
+                Path(f"policy-v{version}.md"),
+                {"doc_id": "policy", "source": "archive", "title": "Policy", "version": version, "page_count": 1},
+                [(1, text)], text, f"hash-{version}",
+            ))
+        with patch("rag.verify.embed_texts", return_value=([[1.0, 0.0], [0.0, 1.0]], 1.0)):
+            outcomes = verify_batch(documents, {"ids": [], "documents": [], "metadatas": []}, get_settings())
+        self.assertFalse(outcomes[0]["checks"]["recency"])
+        self.assertIn("older than 1.3 in this batch", outcomes[0]["reasons"]["recency"])
+        self.assertTrue(outcomes[1]["checks"]["recency"])
+
+    def test_utf8_extraction_failure_has_four_check_results(self) -> None:
+        broken = Document(Path("corrupt.txt"), {}, [], "", "", "UnicodeDecodeError: invalid byte")
+        outcome = verify_batch([broken], {"ids": [], "documents": [], "metadatas": []}, get_settings())[0]
+        self.assertEqual(set(outcome["checks"]), {"quality", "completeness", "recency", "uniqueness"})
+        self.assertFalse(outcome["checks"]["quality"])
+        self.assertFalse(outcome["checks"]["completeness"])
+        self.assertFalse(outcome["checks"]["uniqueness"])
+        self.assertTrue(all(name in outcome["reasons"] for name in outcome["checks"]))
+
+    def test_exact_duplicate_of_active_document_fails_uniqueness(self) -> None:
+        text = "A stable source body with enough words to pass quality validation for a document record." * 3
+        duplicate = Document(
+            Path("duplicate.md"),
+            {"doc_id": "copy", "source": "archive", "title": "Copy", "version": "1.0", "page_count": 1},
+            [(1, text)], text, "same-hash",
+        )
+        rows = {
+            "ids": ["old-chunk"],
+            "documents": [text],
+            "metadatas": [{"doc_id": "original", "doc_version": "1.0", "doc_sha256": "same-hash", "superseded": False}],
+        }
+        outcome = verify_batch([duplicate], rows, get_settings())[0]
+        self.assertFalse(outcome["checks"]["uniqueness"])
+        self.assertIn("exact duplicate", outcome["reasons"]["uniqueness"])
+
     def test_chroma_persistent_collection_is_queryable_read_only(self) -> None:
         temp_root = Path(__file__).resolve().parents[1] / "tmp"
         temp_root.mkdir(exist_ok=True)
@@ -101,6 +148,17 @@ class PipelineContractTests(unittest.TestCase):
         self.assertEqual(result["ids"][0], ["chunk-one"])
         del reader, reader_client, collection, client
         gc.collect()
+
+    def test_collection_generation_marker_does_not_modify_chroma_config(self) -> None:
+        temp_root = Path(__file__).resolve().parents[1] / "tmp"
+        temp_root.mkdir(exist_ok=True)
+        vector_dir = Path(tempfile.mkdtemp(dir=temp_root))
+        settings = get_settings(vector_dir=vector_dir, collection="generationtest")
+        _, collection = open_collection(settings)
+        original_config = collection.configuration["hnsw"]["space"]
+        generation = mark_generation(collection, vector_dir)
+        self.assertEqual(collection_generation(collection, vector_dir), generation)
+        self.assertEqual(collection.configuration["hnsw"]["space"], original_config)
 
     def test_gate_pass_and_expected_recall_failure(self) -> None:
         baseline = {"metrics": {
