@@ -13,10 +13,10 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 Copy-Item .env.example .env
 python scripts/build_sample_corpus.py
-python scripts/cache_models.py
+python scripts/download_models.py
 ```
 
-`cache_models.py` downloads `sentence-transformers/all-MiniLM-L6-v2` and the configured small Qwen instruct model into the ignored `data/model_cache/` directory. After that, ingestion, tests, and queries run in offline mode. With no `LLM_API_KEY`, generation uses the local Transformers model. Temperature is fixed at zero.
+`scripts/download_models.py` checks the ignored `data/model_cache/` first and skips any model already present. On a fresh clone without cached models, run `python scripts/download_models.py --allow-download` once while connected, then keep `MODEL_CACHE_OFFLINE=1` for operation. With no `LLM_API_KEY`, generation uses the local Transformers model. Temperature is fixed at zero.
 
 Set defaults for the shell, or edit `.env`:
 

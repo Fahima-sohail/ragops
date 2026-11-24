@@ -21,7 +21,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN python -m pip install --no-cache-dir -r requirements.txt
 COPY scripts ./scripts
-RUN python scripts/cache_models.py
+RUN python scripts/download_models.py --allow-download
 COPY rag ./rag
 COPY eval ./eval
 COPY gate.yaml .

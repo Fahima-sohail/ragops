@@ -13,10 +13,10 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 Copy-Item .env.example .env
 python scripts/build_sample_corpus.py
-python scripts/cache_models.py
+python scripts/download_models.py
 ```
 
-The cache command downloads `sentence-transformers/all-MiniLM-L6-v2` and `Qwen/Qwen2.5-0.5B-Instruct` into ignored `data/model_cache/`. Ingestion, evaluation, and API use the cached local models with outbound model downloads disabled. Model artifacts must be available to the API and evaluation Jobs. No secret belongs in Git.
+`scripts/download_models.py` fills `data/model_cache/` and first checks for existing snapshots; cached models are never downloaded again. If a new clone has no cache and network access is available, run `python scripts/download_models.py --allow-download` once. Afterward keep `MODEL_CACHE_OFFLINE=1`. The cache is ignored by Git and is not part of the Docker build context. The Dockerfile runs `python scripts/download_models.py --allow-download` at image build time; an alternative deployment can mount a prefilled model cache at `/app/data/model_cache`. Ensure the API and evaluation Job see the same model files. No secret belongs in Git.
 
 ## Environment contract
 
