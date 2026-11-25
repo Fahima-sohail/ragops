@@ -1,0 +1,240 @@
+{
+  "timestamp": "2026-11-25T10:31:01.745779+00:00",
+  "seed": 4032,
+  "collection": "a-demo-20261125-012139",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "llm_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "generation_mode": "local cached model; remote API disabled",
+  "answerable_candidate_runs": [
+    {
+      "source_pages": [
+        {
+          "doc_id": "prompt-safety",
+          "page": 2,
+          "versions": [
+            "1.5"
+          ]
+        },
+        {
+          "doc_id": "injection-test-record",
+          "page": 3,
+          "versions": [
+            "1.0"
+          ]
+        }
+      ],
+      "prompt": "Create exactly two distinct answerable synthetic questions from the evidence below. For each, return a compact JSON object with keys question, reference_answer, and evidence_quote. The evidence_quote must be copied exactly from one source page. Keep each answer a short phrase or one sentence; do not make up details. Return only a JSON array.\n\nSOURCE prompt-safety PAGE 2\nThe guardrail looks for instruction override language, requests to reveal hidden prompts, credential exfiltration, and tool-use commands embedded in retrieved text. A flagged chunk is withheld from the generation context and the action is written into the query trace. The guardrail does not remove the record from the audit trail: operators can still see which chunk was retrieved and why it was excluded from the prompt.\n\nSOURCE injection-test-record PAGE 3\nThe incident reviewer checks that the generator did not repeat hidden prompt text or secrets. The reviewer opens the recorded trace, confirms the flagged chunk was excluded from the final prompt, and verifies that a guardrail action was recorded. The test is repeated after a prompt or model change.",
+      "raw_model_output": "```json\n{\n  \"question\": \"What are the potential consequences of flagging a chunk in the guardrail?\",\n  \"reference_answer\": \"Operators can still see which chunk was retrieved and why it was excluded from the prompt.\",\n  \"evidence_quote\": \"A flagged chunk is withheld from the generation context and the action is written into the query trace.\"\n}\n```"
+    },
+    {
+      "source_pages": [
+        {
+          "doc_id": "service-charter",
+          "page": 2,
+          "versions": [
+            "1.0"
+          ]
+        },
+        {
+          "doc_id": "intake-standard",
+          "page": 3,
+          "versions": [
+            "1.4"
+          ]
+        }
+      ],
+      "prompt": "Create exactly two distinct answerable synthetic questions from the evidence below. For each, return a compact JSON object with keys question, reference_answer, and evidence_quote. The evidence_quote must be copied exactly from one source page. Keep each answer a short phrase or one sentence; do not make up details. Return only a JSON array.\n\nSOURCE service-charter PAGE 2\nThe service has four runtime stages: embed the query, retrieve active passages, assemble a bounded prompt, and generate a cited answer. Ingestion is a separate writer process. The API process may read the persistent collection but must never add, update, or delete vectors. Each response carries a trace identifier so an operator can locate the exact retrieved passages and prompt. A service restart must not remove the corpus or trace archive.\n\nSOURCE intake-standard PAGE 3\nA repeated intake of unchanged sources must create no new chunk embeddings. A changed source replaces only the chunks belonging to that document. A full snapshot run removes chunks for a document that has been deleted from that snapshot. Incremental batch imports leave unrelated documents in place. The result file records discovered files, verified files, quarantined files, inserted chunks, replaced chunks, skipped chunks, and deleted chunks.",
+      "raw_model_output": "```json\n{\n  \"question\": \"What are the four stages of the service's workflow?\",\n  \"reference_answer\": \"embed the query, retrieve active passages, assemble a bounded prompt, and generate a cited answer.\",\n  \"evidence_quote\": \"The service has four runtime stages: embed the query, retrieve active passages, assemble a bounded prompt, and generate a cited answer.\"\n}\n```"
+    },
+    {
+      "source_pages": [
+        {
+          "doc_id": "retrieval-quality",
+          "page": 2,
+          "versions": [
+            "1.3"
+          ]
+        },
+        {
+          "doc_id": "retrieval-quality",
+          "page": 3,
+          "versions": [
+            "1.3"
+          ]
+        }
+      ],
+      "prompt": "Create exactly two distinct answerable synthetic questions from the evidence below. For each, return a compact JSON object with keys question, reference_answer, and evidence_quote. The evidence_quote must be copied exactly from one source page. Keep each answer a short phrase or one sentence; do not make up details. Return only a JSON array.\n\nSOURCE retrieval-quality PAGE 2\nRecall at k measures whether at least one relevant document and page appears among the first k results. Mean reciprocal rank rewards a relevant item appearing near the top. Normalized discounted cumulative gain gives more credit to relevant results at earlier ranks. The evaluation reports recall at three and five, MRR, and nDCG at five. Each metric includes its query count and relevance definition so an operator can reproduce the calculation.\n\nSOURCE retrieval-quality PAGE 3\nThe noise check adds three unrelated test passages to a copy of the candidate ranking and measures the same retrieval metrics again. It does not write those passages to the production Chroma collection. A second check introduces deterministic query typos. The report records the absolute change from the clean run and keeps the random seed with the result file. A failed retrieval metric blocks candidate release even if generated answers sound convincing.",
+      "raw_model_output": "```json\n{\n  \"answer\": \"What are the three retrieval metrics that evaluate the relevance of search results?\",\n  \"reference_answer\": \"Mean reciprocal rank (MRR), Normalized discounted cumulative gain (nDCG), Recall\",\n  \"evidence_quote\": \"The evaluation reports recall at three and five, MRR, and nDCG at five.\"\n}\n```"
+    },
+    {
+      "source_pages": [
+        {
+          "doc_id": "verification-standard",
+          "page": 1,
+          "versions": [
+            "2.1"
+          ]
+        },
+        {
+          "doc_id": "verification-standard",
+          "page": 3,
+          "versions": [
+            "2.1"
+          ]
+        }
+      ],
+      "prompt": "Create exactly two distinct answerable synthetic questions from the evidence below. For each, return a compact JSON object with keys question, reference_answer, and evidence_quote. The evidence_quote must be copied exactly from one source page. Keep each answer a short phrase or one sentence; do not make up details. Return only a JSON array.\n\nSOURCE verification-standard PAGE 1\nQuality verification rejects empty text, garbled extraction, or an extraction failure. The checker requires a minimum amount of readable text and rejects a document when replacement characters or non-printing characters dominate. A text file ending halfway through a word or sentence is incomplete when the manifest also marks it truncated. The verifier records pass or fail separately for quality, completeness, recency, and uniqueness, together with a concise reason for each result.\n\nSOURCE verification-standard PAGE 3\nExact duplicates are detected with SHA-256 over normalized extracted body text. Near duplicates are detected with cosine similarity between local document embeddings. The test threshold is 0.94; a pair at or above that value is quarantined unless both records share a document identifier and are versions of the same source. The report includes the matching document id and the measured similarity so an operator can explain the decision.",
+      "raw_model_output": "```json\n{\n  \"question\": \"What is the difference between exact duplicates and near duplicates?\",\n  \"reference_answer\": \"Exact duplicates have a high degree of similarity in their content, while near duplicates have a moderate to low degree of similarity.\",\n  \"evidence_quote\": \"Near duplicates are detected with cosine similarity between local document embeddings.\"\n}\n```"
+    },
+    {
+      "source_pages": [
+        {
+          "doc_id": "release-gate",
+          "page": 1,
+          "versions": [
+            "1.1"
+          ]
+        },
+        {
+          "doc_id": "storage-backup",
+          "page": 1,
+          "versions": [
+            "1.1"
+          ]
+        }
+      ],
+      "prompt": "Create exactly two distinct answerable synthetic questions from the evidence below. For each, return a compact JSON object with keys question, reference_answer, and evidence_quote. The evidence_quote must be copied exactly from one source page. Keep each answer a short phrase or one sentence; do not make up details. Return only a JSON array.\n\nSOURCE release-gate PAGE 1\nA candidate changes one selected pipeline setting while all other settings remain fixed. The baseline and candidate use the same corpus, golden set, random seed, embedding model, and judge procedure. The report compares embedding behavior, retrieval metrics, end-to-end quality, and latency. The candidate JSON records the settings and result path so the gate can be replayed without relying on an untracked notebook.\n\nSOURCE storage-backup PAGE 1\nThe vector collection uses a persistent Chroma directory so it can be mounted from a persistent volume. The data lake, quarantine directory, archived revisions, traces, and evaluation results also need durable storage. The API mounts the vector directory read-only. The ingestion job mounts it read-write and owns all collection updates. Local development uses the same path contract through VECTOR_DIR.",
+      "raw_model_output": "```json\n{\n  \"question\": \"What is the primary purpose of using a persistent Chroma directory in the vector collection?\",\n  \"reference_answer\": \"To store and manage large volumes of data efficiently.\",\n  \"evidence_quote\": \"The vector collection uses a persistent Chroma directory to store and manage large volumes of data efficiently.\"\n}\n```"
+    },
+    {
+      "source_pages": [
+        {
+          "doc_id": "document-repair",
+          "page": 3,
+          "versions": [
+            "1.0"
+          ]
+        },
+        {
+          "doc_id": "feedback-loop",
+          "page": 3,
+          "versions": [
+            "1.0"
+          ]
+        }
+      ],
+      "prompt": "Create exactly two distinct answerable synthetic questions from the evidence below. For each, return a compact JSON object with keys question, reference_answer, and evidence_quote. The evidence_quote must be copied exactly from one source page. Keep each answer a short phrase or one sentence; do not make up details. Return only a JSON array.\n\nSOURCE document-repair PAGE 3\nOnce the document passes, the ingestion writer replaces only that document's chunks and records the inserted and removed chunk counts. The query owner then runs a targeted question and checks the retrieved page and document version. If the repair changes an answer, the evaluation result records the change and the trace shows the supporting passage.\n\nSOURCE feedback-loop PAGE 3\nAfter approved questions are added, the full offline suite runs again and writes a timestamped result. The report compares the old and expanded coverage, retrieval metrics, abstention behavior, and gate decision. Synthetic questions are reviewed for ambiguity and for whether their labels match the source page.",
+      "raw_model_output": "```json\n{\n  \"question\": \"What is the purpose of the ingestion process?\",\n  \"reference_answer\": \"The ingestion process involves replacing only the document's chunks and recording the insertion and removal of these chunks.\",\n  \"evidence_quote\": \"Once the document passes, the ingestion writer replaces only that document's chunks and records the inserted and removed chunk counts.\"\n}\n```"
+    }
+  ],
+  "hard_candidate_run": {
+    "source_pages": [
+      {
+        "doc_id": "versioning-standard",
+        "page": 3,
+        "versions": [
+          "1.2"
+        ]
+      },
+      {
+        "doc_id": "incident-recovery",
+        "page": 2,
+        "versions": [
+          "1.3"
+        ]
+      }
+    ],
+    "prompt": "Create exactly one hard, answerable question that requires combining both source passages. Return one compact JSON object with question, reference_answer, and evidence_quote_1/evidence_quote_2. Each evidence quote must be an exact substring of its corresponding passage. Return JSON only.\n\nSOURCE versioning-standard PAGE 3\nA rollback names both the stable document id and the archived version to restore. The ingestion writer then marks the currently active chunks superseded, reactivates the requested archived version, and records the rollback event in its report. A rollback is a new auditable event; it does not erase the newer file or its trace history. The active version after rollback must be visible in a retrieval result and a query trace.\n\nSOURCE incident-recovery PAGE 2\nIf a new document revision causes a regression, the operator restores the last known good version by document id and version. The ingestion job is the only writer and records the rollback. The operator then submits a test question that targets the affected clause and checks that the returned trace shows the expected active version. A successful health check alone does not prove that retrieval has recovered.",
+    "raw_model_output": "```json\n{\n  \"answer\": \"What happens when a new document revision causes a regression?\",\n  \"reference_answer\": [\n    \"The operator restores the last known good version by document id and version.\",\n    \"The ingestion job is the only writer and records the rollback.\"\n  ],\n  \"evidence_quote_1\": \"If a new document revision causes a regression, the operator restores the last known good version by document id and version.\",\n  \"evidence_quote_2\": \"The ingestion job is the only writer and records the rollback.\"\n}\n```"
+  },
+  "unanswerable_candidate_run": {
+    "source_pages": [
+      {
+        "doc_id": "citations-abstention",
+        "page": 2,
+        "versions": [
+          "1.0"
+        ]
+      }
+    ],
+    "prompt": "Using only the policy below, propose one synthetic question asking for a specific personal or live fact that the indexed archive does not contain. Return JSON only with one key question. Do not answer the question.\n\nSOURCE citations-abstention PAGE 2\nThe service abstains when retrieval provides no evidence for the requested fact, when the relevant passage was withheld by a guardrail, or when the answer depends on personal or live information absent from the archive. The standard abstention says that the archive does not contain enough information to answer reliably. An abstention has no factual citation and is counted separately from an empty response or a server error.",
+    "raw_model_output": "What is the current status of the service's policy regarding the inclusion of personal or live facts in its responses?"
+  },
+  "curation": {
+    "accepted_llm_questions": [
+      {
+        "id": "llm-01",
+        "source_page": "service-charter p. 2",
+        "reviewed": true,
+        "reference_method": "exact page quotation"
+      },
+      {
+        "id": "llm-02",
+        "source_page": "verification-standard p. 3",
+        "reviewed": true,
+        "reference_method": "question narrowed to near-duplicate detection; exact page quotation"
+      },
+      {
+        "id": "llm-03",
+        "source_page": "prompt-safety p. 2",
+        "reviewed": true,
+        "reference_method": "question aligned to flagged-chunk handling; exact page quotation"
+      },
+      {
+        "id": "llm-04",
+        "source_page": "retrieval-quality p. 2",
+        "reviewed": true,
+        "reference_method": "question corrected to match all reported measures; exact page quotation"
+      },
+      {
+        "id": "llm-05",
+        "source_page": "document-repair p. 3",
+        "reviewed": true,
+        "reference_method": "question narrowed to passed repair; exact page quotation"
+      },
+      {
+        "id": "llm-06",
+        "source_page": "storage-backup p. 1",
+        "reviewed": true,
+        "reference_method": "model answer replaced because it was unsupported; exact source quotation"
+      },
+      {
+        "id": "llm-07",
+        "source_pages": [
+          "incident-recovery p. 2",
+          "versioning-standard p. 3"
+        ],
+        "reviewed": false,
+        "reference_method": "hard cross-page question and answers normalized against both exact pages"
+      }
+    ],
+    "manual_reference_checks_for_reviewed_ids": [
+      "q01",
+      "q02",
+      "q03",
+      "q04",
+      "llm-01",
+      "llm-02",
+      "llm-03",
+      "llm-04",
+      "llm-05",
+      "llm-06"
+    ],
+    "rejected_model_candidates": [
+      {
+        "kind": "storage-backup reference answer",
+        "reason": "claimed the collection manages large volumes efficiently, which the indexed page does not state; replaced with the exact persistent-volume sentence"
+      },
+      {
+        "kind": "unanswerable question",
+        "reason": "asked about the documented abstention policy, so it was answerable; the golden set uses a concrete absent personal fact instead"
+      }
+    ],
+    "validation_result": "eval/results/golden_validation_20261125T110458Z.json",
+    "manual_synthetic_question": {
+      "id": "synth-u01",
+      "question": "What is the current personal mobile number of the on-call engineer?",
+      "note": "The local LLM candidate asked about the policy, which is answered by its cited source, so it was rejected. This absent personal fact was added as a synthetic abstention question and is not represented as an accepted LLM-generated item."
+    }
+  }
+}

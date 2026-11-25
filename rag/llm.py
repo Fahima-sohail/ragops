@@ -45,7 +45,7 @@ def _local_model(model_name: str, device: str):
     return tokenizer, model, torch
 
 
-def generate(prompt: str, settings: Settings) -> str:
+def generate(prompt: str, settings: Settings, max_new_tokens: int = 112) -> str:
     if settings.llm_api_key:
         body = {
             "model": settings.llm_model,
@@ -82,7 +82,7 @@ def generate(prompt: str, settings: Settings) -> str:
         output = model.generate(
             input_ids=input_ids,
             attention_mask=attention_mask,
-            max_new_tokens=112,
+            max_new_tokens=max_new_tokens,
             do_sample=False,
             pad_token_id=tokenizer.eos_token_id,
         )

@@ -30,6 +30,24 @@ python -c "from rag.config import get_settings; from rag.retrieve import retriev
 
 For the same full sequence with its actual terminal output saved to `eval/results/A_demo_log.txt`, run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_a_demo.ps1` from the repository root.
 
+## Part B - Module and component evaluation
+
+Run from the repository root with `.venv` active. Use the collection created by the Part A demo and keep local models offline. The first command records raw LLM question-generation evidence; the remaining commands verify the checked-in set and run both evaluation levels.
+
+```powershell
+$env:COLLECTION = "a-demo-20261125-012139"
+$env:SEED = "4032"
+$env:MODEL_CACHE_OFFLINE = "1"
+$env:HF_HUB_OFFLINE = "1"
+$env:LLM_API_KEY = ""
+python -m eval.generate_questions --max-new-tokens 220
+python -m eval.validate_golden
+python -m eval.module_embedding
+python -m eval.component_retrieval
+```
+
+The noise run copies the active corpus to a temporary in-memory Chroma collection, adds three irrelevant documents there, and confirms that the main collection count is unchanged. The committed results are `eval/results/golden_validation_20261125T110458Z.json`, `eval/results/embedding_20261125T104045Z.json`, and `eval/results/retrieval_component_20261125T110540Z.json`.
+
 ## Part D1/D4
 
 Use the Part A demo collection printed in `eval/results/A_demo_log.txt`. In the API server PowerShell window, ingest the Batch B injection fixture (it is unchanged if Part A has already indexed it), keep model access offline, and start the API:

@@ -110,13 +110,19 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_a_demo.ps1
 
 ## Part B - Offline evaluation
 
-`eval/golden.jsonl` has 25 proposed questions: 20 answerable, five unanswerable, and five hard. Eight human-authorship proposals and eight proposed synthetic reviews are marked pending in `eval/review/golden_questions.md`. Do not report those labels as approved until the user reviews the file and replies `approved`.
+`eval/golden.jsonl` uses the Part B schema and currently contains 33 synthetic questions: 21 answerable, six unanswerable, and six hard. Exactly ten synthetic questions have `reviewed=true`; their source pages are checked by `eval.validate_golden` against active indexed text. Ten human-authored placeholders are kept separately in `eval/human_questions_todo.md`. The loader skips untouched placeholders and includes completed entries after their fields and source pages are filled.
 
 ```powershell
+python -m eval.generate_questions --max-new-tokens 220
+python -m eval.validate_golden
+python -m eval.module_embedding
+python -m eval.component_retrieval
 python -m eval.run_suite
 ```
 
-The suite computes embedding similarity, determinism, recall@3/5, MRR, nDCG@5, a three-document noise check, answer grounding, abstention correctness, citation validity, latency, and two seeded runs. It writes timestamped results under `eval/results/`. Results remain provisional while human review is pending. The command exits with status 1 if the configured release gate fails.
+Question generation uses the cached local LLM in offline mode and writes the raw prompt/output to `eval/results/`. The validation command checks every answer reference against the selected active collection. The embedding module reports the mean cosine for 15+ paraphrase and unrelated pairs, their gap, time per active chunk, and repeat-embedding determinism. The retrieval component reports doc/page-level recall@3/5, MRR, and nDCG@5 for clean, typo-query, and noise-document conditions; it copies the corpus into a temporary in-memory Chroma collection, adds three noise documents there, and verifies the main collection count is unchanged. Each script records the configured `SEED` and writes a result under `eval/results/`.
+
+The end-to-end suite computes answer grounding, abstention correctness, citation validity, latency, and two seeded runs. It writes timestamped results under `eval/results/`. Results remain provisional until at least eight human questions are supplied and reviewed. The command exits with status 1 if the configured release gate fails.
 
 ## Part C - Change experiment and release gate
 

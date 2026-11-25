@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-11-25T10:40:45.492461+00:00",
+  "seed": 4032,
+  "collection": "a-demo-20261125-012139",
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "embedding_version": "sentence-transformers/all-MiniLM-L6-v2; sentence-transformers=3.4.1",
+  "paraphrase_pairs": 15,
+  "unrelated_pairs": 15,
+  "mean_paraphrase_cosine": 0.48697,
+  "mean_unrelated_cosine": 0.01636,
+  "similarity_gap": 0.47061,
+  "embedding_time_per_chunk_ms": 50.412382,
+  "timed_active_chunks": 51,
+  "pair_embedding_elapsed_ms": 1301.951,
+  "determinism_largest_absolute_difference": 0.0,
+  "result_file": "D:\\SCD\\ragops\\eval\\results\\embedding_20261125T104045Z.json"
+}

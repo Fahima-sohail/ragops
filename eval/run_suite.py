@@ -15,6 +15,7 @@ from typing import Any
 import numpy as np
 
 from eval.gate import evaluate as apply_gate
+from eval.golden import ground_truth_refs, load_golden
 from rag.config import ROOT, get_settings
 from rag.embeddings import cosine, embed_texts
 from rag.generate import ABSTENTION, _meaningful, run_query, _CACHE
@@ -29,13 +30,16 @@ NOISE_TEXTS = [
 ]
 
 
-def _read_jsonl(path: Path) -> list[dict[str, Any]]:
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-
-
-def _relevance_metrics(ranked: list[tuple[str, int, float]], expected: list[dict[str, Any]], k: int) -> tuple[float, float, float]:
-    expected_set = {(str(item["doc_id"]), int(item["page"])) for item in expected}
-    top = ranked[:k]
+def _relevance_metrics(ranked: list[tuple[str, int, float]], expected: list[tuple[str, int]], k: int) -> tuple[float, float, float]:
+    expected_set = set(expected)
+    unique: list[tuple[str, int, float]] = []
+    seen: set[tuple[str, int]] = set()
+    for row in ranked:
+        pair = (row[0], row[1])
+        if pair not in seen:
+            seen.add(pair)
+            unique.append(row)
+    top = unique[:k]
     found = {(doc_id, page) for doc_id, page, _ in top if (doc_id, page) in expected_set}
     recall = len(found) / len(expected_set) if expected_set else 0.0
     ranks = [index for index, (doc_id, page, _) in enumerate(top, 1) if (doc_id, page) in expected_set]
@@ -48,7 +52,7 @@ def _relevance_metrics(ranked: list[tuple[str, int, float]], expected: list[dict
 
 
 def retrieval_metrics(questions: list[dict[str, Any]], settings, top_k: int) -> dict[str, Any]:
-    answerable = [item for item in questions if item["answerability"] == "answerable"]
+    answerable = [item for item in questions if item["expected_behavior"] == "answer"]
     noise_vectors, _ = embed_texts(NOISE_TEXTS, settings.embed_model, settings.local_device)
     clean_scores = {"recall_at_3": [], "recall_at_5": [], "mrr": [], "ndcg_at_5": []}
     noisy_scores = {key: [] for key in clean_scores}
@@ -58,7 +62,7 @@ def retrieval_metrics(questions: list[dict[str, Any]], settings, top_k: int) -> 
     for item in answerable:
         passages, _, _, query_vector = retrieve(item["question"], settings, actual_k)
         ranked = [(passage.doc_id, passage.page, passage.score) for passage in passages]
-        expected = item.get("relevant", [])
+        expected = ground_truth_refs(item)
         for key, k in (("recall_at_3", 3), ("recall_at_5", 5), ("mrr", 5), ("ndcg_at_5", 5)):
             recall, reciprocal, ndcg = _relevance_metrics(ranked, expected, k)
             clean_scores[key].append({"recall_at_3": recall, "recall_at_5": recall, "mrr": reciprocal, "ndcg_at_5": ndcg}[key])
@@ -129,21 +133,27 @@ def _answer_metrics(questions: list[dict[str, Any]], settings, top_k: int) -> tu
         result = run_query(item["question"], settings=settings, top_k=top_k)
         latency.append(float(result["latency_ms"]["total"]))
         citations = result.get("citations", [])
-        retrieved_keys = {(str(row["doc_id"]), int(row["page"])) for row in result.get("retrieved", [])}
-        citation_ok = bool(citations) and all((str(cit["doc_id"]), int(cit["page"])) in retrieved_keys for cit in citations)
+        retrieved_chunk_ids = {str(row["chunk_id"]) for row in result.get("retrieved", [])}
+        citation_ok = bool(citations) and all(
+            str(cit.get("chunk_id", "")) in retrieved_chunk_ids
+            and bool(str(cit.get("doc_id", "")))
+            and int(cit.get("page", 0)) > 0
+            for cit in citations
+        )
         citation_total += bool(citations)
         citation_valid += citation_ok
-        answerable = item["answerability"] == "answerable"
+        answerable = item["expected_behavior"] == "answer"
         if answerable:
             answerable_count += 1
-            expected = {(str(ref["doc_id"]), int(ref["page"])) for ref in item.get("relevant", [])}
-            relevant_retrieved = bool(expected & retrieved_keys)
+            expected = set(ground_truth_refs(item))
+            cited_pages = {(str(cit["doc_id"]), int(cit["page"])) for cit in citations}
+            relevant_retrieved = bool(expected & cited_pages)
             answer_without_citation = str(result.get("response", "")).split(" [", 1)[0]
             evidence_text = str(result.get("prompt", ""))
             answer_terms = _meaningful(answer_without_citation)
             evidence_terms = _meaningful(evidence_text)
             lexical_support = bool(answer_terms) and len(answer_terms & evidence_terms) / len(answer_terms) >= 0.38
-            faithful = bool(result.get("answered_from_context")) and citation_ok and relevant_retrieved and lexical_support
+            faithful = result.get("response") != ABSTENTION and citation_ok and relevant_retrieved and lexical_support
             faithfulness_count += faithful
         else:
             correct = result.get("response") == ABSTENTION and not citations
@@ -152,17 +162,19 @@ def _answer_metrics(questions: list[dict[str, Any]], settings, top_k: int) -> tu
         rows.append({
             "id": item["id"],
             "question": item["question"],
-            "answerability": item["answerability"],
+            "type": item["type"],
+            "expected_behavior": item["expected_behavior"],
             "response": result["response"],
             "citations": citations,
             "faithfulness_heuristic": bool(faithful),
             "citation_valid": bool(citation_ok),
             "trace_id": result["trace_id"],
             "latency_ms": result["latency_ms"],
-            "review_status": item.get("review_status", "not_reviewed"),
+            "source": item["source"],
+            "reviewed": item["reviewed"],
         })
 
-    unanswerable = sum(item["answerability"] == "unanswerable" for item in questions)
+    unanswerable = sum(item["expected_behavior"] == "abstain" for item in questions)
     sorted_latency = sorted(latency)
     pct = lambda fraction: sorted_latency[min(len(sorted_latency) - 1, round((len(sorted_latency) - 1) * fraction))] if sorted_latency else 0.0
     return {
@@ -211,20 +223,17 @@ def run(candidate_top_k: int | None = None) -> tuple[dict[str, Any], bool]:
     settings = get_settings()
     random.seed(settings.seed)
     np.random.seed(settings.seed)
-    questions = _read_jsonl(ROOT / "eval" / "golden.jsonl")
-    if len(questions) < 25:
-        raise ValueError("golden set must contain at least 25 questions")
-    if sum(item["answerability"] == "answerable" for item in questions) < 15:
-        raise ValueError("golden set needs at least 15 answerable questions")
-    if sum(item["answerability"] == "unanswerable" for item in questions) < 5:
-        raise ValueError("golden set needs at least 5 unanswerable questions")
-    if sum(item.get("difficulty") == "hard" for item in questions) < 5:
-        raise ValueError("golden set needs at least 5 hard questions")
-    review_complete = all(
-        item.get("review_status") == "approved"
-        for item in questions
-        if item.get("author_type") == "human" or item.get("id") in {f"q{i:02d}" for i in range(9, 17)}
-    )
+    questions, loader_counts = load_golden()
+    answerable_count = sum(item["expected_behavior"] == "answer" for item in questions)
+    unanswerable_count = sum(item["expected_behavior"] == "abstain" for item in questions)
+    hard_count = sum(item["type"] == "hard" for item in questions)
+    if len(questions) < 28 or answerable_count < 18 or unanswerable_count < 6 or hard_count < 6:
+        raise ValueError("golden set needs at least 28 questions, 18 answerable, 6 unanswerable, and 6 hard")
+    synthetic_reviewed = sum(item["source"] == "synthetic" and item["reviewed"] for item in questions)
+    if synthetic_reviewed != 10:
+        raise ValueError(f"golden set must have exactly 10 reviewed synthetic questions; got {synthetic_reviewed}")
+    human_rows = [item for item in questions if item["source"] == "human"]
+    review_complete = len(human_rows) >= 8 and all(item["reviewed"] for item in human_rows)
     baseline_k = settings.top_k
     candidate_k = candidate_top_k or baseline_k + 1
     baseline_first = suite_once(questions, settings, baseline_k)
@@ -246,10 +255,14 @@ def run(candidate_top_k: int | None = None) -> tuple[dict[str, Any], bool]:
         "llm_model": settings.llm_model,
         "dataset": {
             "questions": len(questions),
-            "answerable": sum(item["answerability"] == "answerable" for item in questions),
-            "unanswerable": sum(item["answerability"] == "unanswerable" for item in questions),
-            "hard": sum(item.get("difficulty") == "hard" for item in questions),
-            "pending_reviews": sum(item.get("review_status") == "pending_user_approval" for item in questions),
+            "answerable": answerable_count,
+            "unanswerable": unanswerable_count,
+            "hard": hard_count,
+            "human_questions": len(human_rows),
+            "completed_human_drafts": loader_counts["completed_human_drafts"],
+            "unfilled_human_placeholders": loader_counts["unfilled_human_placeholders"],
+            "reviewed_synthetic": synthetic_reviewed,
+            "pending_reviews": sum(not item["reviewed"] for item in questions),
             "human_review_complete": review_complete,
         },
         "provisional": not review_complete,
