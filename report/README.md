@@ -1,12 +1,12 @@
 # Report evidence map
 
-The assignment report must be assembled from the generated artifacts, not estimates:
+The Member 1 report draft is [`member1_sections.md`](member1_sections.md). Every measured value there cites a committed file under `eval/results/` or `traces/`.
 
-- Part A: `eval/results/verification_*.json`, the `counts` by run, quarantine files, archive versions, and Chroma counts.
-- Part B: `eval/results/suite_*.json` and approved `eval/golden.jsonl` review labels.
-- Part C: `eval/results/baseline.json`, `candidate.json`, the deliberately failing candidate record, and `gate.yaml`.
-- Part D: real lines in `traces/` and the API `/metrics` response.
-- Part E: Member 2's live-query and coverage outputs after implementation.
-- Part F: Member 2's real Kubernetes Job, rollout, resource, and recovery evidence.
+- Part A verification and ingestion runs: `eval/results/verification_*.json`, `eval/results/A_demo_log.txt`, and `data/batch_b/PLANTED.md`.
+- Part B module, component, and end-to-end metrics: timestamped `eval/results/suite_*.json` and Markdown summaries; judge agreement and stochasticity have their own timestamped result files.
+- Part C: `eval/results/C1_comparison.md`, `C2_gate_pass.txt`, `C2_gate_fail.txt`, and `C_release_decision.md`.
+- Part D: `eval/results/D1D4_api_run.txt`, `eval/results/D5_root_cause.md`, and real JSONL records under `traces/`.
+- Part E3: `eval/results/E3_drift.md`, its before/after suite files, and `traces/e3_batch_b_sample.jsonl`.
+- Part E1, E2, and E4, the trace inspection tool, and Part F Kubernetes evidence are owned by Member 2 and are not claimed as completed here.
 
-The golden-set and judge-review drafts are pending user approval. Results produced before approval are marked provisional. No names, roll numbers, screenshots, cluster measurements, or unrun results are inferred here.
+The user confirmed review of the ten human golden questions and ten judge labels. The golden-set review indicators and judge agreement output record that status.

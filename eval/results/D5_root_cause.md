@@ -4,12 +4,12 @@ Latest complete suite: `suite_20261126T162002Z` (`cand_topk1`). The single trace
 
 ## Relevant fields quoted from that trace record
 
-- `trace_id`: `76fd2f54-75b9-4c06-b14d-052096584939`
-- `user_query`: `What stages handle a query from embedding through answer generation?`
-- `retrieved[0]`: `{"chunk_id":"evaluation-protocol-1.2-0003-fdd27601c010175d","doc_id":"evaluation-protocol","doc_version":"1.2","score":0.426249}`
-- `filters`: `{"status":"active","top_k":1,"minimum_similarity":0.99}`
-- `response`: `I don't know based on the documents`
-- `citations`: `[]`
+- `"trace_id"`: `"76fd2f54-75b9-4c06-b14d-052096584939"`
+- `"user_query"`: `"What stages handle a query from embedding through answer generation?"`
+- `"retrieved[0]"`: `{"chunk_id":"evaluation-protocol-1.2-0003-fdd27601c010175d","doc_id":"evaluation-protocol","doc_version":"1.2","score":0.426249}`
+- `"filters"`: `{"status":"active","top_k":1,"minimum_similarity":0.99}`
+- `"response"`: `"I don't know based on the documents"`
+- `"citations"`: `[]`
 
 ## Root cause analysis (exactly five lines)
 

@@ -38,6 +38,24 @@ $env:SEED = '4032'
 
 ## Part A - Data management
 
+### Commands and expected outputs
+
+| Command | Expected output artifact |
+| --- | --- |
+| `python -m rag.ingest --data $env:DATA_DIR --collection $env:COLLECTION` | `eval/results/verification_<run-id>.json` and `data/vector_store/<collection>.manifest.json` |
+| Run the same ingestion command again on unchanged Batch A | A second verification JSON with `embedded_chunks: 0`; full console sequence: `eval/results/A_demo_log.txt` |
+| `$env:DATA_DIR = 'data/batch_b'` then `python -m rag.ingest --data $env:DATA_DIR --collection $env:COLLECTION` | A verification JSON with the four check outcomes, quarantine decisions, and archive versions |
+| `python -m rag.ingest --count-by-doc --collection $env:COLLECTION --doc-id source-provenance` | Per-document counts on stdout; the deletion proof (`source-provenance: 0`) is recorded in `eval/results/A_demo_log.txt` |
+| `python -m rag.ingest --restore verification-standard 2.1 --collection $env:COLLECTION` | Restore verification JSON; recorded rollback output is in `eval/results/A_demo_log.txt` |
+
+Run the complete sequence, including unchanged ingestion, Batch B, deletion, and restore, with:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_a_demo.ps1
+```
+
+Expected captured output: [`eval/results/A_demo_log.txt`](eval/results/A_demo_log.txt). Individual run reports use `eval/results/verification_<run-id>.json`.
+
 Create the local sample documents, ingest Batch A, and rerun the same command to demonstrate zero new chunk embeddings for unchanged sources:
 
 ```powershell
@@ -110,6 +128,20 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_a_demo.ps1
 
 ## Part B - Offline evaluation
 
+### Commands and expected outputs
+
+| Command | Expected output artifact |
+| --- | --- |
+| `python -m eval.validate_golden` | `eval/results/golden_validation_<timestamp>.json` |
+| `python -m eval.module_embedding` | `eval/results/embedding_<timestamp>.json` |
+| `python -m eval.component_retrieval` | `eval/results/retrieval_component_<timestamp>.json` |
+| `python -m eval.e2e` | `eval/results/e2e_<timestamp>.json` and `eval/judge_labels.csv` |
+| `python -m eval.judge_agreement` | `eval/results/judge_agreement_<timestamp>.json` |
+| `python -m eval.stochasticity` | `eval/results/stochasticity_<timestamp>.json` |
+| `python -m eval.run_suite --label member1-end-to-end` | `eval/results/suite_<timestamp>.json`, `suite_<timestamp>.md`, plus `baseline.json` on the first run and `candidate.json` |
+
+The committed three-level example is [`eval/results/suite_20261126T155753Z.json`](eval/results/suite_20261126T155753Z.json) with its Markdown summary beside it. Keep `MODEL_CACHE_OFFLINE=1` and `HF_HUB_OFFLINE=1` for local runs.
+
 `eval/golden.jsonl` contains 43 questions: 27 answerable, seven unanswerable, and nine hard. It has 33 synthetic questions and ten entries with `source="human"`, filled and merged from `eval/human_questions_todo.md`. The user confirmed reviewing all ten human-source entries; those and exactly ten synthetic rows have `reviewed=true`. All 43 ground-truth references were checked against active indexed document pages. The loader tolerates unfilled placeholders and avoids double-counting completed rows already merged into the golden set.
 
 ```powershell
@@ -129,6 +161,30 @@ python -m eval.stochasticity
 `eval/e2e.py` writes ten real answer/context/judge-score samples to `eval/judge_labels.csv`; after the user authorized manual labeling, all ten sampled claims were checked against their quoted contexts and labeled `supported`. Their matching real query traces are committed in `traces/e2e_sample_run.jsonl`, and agreement is recorded in `eval/results/judge_agreement_20261126T162229Z.json`. A canonical abstention has no factual claims and receives faithfulness 1 by vacuous truth; the report counts these separately from calls to the local LLM judge. The suite exits 1 if a configured release-gate check fails.
 
 ## Part C - Change experiment and release gate
+
+### Commands and expected outputs
+
+Use the same corpus and model settings for both collections; only `TOP_K` and `COLLECTION` change:
+
+```powershell
+$env:COLLECTION = "e3-before-b-500"
+$env:TOP_K = "3"
+python -m eval.run_suite --label C1-baseline-topk3 --no-gate
+$env:COLLECTION = "cand_topk8"
+$env:TOP_K = "8"
+$env:SIMILARITY_THRESHOLD = "0.28"
+python -m eval.run_suite --label C1-candidate-topk8 --no-gate
+Copy-Item eval/results/candidate.json eval/results/C2_candidate_pass.json -Force
+$env:COLLECTION = "cand_topk1"
+$env:TOP_K = "1"
+$env:SIMILARITY_THRESHOLD = "0.99"
+python -m eval.run_suite --label C2-deliberate-fail-topk1 --no-gate
+Copy-Item eval/results/candidate.json eval/results/C2_candidate_fail.json -Force
+python -m eval.gate --candidate eval/results/C2_candidate_pass.json --baseline eval/results/C2_baseline.json --config gate.yaml
+python -m eval.gate --candidate eval/results/C2_candidate_fail.json --baseline eval/results/C2_baseline.json --config gate.yaml
+```
+
+Expected outputs: `eval/results/suite_<timestamp>.json` and `.md` for both runs; `eval/results/C1_comparison.md`; `eval/results/C2_gate_pass.txt`; `eval/results/C2_gate_fail.txt`; and `eval/results/C_release_decision.md`. The last two gate commands must show Overall PASS and Overall FAIL, respectively.
 
 The C1 experiment changes only `TOP_K` through environment variables: baseline 3 versus candidate 8, using separate Chroma collections with identical Batch A + Batch B documents and identical Chunk Size 500 / Overlap 50 settings. The corpus pages are each below 250 words, so changing chunk size from 500 to 250 would create no new chunks. The deliberate C2 failure uses `TOP_K=1` and `SIMILARITY_THRESHOLD=0.99`. All three levels are measured by `eval.run_suite`; the results and deltas are recorded in `eval/results/C1_comparison.md`.
 
@@ -151,6 +207,17 @@ python -m eval.gate --candidate eval/results/C2_candidate_fail.json --baseline e
 
 ## Part D - Observability and tracing
 
+### Commands and expected outputs
+
+| Command | Expected output artifact |
+| --- | --- |
+| `uvicorn rag.api:app --port 8000` | API stdout includes the query trace JSON lines; requests append to `$TRACE_DIR/traces.jsonl` |
+| `Invoke-RestMethod http://127.0.0.1:8000/health` and `curl.exe -sS http://127.0.0.1:8000/metrics` | Health JSON and Prometheus text; captured real run: `eval/results/D1D4_api_run.txt` |
+| POST one or more `{ "question": "..." }` requests to `/query` | One trace line per request in `$TRACE_DIR/traces.jsonl`; committed samples: `traces/sample_run.jsonl`, `traces/example.jsonl` |
+| `python scripts/audit.py` | PASS/FAIL checklist for repository evidence; Member 2-owned inspection tool is marked M2 |
+
+The D5 trace and five-line diagnosis are in `traces/d5_candidate_fail_sample.jsonl` and `eval/results/D5_root_cause.md`.
+
 Start the API after ingestion. The API is read-only against Chroma; only `rag.ingest` writes vectors.
 
 ```powershell
@@ -171,12 +238,31 @@ Every query is appended as one JSON line to `$TRACE_DIR/traces.jsonl` and the sa
 
 ## Part E - Live-query coverage and drift
 
-Member 2 fills the live-query set, coverage script, metrics summary script, and trace inspection tool. The expected workflow is: add at least 40 live queries, compare each with the closest golden question, list uncovered topics, run Batch B evaluation, add six approved coverage questions, then rerun the gate. No live-user logs or coverage percentages are fabricated in this repository.
+### E3 command sequence and expected outputs
+
+The recorded E3 run compares the same 43-question suite before and after ingesting Batch B:
+
+```powershell
+$env:COLLECTION = "e3-before-b-500"
+$env:TOP_K = "5"
+$env:CHUNK_SIZE = "500"
+$env:CHUNK_OVERLAP = "50"
+$env:EVAL_ALLOW_MISSING_GROUND_TRUTH = "1"
+python -m eval.run_suite --label E3-before-Batch-B --no-gate
+$env:DATA_DIR = "data/batch_b"
+python -m rag.ingest --data $env:DATA_DIR --collection $env:COLLECTION
+$env:EVAL_ALLOW_GROUND_TRUTH_DRIFT = "1"
+python -m eval.run_suite --label E3-after-Batch-B --no-gate
+```
+
+Expected outputs: the ingestion report `eval/results/verification_<run-id>.json`, two `eval/results/suite_<timestamp>.json`/`.md` pairs, and the comparison `eval/results/E3_drift.md`. The committed before/after runs are `suite_20261126T102138Z` and `suite_20261126T105501Z`.
+
+Member 2 fills the exact commands and output paths for E1, E2, and E4, because the live-query and coverage scripts are Member 2-owned. Those steps require at least 40 live queries (about 28 in-domain and 12 outside coverage), similarity coverage plus uncovered-topic groups, then at least six added golden questions and a before/after coverage result. No live-query log or coverage percentage is claimed here. The metrics-summary script and trace inspection tool are also Member 2-owned.
 
 ## Part F - Kubernetes
 
-The demo must run on Kubernetes; running only Docker containers receives zero. `k8s/` is reserved for Member 2 and was not edited by Member 1. Member 2 fills `k8s/README.md` with the apply, Job, rollout, rollback, PVC, and port-forward commands. The local API Dockerfile is provided for building an image, not as a substitute for the Kubernetes demo.
+The demo must run on Kubernetes; running only Docker containers receives zero. `k8s/` is reserved for Member 2 and was not edited by Member 1. Member 2 fills the [Kubernetes README](k8s/README.md) with the apply, Job, rollout, rollback, PVC, and port-forward commands. The local API Dockerfile is provided for building an image, not as a substitute for the Kubernetes demo.
 
 ## Part G - Report evidence
 
-Use only real results from `eval/results/` and real JSONL records under `traces/`. Report the pending-review status explicitly until approval is recorded. Kubernetes measurements and screenshots are supplied by Member 2 after a real cluster run. See `report/README.md` for the evidence map.
+Use only real results from `eval/results/` and real JSONL records under `traces/`. The user confirmed review of the human questions and judge labels; remaining live-query coverage and Kubernetes measurements/screenshots are Member 2 work. See [`report/member1_sections.md`](report/member1_sections.md) for Member 1's drafted report sections and [`report/README.md`](report/README.md) for the evidence map.
