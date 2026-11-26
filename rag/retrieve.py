@@ -41,9 +41,12 @@ def retrieve(query: str, settings: Settings, top_k: int | None = None) -> tuple[
     count = collection.count()
     if count == 0:
         return [], embed_ms, 0.0, vector
+    limit = min(top_k or settings.top_k, count)
     result = collection.query(
         query_embeddings=[vector],
-        n_results=min(top_k or settings.top_k, count),
+        # Read every active match, then apply a stable local order. Asking Chroma
+        # for only k rows leaves cutoff ties dependent on its internal row order.
+        n_results=count,
         where={"status": "active"},
         include=["documents", "metadatas", "distances"],
     )
@@ -66,4 +69,7 @@ def retrieve(query: str, settings: Settings, top_k: int | None = None) -> tuple[
             score=score,
             text=str(text or ""),
         ))
+    passages.sort(key=lambda passage: (-passage.score, passage.chunk_id))
+    passages = passages[:limit]
+    retrieve_ms = (time.perf_counter() - started) * 1000.0
     return passages, embed_ms, retrieve_ms, vector

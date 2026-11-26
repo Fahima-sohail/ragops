@@ -1,0 +1,561 @@
+{
+  "timestamp": "2026-11-26T08:17:57.016538+00:00",
+  "seed": 4032,
+  "collection": "a-demo-20261125-012139",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "llm_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "temperature": 0,
+  "run_1": {
+    "embedding": {
+      "timestamp": "2026-11-26T07:06:00.620131+00:00",
+      "seed": 4032,
+      "collection": "a-demo-20261125-012139",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_version": "sentence-transformers/all-MiniLM-L6-v2; sentence-transformers=3.4.1",
+      "paraphrase_pairs": 15,
+      "unrelated_pairs": 15,
+      "mean_paraphrase_cosine": 0.48697,
+      "mean_unrelated_cosine": 0.01636,
+      "similarity_gap": 0.47061,
+      "embedding_time_per_chunk_ms": 25.803514,
+      "timed_active_chunks": 51,
+      "pair_embedding_elapsed_ms": 228.362,
+      "determinism_largest_absolute_difference": 0.0
+    },
+    "retrieval": {
+      "metrics": {
+        "clean": {
+          "recall_at_3": 0.888889,
+          "recall_at_5": 0.944444,
+          "mrr": 0.862963,
+          "ndcg_at_5": 0.868587
+        },
+        "noise_documents": {
+          "recall_at_3": 0.888889,
+          "recall_at_5": 0.944444,
+          "mrr": 0.862963,
+          "ndcg_at_5": 0.868587
+        },
+        "typo_queries": {
+          "recall_at_3": 0.819444,
+          "recall_at_5": 0.888889,
+          "mrr": 0.765741,
+          "ndcg_at_5": 0.781059
+        }
+      },
+      "changes_vs_clean": {
+        "noise_documents": {
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "ndcg_at_5": 0.0
+        },
+        "typo_queries": {
+          "recall_at_3": -0.069445,
+          "recall_at_5": -0.055555,
+          "mrr": -0.097222,
+          "ndcg_at_5": -0.087528
+        }
+      },
+      "noise_documents_added": 3,
+      "main_collection_unchanged": true
+    },
+    "end_to_end": {
+      "faithfulness": 1.0,
+      "faithfulness_scored_questions": 43,
+      "faithfulness_answered_only": 1.0,
+      "abstention_correctness": 1.0,
+      "correct_abstentions": 7,
+      "unanswerable_count": 7,
+      "false_abstention_rate": 0.0,
+      "false_abstentions": 0,
+      "answer_expected_count": 36,
+      "citation_validity": 1.0,
+      "citation_valid_count": 36,
+      "citation_evaluable_count": 36,
+      "p50_latency_ms": 9585.26,
+      "p95_latency_ms": 18343.13,
+      "mean_judge_latency_ms": 4020.233,
+      "llm_judge_calls": 36,
+      "vacuous_truth_abstentions": 7,
+      "query_count": 43
+    }
+  },
+  "run_2": {
+    "embedding": {
+      "timestamp": "2026-11-26T08:05:01.057408+00:00",
+      "seed": 4032,
+      "collection": "a-demo-20261125-012139",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_version": "sentence-transformers/all-MiniLM-L6-v2; sentence-transformers=3.4.1",
+      "paraphrase_pairs": 15,
+      "unrelated_pairs": 15,
+      "mean_paraphrase_cosine": 0.48697,
+      "mean_unrelated_cosine": 0.01636,
+      "similarity_gap": 0.47061,
+      "embedding_time_per_chunk_ms": 38.329524,
+      "timed_active_chunks": 51,
+      "pair_embedding_elapsed_ms": 388.367,
+      "determinism_largest_absolute_difference": 0.0
+    },
+    "retrieval": {
+      "metrics": {
+        "clean": {
+          "recall_at_3": 0.888889,
+          "recall_at_5": 0.944444,
+          "mrr": 0.862963,
+          "ndcg_at_5": 0.868587
+        },
+        "noise_documents": {
+          "recall_at_3": 0.888889,
+          "recall_at_5": 0.944444,
+          "mrr": 0.862963,
+          "ndcg_at_5": 0.868587
+        },
+        "typo_queries": {
+          "recall_at_3": 0.819444,
+          "recall_at_5": 0.888889,
+          "mrr": 0.765741,
+          "ndcg_at_5": 0.781059
+        }
+      },
+      "changes_vs_clean": {
+        "noise_documents": {
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "ndcg_at_5": 0.0
+        },
+        "typo_queries": {
+          "recall_at_3": -0.069445,
+          "recall_at_5": -0.055555,
+          "mrr": -0.097222,
+          "ndcg_at_5": -0.087528
+        }
+      },
+      "noise_documents_added": 3,
+      "main_collection_unchanged": true
+    },
+    "end_to_end": {
+      "faithfulness": 1.0,
+      "faithfulness_scored_questions": 43,
+      "faithfulness_answered_only": 1.0,
+      "abstention_correctness": 1.0,
+      "correct_abstentions": 7,
+      "unanswerable_count": 7,
+      "false_abstention_rate": 0.0,
+      "false_abstentions": 0,
+      "answer_expected_count": 36,
+      "citation_validity": 1.0,
+      "citation_valid_count": 36,
+      "citation_evaluable_count": 36,
+      "p50_latency_ms": 13189.842,
+      "p95_latency_ms": 23349.438,
+      "mean_judge_latency_ms": 5320.856,
+      "llm_judge_calls": 36,
+      "vacuous_truth_abstentions": 7,
+      "query_count": 43
+    }
+  },
+  "comparison": {
+    "metric_count": 51,
+    "nonzero_numeric_difference_count": 5,
+    "all_differences": [
+      {
+        "metric": "embedding.determinism_largest_absolute_difference",
+        "run_1": 0.0,
+        "run_2": 0.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "embedding.embedding_time_per_chunk_ms",
+        "run_1": 25.803514,
+        "run_2": 38.329524,
+        "difference_run_2_minus_run_1": 12.52601,
+        "explanation": "Host scheduling, model warm-up, and cache state can change measured runtime."
+      },
+      {
+        "metric": "embedding.mean_paraphrase_cosine",
+        "run_1": 0.48697,
+        "run_2": 0.48697,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "embedding.mean_unrelated_cosine",
+        "run_1": 0.01636,
+        "run_2": 0.01636,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "embedding.pair_embedding_elapsed_ms",
+        "run_1": 228.362,
+        "run_2": 388.367,
+        "difference_run_2_minus_run_1": 160.005,
+        "explanation": "Host scheduling, model warm-up, and cache state can change measured runtime."
+      },
+      {
+        "metric": "embedding.paraphrase_pairs",
+        "run_1": 15.0,
+        "run_2": 15.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "embedding.seed",
+        "run_1": 4032.0,
+        "run_2": 4032.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "embedding.similarity_gap",
+        "run_1": 0.47061,
+        "run_2": 0.47061,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "embedding.timed_active_chunks",
+        "run_1": 51.0,
+        "run_2": 51.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "embedding.timestamp",
+        "run_1": "2026-11-26T07:06:00.620131+00:00",
+        "run_2": "2026-11-26T08:05:01.057408+00:00",
+        "difference_run_2_minus_run_1": null,
+        "explanation": "Non-numeric run metadata differs; it has no arithmetic metric difference."
+      },
+      {
+        "metric": "embedding.unrelated_pairs",
+        "run_1": 15.0,
+        "run_2": 15.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.abstention_correctness",
+        "run_1": 1.0,
+        "run_2": 1.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.answer_expected_count",
+        "run_1": 36.0,
+        "run_2": 36.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.citation_evaluable_count",
+        "run_1": 36.0,
+        "run_2": 36.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.citation_valid_count",
+        "run_1": 36.0,
+        "run_2": 36.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.citation_validity",
+        "run_1": 1.0,
+        "run_2": 1.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.correct_abstentions",
+        "run_1": 7.0,
+        "run_2": 7.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.faithfulness",
+        "run_1": 1.0,
+        "run_2": 1.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.faithfulness_answered_only",
+        "run_1": 1.0,
+        "run_2": 1.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.faithfulness_scored_questions",
+        "run_1": 43.0,
+        "run_2": 43.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.false_abstention_rate",
+        "run_1": 0.0,
+        "run_2": 0.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.false_abstentions",
+        "run_1": 0.0,
+        "run_2": 0.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.llm_judge_calls",
+        "run_1": 36.0,
+        "run_2": 36.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.mean_judge_latency_ms",
+        "run_1": 4020.233,
+        "run_2": 5320.856,
+        "difference_run_2_minus_run_1": 1300.623,
+        "explanation": "Host scheduling, model warm-up, and cache state can change measured runtime."
+      },
+      {
+        "metric": "end_to_end.p50_latency_ms",
+        "run_1": 9585.26,
+        "run_2": 13189.842,
+        "difference_run_2_minus_run_1": 3604.582,
+        "explanation": "Host scheduling, model warm-up, and cache state can change measured runtime."
+      },
+      {
+        "metric": "end_to_end.p95_latency_ms",
+        "run_1": 18343.13,
+        "run_2": 23349.438,
+        "difference_run_2_minus_run_1": 5006.308,
+        "explanation": "Host scheduling, model warm-up, and cache state can change measured runtime."
+      },
+      {
+        "metric": "end_to_end.query_count",
+        "run_1": 43.0,
+        "run_2": 43.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.unanswerable_count",
+        "run_1": 7.0,
+        "run_2": 7.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "end_to_end.vacuous_truth_abstentions",
+        "run_1": 7.0,
+        "run_2": 7.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.changes_vs_clean.noise_documents.mrr",
+        "run_1": 0.0,
+        "run_2": 0.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.changes_vs_clean.noise_documents.ndcg_at_5",
+        "run_1": 0.0,
+        "run_2": 0.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.changes_vs_clean.noise_documents.recall_at_3",
+        "run_1": 0.0,
+        "run_2": 0.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.changes_vs_clean.noise_documents.recall_at_5",
+        "run_1": 0.0,
+        "run_2": 0.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.changes_vs_clean.typo_queries.mrr",
+        "run_1": -0.097222,
+        "run_2": -0.097222,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.changes_vs_clean.typo_queries.ndcg_at_5",
+        "run_1": -0.087528,
+        "run_2": -0.087528,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.changes_vs_clean.typo_queries.recall_at_3",
+        "run_1": -0.069445,
+        "run_2": -0.069445,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.changes_vs_clean.typo_queries.recall_at_5",
+        "run_1": -0.055555,
+        "run_2": -0.055555,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.main_collection_unchanged",
+        "run_1": true,
+        "run_2": true,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.clean.mrr",
+        "run_1": 0.862963,
+        "run_2": 0.862963,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.clean.ndcg_at_5",
+        "run_1": 0.868587,
+        "run_2": 0.868587,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.clean.recall_at_3",
+        "run_1": 0.888889,
+        "run_2": 0.888889,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.clean.recall_at_5",
+        "run_1": 0.944444,
+        "run_2": 0.944444,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.noise_documents.mrr",
+        "run_1": 0.862963,
+        "run_2": 0.862963,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.noise_documents.ndcg_at_5",
+        "run_1": 0.868587,
+        "run_2": 0.868587,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.noise_documents.recall_at_3",
+        "run_1": 0.888889,
+        "run_2": 0.888889,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.noise_documents.recall_at_5",
+        "run_1": 0.944444,
+        "run_2": 0.944444,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.typo_queries.mrr",
+        "run_1": 0.765741,
+        "run_2": 0.765741,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.typo_queries.ndcg_at_5",
+        "run_1": 0.781059,
+        "run_2": 0.781059,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.typo_queries.recall_at_3",
+        "run_1": 0.819444,
+        "run_2": 0.819444,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.metrics.typo_queries.recall_at_5",
+        "run_1": 0.888889,
+        "run_2": 0.888889,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      },
+      {
+        "metric": "retrieval.noise_documents_added",
+        "run_1": 3.0,
+        "run_2": 3.0,
+        "difference_run_2_minus_run_1": 0.0,
+        "explanation": "No observed difference between the two runs."
+      }
+    ],
+    "nonzero_differences": [
+      {
+        "metric": "embedding.embedding_time_per_chunk_ms",
+        "run_1": 25.803514,
+        "run_2": 38.329524,
+        "difference_run_2_minus_run_1": 12.52601,
+        "explanation": "Host scheduling, model warm-up, and cache state can change measured runtime."
+      },
+      {
+        "metric": "embedding.pair_embedding_elapsed_ms",
+        "run_1": 228.362,
+        "run_2": 388.367,
+        "difference_run_2_minus_run_1": 160.005,
+        "explanation": "Host scheduling, model warm-up, and cache state can change measured runtime."
+      },
+      {
+        "metric": "end_to_end.mean_judge_latency_ms",
+        "run_1": 4020.233,
+        "run_2": 5320.856,
+        "difference_run_2_minus_run_1": 1300.623,
+        "explanation": "Host scheduling, model warm-up, and cache state can change measured runtime."
+      },
+      {
+        "metric": "end_to_end.p50_latency_ms",
+        "run_1": 9585.26,
+        "run_2": 13189.842,
+        "difference_run_2_minus_run_1": 3604.582,
+        "explanation": "Host scheduling, model warm-up, and cache state can change measured runtime."
+      },
+      {
+        "metric": "end_to_end.p95_latency_ms",
+        "run_1": 18343.13,
+        "run_2": 23349.438,
+        "difference_run_2_minus_run_1": 5006.308,
+        "explanation": "Host scheduling, model warm-up, and cache state can change measured runtime."
+      }
+    ]
+  },
+  "result_file": "D:\\SCD\\ragops\\eval\\results\\stochasticity_20261126T081757Z.json"
+}

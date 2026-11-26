@@ -22,6 +22,7 @@ from rag.config import ROOT, get_settings
 from rag.embeddings import embed_texts
 from rag.retrieve import retrieve
 from rag.store import collection_rows, open_read_collection
+from eval.seeding import seed_all
 
 NOISE_DOCUMENTS = [
     {
@@ -95,27 +96,37 @@ def _run_questions(questions: list[dict[str, Any]], settings, seed: int, make_ty
     order = list(questions)
     rng.shuffle(order)
     per_question: list[dict[str, Any]] = []
+    if collection is None:
+        _, read_collection = open_read_collection(settings)
+        ranking_limit = read_collection.count()
+    else:
+        ranking_limit = collection.count()
     for item in order:
         question = str(item["question"])
         typo = None
         if make_typos:
             question, typo = _typo(question, rng)
         if collection is None:
-            passages, _embed_ms, _retrieve_ms, _query_vector = retrieve(question, settings, top_k=settings.top_k)
+            passages, _embed_ms, _retrieve_ms, _query_vector = retrieve(question, settings, top_k=ranking_limit)
             ranked = _page_level_rank(passages)
         else:
             vectors, _embed_ms = embed_texts([question], settings.embed_model, settings.local_device)
-            count = collection.count()
             raw = collection.query(
                 query_embeddings=[vectors[0]],
-                n_results=min(settings.top_k, count),
+                n_results=ranking_limit,
                 where={"status": "active"},
-                include=["metadatas"],
+                include=["metadatas", "distances"],
             )
             metadata = raw.get("metadatas", [[]])[0]
+            distances = raw.get("distances", [[]])[0]
+            ids = raw.get("ids", [[]])[0]
+            ordered = sorted(
+                zip(ids, metadata, distances),
+                key=lambda row: (float(row[2]), str(row[0])),
+            )
             ranked = _unique_pairs([
                 (str(row.get("doc_id", "")), int(row.get("page", 1)))
-                for row in metadata if row
+                for _chunk_id, row, _distance in ordered if row
             ])
         expected = set(ground_truth_refs(item))
         values = _metrics_for_query(ranked, expected)
@@ -164,12 +175,11 @@ def _temporary_noise_collection(settings, seed: int) -> tuple[Any, Any, int]:
     return client, destination, destination.count()
 
 
-def run(top_k: int | None = None) -> dict[str, Any]:
-    settings = get_settings()
+def run(settings=None, top_k: int | None = None, write_result: bool = True) -> dict[str, Any]:
+    settings = settings or get_settings(llm_api_key="")
     if top_k is not None:
         settings = replace(settings, top_k=top_k)
-    random.seed(settings.seed)
-    np.random.seed(settings.seed)
+    seed_all(settings.seed)
     questions, loader_counts = load_golden()
     answerable = [row for row in questions if row["expected_behavior"] == "answer"]
     if not answerable:
@@ -218,12 +228,13 @@ def run(top_k: int | None = None) -> dict[str, Any]:
         "ground_truth_validation": {"verified_rows": len(verification), "checks": verification},
         "per_question": {"clean": clean_rows, "noise_documents": noisy_rows, "typo_queries": typo_rows},
     }
-    results = ROOT / "eval" / "results"
-    results.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    result_path = results / f"retrieval_component_{stamp}.json"
-    result["result_file"] = str(result_path)
-    result_path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+    if write_result:
+        results = ROOT / "eval" / "results"
+        results.mkdir(parents=True, exist_ok=True)
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        result_path = results / f"retrieval_component_{stamp}.json"
+        result["result_file"] = str(result_path)
+        result_path.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     return result
 
 
@@ -232,12 +243,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--top-k", type=int)
     args = parser.parse_args(argv)
     try:
-        settings = get_settings()
+        settings = get_settings(llm_api_key="")
         if args.top_k is not None:
             settings = replace(settings, top_k=args.top_k)
         if settings.top_k < 5:
             raise ValueError("--top-k must be at least 5 to report recall@5")
-        result = run(settings.top_k)
+        result = run(settings=settings, top_k=settings.top_k)
         print("Condition | Recall@3 | Recall@5 | MRR | nDCG@5")
         print("--- | ---: | ---: | ---: | ---:")
         for condition, values in result["metrics"].items():

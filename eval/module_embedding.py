@@ -5,7 +5,6 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import json
 from pathlib import Path
-import random
 import statistics
 import sys
 from typing import Any
@@ -15,12 +14,12 @@ import numpy as np
 from rag.config import ROOT, get_settings
 from rag.embeddings import cosine, embed_texts, embedding_version
 from rag.store import open_read_collection
+from eval.seeding import seed_all
 
 
-def run() -> dict[str, Any]:
-    settings = get_settings()
-    random.seed(settings.seed)
-    np.random.seed(settings.seed)
+def run(settings=None, write_result: bool = True) -> dict[str, Any]:
+    settings = settings or get_settings(llm_api_key="")
+    seed_all(settings.seed)
     pairs_path = ROOT / "eval" / "embedding_pairs.json"
     pairs = json.loads(pairs_path.read_text(encoding="utf-8"))
     if len(pairs) < 15:
@@ -62,11 +61,12 @@ def run() -> dict[str, Any]:
         "pair_embedding_elapsed_ms": round(pair_elapsed, 3),
         "determinism_largest_absolute_difference": largest_difference,
     }
-    results = ROOT / "eval" / "results"
-    results.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    result["result_file"] = str(results / f"embedding_{stamp}.json")
-    Path(result["result_file"]).write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+    if write_result:
+        results = ROOT / "eval" / "results"
+        results.mkdir(parents=True, exist_ok=True)
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        result["result_file"] = str(results / f"embedding_{stamp}.json")
+        Path(result["result_file"]).write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     return result
 
 

@@ -45,15 +45,22 @@ def _local_model(model_name: str, device: str):
     return tokenizer, model, torch
 
 
-def generate(prompt: str, settings: Settings, max_new_tokens: int = 112) -> str:
+def generate(
+    prompt: str,
+    settings: Settings,
+    max_new_tokens: int = 112,
+    system_prompt: str | None = None,
+    temperature: float = 0.0,
+) -> str:
+    active_system_prompt = system_prompt or SYSTEM_PROMPT
     if settings.llm_api_key:
         body = {
             "model": settings.llm_model,
             "messages": [
-                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "system", "content": active_system_prompt},
                 {"role": "user", "content": prompt},
             ],
-            "temperature": 0,
+            "temperature": temperature,
             "response_format": {"type": "json_object"},
         }
         response = httpx.post(
@@ -67,7 +74,7 @@ def generate(prompt: str, settings: Settings, max_new_tokens: int = 112) -> str:
 
     tokenizer, model, torch = _local_model(settings.llm_model, settings.local_device)
     messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "system", "content": active_system_prompt},
         {"role": "user", "content": prompt},
     ]
     if hasattr(tokenizer, "apply_chat_template") and tokenizer.chat_template:

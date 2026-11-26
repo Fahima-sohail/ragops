@@ -110,35 +110,37 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_a_demo.ps1
 
 ## Part B - Offline evaluation
 
-`eval/golden.jsonl` uses the Part B schema and currently contains 33 synthetic questions: 21 answerable, six unanswerable, and six hard. Exactly ten synthetic questions have `reviewed=true`; their source pages are checked by `eval.validate_golden` against active indexed text. Ten human-authored placeholders are kept separately in `eval/human_questions_todo.md`. The loader skips untouched placeholders and includes completed entries after their fields and source pages are filled.
+`eval/golden.jsonl` contains 43 questions: 27 answerable, seven unanswerable, and nine hard. It has 33 synthetic questions and ten entries with `source="human"`, filled per the request and merged from `eval/human_questions_todo.md`. Exactly ten synthetic rows have `reviewed=true`; all 43 ground-truth references were checked against active indexed document pages. Human rows remain `reviewed=false` pending owner review. The loader tolerates unfilled placeholders and avoids double-counting completed rows already merged into the golden set.
 
 ```powershell
-python -m eval.generate_questions --max-new-tokens 220
+$env:COLLECTION = "a-demo-20261125-012139"
+$env:SEED = "4032"
+$env:MODEL_CACHE_OFFLINE = "1"
+$env:HF_HUB_OFFLINE = "1"
+$env:LLM_API_KEY = ""
 python -m eval.validate_golden
-python -m eval.module_embedding
-python -m eval.component_retrieval
-python -m eval.run_suite
+python -m eval.run_suite --label member1-end-to-end
+python -m eval.gate --candidate eval/results/candidate.json --baseline eval/results/baseline.json --config gate.yaml
+python -m eval.stochasticity
 ```
 
-Question generation uses the cached local LLM in offline mode and writes the raw prompt/output to `eval/results/`. The validation command checks every answer reference against the selected active collection. The embedding module reports the mean cosine for 15+ paraphrase and unrelated pairs, their gap, time per active chunk, and repeat-embedding determinism. The retrieval component reports doc/page-level recall@3/5, MRR, and nDCG@5 for clean, typo-query, and noise-document conditions; it copies the corpus into a temporary in-memory Chroma collection, adds three noise documents there, and verifies the main collection count is unchanged. Each script records the configured `SEED` and writes a result under `eval/results/`.
+`eval.run_suite` runs the module, component, and end-to-end levels, writes a timestamped JSON result and Markdown summary, prints the metric and gate tables, then applies `gate.yaml` against `eval/results/baseline.json`. The first real suite run creates that baseline. It supports `--label TEXT` and `--no-gate`; `COLLECTION` selects the indexed Chroma collection. The embedding module reports paraphrase/unrelated cosine, gap, time per chunk, and repeat-embedding determinism. Retrieval reports doc/page recall@3/5, MRR, and nDCG@5 for clean, typo, and noise conditions; noise records exist only in a temporary in-memory collection. End-to-end evaluation runs each golden question through the actual query pipeline, uses temperature zero for the generation and LLM grounding judge, and reports faithfulness, abstention and false-abstention rates, citation validity, and query latency p50/p95. `eval.stochasticity` repeats the suite twice with the configured seed and records metric differences plus explanations for any nonzero difference. All result-producing commands use the cached local models with `MODEL_CACHE_OFFLINE=1` and `HF_HUB_OFFLINE=1`.
 
-The end-to-end suite computes answer grounding, abstention correctness, citation validity, latency, and two seeded runs. It writes timestamped results under `eval/results/`. Results remain provisional until at least eight human questions are supplied and reviewed. The command exits with status 1 if the configured release gate fails.
+`eval/e2e.py` also writes ten real answer/context/judge-score samples to `eval/judge_labels.csv`, leaving `my_label` blank. Their matching real query traces are committed in `traces/e2e_sample_run.jsonl`. A canonical abstention has no factual claims and receives faithfulness 1 by vacuous truth; the report counts these separately from calls to the local LLM judge. After filling at least eight labels, run `python -m eval.judge_agreement` to calculate binary agreement and Cohen's kappa; before eight labels it exits 1 with a clear instruction. The suite exits 1 if a configured release-gate check fails.
 
 ## Part C - Change experiment and release gate
 
-The baseline is `TOP_K=5`; the passing candidate experiment raises it to six and compares the same corpus and questions.
+The release baseline is the first measured suite run; subsequent suite runs compare against it using `gate.yaml`.
 
 ```powershell
-python -m eval.run_suite --candidate-top-k 6
+python -m eval.run_suite --label candidate
 python -m eval.gate --candidate eval/results/candidate.json --baseline eval/results/baseline.json --config gate.yaml
 ```
 
-The deliberately bad `TOP_K=1` candidate is expected to fail when it loses more than two percentage points of recall@5. Restore the passing candidate result after recording the failure:
+`eval.run_suite --no-gate` is available to collect a report without applying the release decision. The standalone `eval.gate` command can re-check the saved candidate and baseline without re-running models.
 
 ```powershell
-python -m eval.run_suite --candidate-top-k 1
-python -m eval.gate --candidate eval/results/candidate.json --baseline eval/results/baseline.json --config gate.yaml
-python -m eval.run_suite --candidate-top-k 6
+python -m eval.run_suite --label report-only --no-gate
 ```
 
 Thresholds and their local CPU rationale are in `gate.yaml`. Kubernetes rollout and rollback evidence belongs to Member 2.

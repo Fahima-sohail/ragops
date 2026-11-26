@@ -1,9 +1,9 @@
 version: 1
 rationale: >-
   The local CPU model and three-page sample corpus make 30 seconds a practical
-  p95 ceiling for this course demo. Faithfulness is measured with a disclosed
-  token-support heuristic because no external LLM judge is used. Recall may
-  lose at most two percentage points; abstention correctness cannot regress.
+  p95 ceiling for this course demo. Faithfulness and citation support are scored
+  by the cached local LLM judge at temperature zero. Recall may lose at most two
+  percentage points; abstention correctness cannot regress.
 thresholds:
   max_recall_at_5_drop: 0.02
   min_faithfulness: 0.50

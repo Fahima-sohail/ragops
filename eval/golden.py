@@ -103,14 +103,26 @@ def load_golden(path: Path | None = None, include_human_drafts: bool = True) -> 
         human_rows, human_placeholders = _human_todo_rows(ROOT / "eval" / "human_questions_todo.md")
     else:
         human_rows, human_placeholders = [], 0
-    for row in rows + human_rows:
+    base_by_id = {str(row["id"]): row for row in rows}
+    unmerged_human_rows: list[dict[str, Any]] = []
+    already_merged = 0
+    for row in human_rows:
+        existing = base_by_id.get(str(row.get("id", "")))
+        if existing is not None:
+            if existing != row:
+                raise ValueError(f"human draft {row.get('id')} conflicts with its merged golden row")
+            already_merged += 1
+        else:
+            unmerged_human_rows.append(row)
+    for row in rows + unmerged_human_rows:
         validate_row(row)
-    identifiers = [str(row["id"]) for row in rows + human_rows]
+    identifiers = [str(row["id"]) for row in rows + unmerged_human_rows]
     if len(identifiers) != len(set(identifiers)):
         raise ValueError("golden question ids must be unique, including completed human drafts")
-    return rows + human_rows, {
+    return rows + unmerged_human_rows, {
         "base_questions": len(rows),
         "completed_human_drafts": len(human_rows),
+        "already_merged_human_drafts": already_merged,
         "unfilled_human_placeholders": human_placeholders,
     }
 

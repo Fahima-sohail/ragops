@@ -5,21 +5,18 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import json
 from pathlib import Path
-import random
 import sys
 from collections import Counter
 from typing import Any
 
-import numpy as np
-
 from eval.golden import active_page_texts, load_golden, verify_ground_truth
+from eval.seeding import seed_all
 from rag.config import ROOT, get_settings
 
 
 def run() -> dict[str, Any]:
     settings = get_settings()
-    random.seed(settings.seed)
-    np.random.seed(settings.seed)
+    seed_all(settings.seed)
     questions, loader = load_golden()
     counts = Counter(row["type"] for row in questions)
     behaviors = Counter(row["expected_behavior"] for row in questions)

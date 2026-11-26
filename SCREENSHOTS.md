@@ -30,9 +30,9 @@ python -c "from rag.config import get_settings; from rag.retrieve import retriev
 
 For the same full sequence with its actual terminal output saved to `eval/results/A_demo_log.txt`, run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_a_demo.ps1` from the repository root.
 
-## Part B - Module and component evaluation
+## Part B - Offline evaluation and release gate
 
-Run from the repository root with `.venv` active. Use the collection created by the Part A demo and keep local models offline. The first command records raw LLM question-generation evidence; the remaining commands verify the checked-in set and run both evaluation levels.
+Run from the repository root with `.venv` active. This uses the Part A collection and cached models in offline mode. The suite command runs embedding, clean/noise/typo retrieval, and LLM-judged end-to-end evaluation. On its first run it creates `eval/results/baseline.json` from those real metrics; later runs compare to that baseline and return exit code 1 if the gate fails.
 
 ```powershell
 $env:COLLECTION = "a-demo-20261125-012139"
@@ -40,13 +40,13 @@ $env:SEED = "4032"
 $env:MODEL_CACHE_OFFLINE = "1"
 $env:HF_HUB_OFFLINE = "1"
 $env:LLM_API_KEY = ""
-python -m eval.generate_questions --max-new-tokens 220
 python -m eval.validate_golden
-python -m eval.module_embedding
-python -m eval.component_retrieval
+python -m eval.run_suite --label member1-end-to-end
+python -m eval.gate --candidate eval/results/candidate.json --baseline eval/results/baseline.json --config gate.yaml
+python -m eval.stochasticity
 ```
 
-The noise run copies the active corpus to a temporary in-memory Chroma collection, adds three irrelevant documents there, and confirms that the main collection count is unchanged. The committed results are `eval/results/golden_validation_20261125T110458Z.json`, `eval/results/embedding_20261125T104045Z.json`, and `eval/results/retrieval_component_20261125T110540Z.json`.
+The suite writes `suite_<timestamp>.json` and `.md`, prints its metric and gate tables, and refreshes `eval/judge_labels.csv` with ten generated answers whose `my_label` cells are blank. After manually labeling at least eight rows, run `python -m eval.judge_agreement`; with fewer than eight labels it exits 1 with the count and next step. `python -m eval.run_suite --no-gate` writes the same reports while skipping the gate. The standalone `python -m eval.module_embedding` and `python -m eval.component_retrieval` commands remain available for focused reports. The retrieval noise documents are added only to an ephemeral collection.
 
 ## Part D1/D4
 

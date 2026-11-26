@@ -23,6 +23,7 @@ _STOP = {
     "in", "is", "it", "of", "on", "or", "that", "the", "this", "to", "what", "when", "where", "which", "who", "with",
 }
 _WORD = re.compile(r"[a-z0-9]+", re.I)
+_BOILERPLATE_QUERY_TERMS = {"aster", "research", "lab"}
 _CACHE: dict[tuple[str, str, str, int, str, float], dict[str, Any]] = {}
 _CACHE_LOCK = threading.RLock()
 
@@ -40,7 +41,9 @@ def _supported(answer: str, passages: list[Passage]) -> bool:
 
 
 def _context_supports_question(question: str, passages: list[Passage]) -> bool:
-    query_terms = _meaningful(question)
+    # Corpus-wide organization words are not evidence that a passage answers a
+    # question about a specific person, room, or live fact.
+    query_terms = _meaningful(question) - _BOILERPLATE_QUERY_TERMS
     if not query_terms or not passages:
         return False
     for passage in passages:
@@ -67,6 +70,23 @@ def _citation(passage: Passage) -> dict[str, Any]:
     result = passage.citation()
     result["inline"] = f"[{passage.title} v{passage.doc_version}, p. {passage.page}]"
     return result
+
+
+def _best_citation_passage(answer: str, passages: list[Passage]) -> Passage:
+    """Cite the retrieved passage with the strongest lexical support for the answer."""
+    if not passages:
+        raise ValueError("cannot select a citation without retrieved evidence")
+    answer_terms = _meaningful(answer)
+    if not answer_terms:
+        return passages[0]
+    return sorted(
+        passages,
+        key=lambda passage: (
+            -len(answer_terms & _meaningful(passage.text)) / len(answer_terms),
+            -passage.score,
+            passage.chunk_id,
+        ),
+    )[0]
 
 
 def _cached_result_key(query: str, settings: Settings, top_k: int) -> tuple[str, str, str, int, str, float]:
@@ -128,7 +148,7 @@ def run_query(query: str, settings: Settings | None = None, top_k: int | None = 
         answered_from_context = False
     else:
         generation_started = time.perf_counter()
-        raw = call_llm(prompt, settings)
+        raw = call_llm(prompt, settings, temperature=0.0)
         generation_ms = (time.perf_counter() - generation_started) * 1000.0
         answer, answered_from_context, confidence = parse_answer(raw)
         if not answer or not answered_from_context:
@@ -138,7 +158,13 @@ def run_query(query: str, settings: Settings | None = None, top_k: int | None = 
             fallback = _extractive_fallback(query, evidence)
             if fallback:
                 answer = fallback
-                actions.append("unsupported_generation_replaced_with_extractive_evidence")
+                supporting_passage = next((passage for passage in evidence if fallback in passage.text), evidence[0])
+                actions.append({
+                    "rule_name": "unsupported_generation",
+                    "chunk_id": supporting_passage.chunk_id,
+                    "doc_id": supporting_passage.doc_id,
+                    "action_taken": "replaced_with_extractive_evidence",
+                })
             else:
                 answer = ""
                 answered_from_context = False
@@ -147,7 +173,8 @@ def run_query(query: str, settings: Settings | None = None, top_k: int | None = 
             citations = []
             confidence = "low"
         else:
-            citations = [_citation(evidence[0])]
+            cited_passage = _best_citation_passage(answer, evidence)
+            citations = [_citation(cited_passage)]
             answer = f"{answer.rstrip()} {citations[0]['inline']}"
 
     total_ms = (time.perf_counter() - started) * 1000.0

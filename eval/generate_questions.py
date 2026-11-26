@@ -11,6 +11,7 @@ import sys
 from typing import Any
 
 from eval.golden import active_page_texts
+from eval.seeding import seed_all
 from rag.config import ROOT, get_settings
 from rag.llm import generate
 
@@ -44,7 +45,7 @@ def _label(ref: tuple[str, int], settings) -> dict[str, Any]:
 
 def generate_candidates(max_new_tokens: int = 220) -> Path:
     settings = get_settings(llm_api_key="")  # force cached local inference; never call a remote API
-    random.seed(settings.seed)
+    seed_all(settings.seed)
     pages = active_page_texts(settings)
     groups = [group for group in ANSWERABLE_PAGE_GROUPS if all(ref in pages for ref in group)]
     if len(groups) != len(ANSWERABLE_PAGE_GROUPS):
