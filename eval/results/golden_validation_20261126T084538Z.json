@@ -1,0 +1,561 @@
+{
+  "timestamp": "2026-11-26T08:45:38.239584+00:00",
+  "seed": 4032,
+  "collection": "a-demo-20261125-012139",
+  "dataset": {
+    "questions": 43,
+    "answerable": 27,
+    "unanswerable": 7,
+    "hard": 9,
+    "expected_answer": 36,
+    "expected_abstain": 7,
+    "source_counts": {
+      "synthetic": 33,
+      "human": 10
+    },
+    "reviewed_synthetic": 10,
+    "base_questions": 43,
+    "completed_human_drafts": 10,
+    "already_merged_human_drafts": 10,
+    "unfilled_human_placeholders": 0
+  },
+  "ground_truth_page_checks": 43,
+  "checks": [
+    {
+      "id": "q01",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "service-charter",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "service-charter",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "intake-standard",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "intake-standard",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "verification-standard",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "verification-standard",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "versioning-standard",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "retrieval-quality",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "prompt-safety",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "citations-abstention",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "q11",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "evaluation-protocol",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "q12",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "release-gate",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "q13",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "trace-observability",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "id": "q14",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "incident-recovery",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "q15",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "storage-backup",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "id": "q16",
+      "behavior": "abstain",
+      "verified": true,
+      "method": "no_ground_truth_expected"
+    },
+    {
+      "id": "q17",
+      "behavior": "abstain",
+      "verified": true,
+      "method": "no_ground_truth_expected"
+    },
+    {
+      "id": "q18",
+      "behavior": "abstain",
+      "verified": true,
+      "method": "no_ground_truth_expected"
+    },
+    {
+      "id": "q19",
+      "behavior": "abstain",
+      "verified": true,
+      "method": "no_ground_truth_expected"
+    },
+    {
+      "id": "q20",
+      "behavior": "abstain",
+      "verified": true,
+      "method": "no_ground_truth_expected"
+    },
+    {
+      "id": "q21",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "versioning-standard",
+          "page": 1
+        },
+        {
+          "doc_id": "versioning-standard",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "id": "q22",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "release-gate",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "id": "q23",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "prompt-safety",
+          "page": 3
+        },
+        {
+          "doc_id": "injection-test-record",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "q24",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "versioning-standard",
+          "page": 3
+        },
+        {
+          "doc_id": "incident-recovery",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "q25",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "latency-runbook",
+          "page": 3
+        },
+        {
+          "doc_id": "retrieval-quality",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "id": "llm-01",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "service-charter",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "llm-02",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "verification-standard",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "id": "llm-03",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "prompt-safety",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "llm-04",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "retrieval-quality",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "llm-05",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "document-repair",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "id": "llm-06",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "storage-backup",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "id": "llm-07",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "incident-recovery",
+          "page": 2
+        },
+        {
+          "doc_id": "versioning-standard",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "id": "synth-u01",
+      "behavior": "abstain",
+      "verified": true,
+      "method": "no_ground_truth_expected"
+    },
+    {
+      "id": "human-q01",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "intake-standard",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "id": "human-q02",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "verification-standard",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "id": "human-q03",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "service-charter",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "id": "human-q04",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "trace-observability",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "id": "human-q05",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "retrieval-quality",
+          "page": 1
+        }
+      ]
+    },
+    {
+      "id": "human-q06",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "intake-standard",
+          "page": 2
+        }
+      ]
+    },
+    {
+      "id": "human-q07",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "document-repair",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "id": "human-q08",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "incident-recovery",
+          "page": 2
+        },
+        {
+          "doc_id": "versioning-standard",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "id": "human-q09",
+      "behavior": "answer",
+      "verified": true,
+      "method": "exact_text",
+      "token_coverage": 1.0,
+      "ground_truth": [
+        {
+          "doc_id": "latency-runbook",
+          "page": 3
+        }
+      ]
+    },
+    {
+      "id": "human-q10",
+      "behavior": "abstain",
+      "verified": true,
+      "method": "no_ground_truth_expected"
+    }
+  ],
+  "all_checks_passed": true,
+  "result_file": "D:\\SCD\\ragops\\eval\\results\\golden_validation_20261126T084538Z.json"
+}

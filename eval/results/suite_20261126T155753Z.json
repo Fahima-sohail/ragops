@@ -1,0 +1,4056 @@
+{
+  "timestamp": "2026-11-26T15:57:53.943291+00:00",
+  "result_id": "suite_20261126T155753Z",
+  "label": "C1-C2-baseline-topk3",
+  "seed": 4032,
+  "collection": "e3-before-b-500",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "llm_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "temperature": 0,
+  "baseline_created_from_this_run": false,
+  "baseline_file": "D:\\SCD\\ragops\\eval\\results\\baseline.json",
+  "dataset": {
+    "questions": 43,
+    "answerable": 36,
+    "unanswerable": 7,
+    "hard": 9,
+    "base_questions": 43,
+    "completed_human_drafts": 10,
+    "already_merged_human_drafts": 10,
+    "unfilled_human_placeholders": 0
+  },
+  "runs": {
+    "embedding": {
+      "timestamp": "2026-11-26T11:00:49.973301+00:00",
+      "seed": 4032,
+      "collection": "e3-before-b-500",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_version": "sentence-transformers/all-MiniLM-L6-v2; sentence-transformers=3.4.1",
+      "paraphrase_pairs": 15,
+      "unrelated_pairs": 15,
+      "mean_paraphrase_cosine": 0.48697,
+      "mean_unrelated_cosine": 0.01636,
+      "similarity_gap": 0.47061,
+      "embedding_time_per_chunk_ms": 39.752011,
+      "timed_active_chunks": 54,
+      "pair_embedding_elapsed_ms": 408.563,
+      "determinism_largest_absolute_difference": 0.0
+    },
+    "component_retrieval": {
+      "timestamp": "2026-11-26T11:00:59.495324+00:00",
+      "seed": 4032,
+      "collection": "e3-before-b-500",
+      "top_k": 3,
+      "golden_counts": {
+        "base_questions": 43,
+        "completed_human_drafts": 10,
+        "already_merged_human_drafts": 10,
+        "unfilled_human_placeholders": 0
+      },
+      "answerable_questions": 36,
+      "metric_level": "unique (doc_id, page) pairs; expected pages from golden set",
+      "metrics": {
+        "clean": {
+          "recall_at_3": 0.861111,
+          "recall_at_5": 0.958333,
+          "mrr": 0.83287,
+          "ndcg_at_5": 0.853492
+        },
+        "noise_documents": {
+          "recall_at_3": 0.861111,
+          "recall_at_5": 0.958333,
+          "mrr": 0.83287,
+          "ndcg_at_5": 0.853492
+        },
+        "typo_queries": {
+          "recall_at_3": 0.791667,
+          "recall_at_5": 0.875,
+          "mrr": 0.743981,
+          "ndcg_at_5": 0.764725
+        }
+      },
+      "changes_vs_clean": {
+        "noise_documents": {
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "ndcg_at_5": 0.0
+        },
+        "typo_queries": {
+          "recall_at_3": -0.069444,
+          "recall_at_5": -0.083333,
+          "mrr": -0.088889,
+          "ndcg_at_5": -0.088767
+        }
+      },
+      "noise_test": {
+        "noise_documents_added": 3,
+        "noise_doc_ids": [
+          "eval-noise-botany",
+          "eval-noise-astronomy",
+          "eval-noise-cooking"
+        ],
+        "temporary_collection": "noise_eval_4032",
+        "temporary_collection_kind": "ephemeral Chroma collection",
+        "temporary_collection_chunk_count_before_cleanup": 63,
+        "main_collection_count_before": 60,
+        "main_collection_count_after": 60,
+        "main_collection_unchanged": true
+      },
+      "typo_test": {
+        "method": "seeded adjacent-character transposition in one word per query",
+        "seed": 4032
+      },
+      "ground_truth_validation": {
+        "verified_rows": 36,
+        "checks": [
+          {
+            "id": "q01",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "service-charter",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "q02",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "service-charter",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "q03",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "intake-standard",
+                "page": 1
+              }
+            ]
+          },
+          {
+            "id": "q04",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "intake-standard",
+                "page": 3
+              }
+            ]
+          },
+          {
+            "id": "q05",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "verification-standard",
+                "page": 1
+              }
+            ]
+          },
+          {
+            "id": "q06",
+            "behavior": "answer",
+            "verified": true,
+            "method": "token_coverage",
+            "token_coverage": 0.866667,
+            "ground_truth": [
+              {
+                "doc_id": "verification-standard",
+                "page": 3
+              }
+            ]
+          },
+          {
+            "id": "q07",
+            "behavior": "answer",
+            "verified": false,
+            "method": "reference_answer_differs_from_active_version",
+            "token_coverage": 0.375,
+            "ground_truth": [
+              {
+                "doc_id": "versioning-standard",
+                "page": 1
+              }
+            ]
+          },
+          {
+            "id": "q08",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "retrieval-quality",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "q09",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "prompt-safety",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "q10",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "citations-abstention",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "q11",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "evaluation-protocol",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "q12",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "release-gate",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "q13",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "trace-observability",
+                "page": 1
+              }
+            ]
+          },
+          {
+            "id": "q14",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "incident-recovery",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "q15",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "storage-backup",
+                "page": 1
+              }
+            ]
+          },
+          {
+            "id": "q21",
+            "behavior": "answer",
+            "verified": true,
+            "method": "token_coverage",
+            "token_coverage": 0.8,
+            "ground_truth": [
+              {
+                "doc_id": "versioning-standard",
+                "page": 1
+              },
+              {
+                "doc_id": "versioning-standard",
+                "page": 3
+              }
+            ]
+          },
+          {
+            "id": "q22",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "release-gate",
+                "page": 1
+              }
+            ]
+          },
+          {
+            "id": "q23",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "prompt-safety",
+                "page": 3
+              },
+              {
+                "doc_id": "injection-test-record",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "q24",
+            "behavior": "answer",
+            "verified": true,
+            "method": "token_coverage",
+            "token_coverage": 0.793103,
+            "ground_truth": [
+              {
+                "doc_id": "versioning-standard",
+                "page": 3
+              },
+              {
+                "doc_id": "incident-recovery",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "q25",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "latency-runbook",
+                "page": 3
+              },
+              {
+                "doc_id": "retrieval-quality",
+                "page": 3
+              }
+            ]
+          },
+          {
+            "id": "llm-01",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "service-charter",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "llm-02",
+            "behavior": "answer",
+            "verified": false,
+            "method": "reference_answer_differs_from_active_version",
+            "token_coverage": 0.272727,
+            "ground_truth": [
+              {
+                "doc_id": "verification-standard",
+                "page": 3
+              }
+            ]
+          },
+          {
+            "id": "llm-03",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "prompt-safety",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "llm-04",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "retrieval-quality",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "llm-05",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "document-repair",
+                "page": 3
+              }
+            ]
+          },
+          {
+            "id": "llm-06",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "storage-backup",
+                "page": 1
+              }
+            ]
+          },
+          {
+            "id": "llm-07",
+            "behavior": "answer",
+            "verified": true,
+            "method": "token_coverage",
+            "token_coverage": 0.705882,
+            "ground_truth": [
+              {
+                "doc_id": "incident-recovery",
+                "page": 2
+              },
+              {
+                "doc_id": "versioning-standard",
+                "page": 3
+              }
+            ]
+          },
+          {
+            "id": "human-q01",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "intake-standard",
+                "page": 1
+              }
+            ]
+          },
+          {
+            "id": "human-q02",
+            "behavior": "answer",
+            "verified": true,
+            "method": "token_coverage",
+            "token_coverage": 0.857143,
+            "ground_truth": [
+              {
+                "doc_id": "verification-standard",
+                "page": 1
+              }
+            ]
+          },
+          {
+            "id": "human-q03",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "service-charter",
+                "page": 3
+              }
+            ]
+          },
+          {
+            "id": "human-q04",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "trace-observability",
+                "page": 1
+              }
+            ]
+          },
+          {
+            "id": "human-q05",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "retrieval-quality",
+                "page": 1
+              }
+            ]
+          },
+          {
+            "id": "human-q06",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "intake-standard",
+                "page": 2
+              }
+            ]
+          },
+          {
+            "id": "human-q07",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "document-repair",
+                "page": 3
+              }
+            ]
+          },
+          {
+            "id": "human-q08",
+            "behavior": "answer",
+            "verified": true,
+            "method": "token_coverage",
+            "token_coverage": 0.705882,
+            "ground_truth": [
+              {
+                "doc_id": "incident-recovery",
+                "page": 2
+              },
+              {
+                "doc_id": "versioning-standard",
+                "page": 3
+              }
+            ]
+          },
+          {
+            "id": "human-q09",
+            "behavior": "answer",
+            "verified": true,
+            "method": "exact_text",
+            "token_coverage": 1.0,
+            "ground_truth": [
+              {
+                "doc_id": "latency-runbook",
+                "page": 3
+              }
+            ]
+          }
+        ]
+      },
+      "allows_absent_ground_truth_pages": false,
+      "allows_active_version_reference_drift": true,
+      "per_question": {
+        "clean": [
+          {
+            "id": "q03",
+            "question": "List the required fields on an intake record before it is accepted.",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q01",
+            "question": "What stages handle a query from embedding through answer generation?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.3333333333333333,
+            "ndcg_at_5": 0.5
+          },
+          {
+            "id": "human-q09",
+            "question": "Why must the evaluation suite be rerun after increasing TOP_K?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q14",
+            "question": "After restoring a prior revision, what must the operator check besides API health?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q21",
+            "question": "When version 1.3 replaces version 1.2, what is kept for rollback and what changes in retrieval?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q02",
+            "question": "Which four verification dimensions receive separate pass/fail results?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "q10",
+            "question": "What response is required when the archive lacks evidence for a requested fact?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-03",
+            "question": "What happens to a flagged chunk and how is the action recorded?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q03",
+            "question": "What release responsibilities belong to the service owner?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-06",
+            "question": "Why is the vector collection stored in a persistent Chroma directory?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q06",
+            "question": "What happens to a file that fails verification in a new intake batch?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-01",
+            "question": "What are the four stages of the service's workflow?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q25",
+            "question": "Why do operators rerun quality and latency checks after increasing TOP_K?",
+            "typo": null,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8503449055347546
+          },
+          {
+            "id": "q23",
+            "question": "For the planted instruction override in Batch B, which trace and answer outcomes are expected?",
+            "typo": null,
+            "recall_at_3": 0.0,
+            "recall_at_5": 0.5,
+            "mrr": 0.2,
+            "ndcg_at_5": 0.23719771276929622
+          },
+          {
+            "id": "llm-05",
+            "question": "After a repaired document passes verification, what does the ingestion writer replace and record?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q04",
+            "question": "Which prompt, model, and evidence details are preserved in each trace?",
+            "typo": null,
+            "recall_at_3": 0.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.25,
+            "ndcg_at_5": 0.43067655807339306
+          },
+          {
+            "id": "human-q05",
+            "question": "How are retrieved chunks ranked, and what details does each result preserve?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q08",
+            "question": "Which four ranking measures are reported by the retrieval evaluation?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q22",
+            "question": "What evidence must be compared before a candidate can replace the baseline?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q06",
+            "question": "At what cosine value is a document treated as a near duplicate?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "llm-04",
+            "question": "Which retrieval metrics are recorded by the evaluation?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q13",
+            "question": "Which identification and retrieval details must a query trace retain?",
+            "typo": null,
+            "recall_at_3": 0.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.2,
+            "ndcg_at_5": 0.38685280723454163
+          },
+          {
+            "id": "human-q01",
+            "question": "Which file formats can the intake process accept?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "q05",
+            "question": "Name the kinds of extraction problems that fail the quality check.",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q04",
+            "question": "What should happen to chunk embeddings when the same unchanged corpus is ingested again?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q24",
+            "question": "How is a rollback verified end to end after choosing an archived revision?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9197207891481876
+          },
+          {
+            "id": "q12",
+            "question": "What is the maximum p95 latency set in the release gate document?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q08",
+            "question": "How is a rollback performed and confirmed after a regression?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-02",
+            "question": "How are near duplicates detected and what threshold does the verifier apply?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q07",
+            "question": "How does retrieval handle chunks from an older superseded revision?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q02",
+            "question": "Which component is permitted to change vectors in the persistent collection?",
+            "typo": null,
+            "recall_at_3": 0.0,
+            "recall_at_5": 0.0,
+            "mrr": 0.0,
+            "ndcg_at_5": 0.0
+          },
+          {
+            "id": "q11",
+            "question": "How many paraphrase pairs and unrelated pairs are required for the embedding check?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q15",
+            "question": "Which process has read-write access to the persistent Chroma directory?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-07",
+            "question": "How does the operator restore a prior revision after a regression and verify that retrieval recovered?",
+            "typo": null,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8772153153380493
+          },
+          {
+            "id": "q09",
+            "question": "What should the guardrail do when a retrieved passage asks the model to ignore earlier instructions?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "human-q07",
+            "question": "After a repaired source passes, which chunks are replaced and what does the query owner verify?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          }
+        ],
+        "noise_documents": [
+          {
+            "id": "q03",
+            "question": "List the required fields on an intake record before it is accepted.",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q01",
+            "question": "What stages handle a query from embedding through answer generation?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.3333333333333333,
+            "ndcg_at_5": 0.5
+          },
+          {
+            "id": "human-q09",
+            "question": "Why must the evaluation suite be rerun after increasing TOP_K?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q14",
+            "question": "After restoring a prior revision, what must the operator check besides API health?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q21",
+            "question": "When version 1.3 replaces version 1.2, what is kept for rollback and what changes in retrieval?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q02",
+            "question": "Which four verification dimensions receive separate pass/fail results?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "q10",
+            "question": "What response is required when the archive lacks evidence for a requested fact?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-03",
+            "question": "What happens to a flagged chunk and how is the action recorded?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q03",
+            "question": "What release responsibilities belong to the service owner?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-06",
+            "question": "Why is the vector collection stored in a persistent Chroma directory?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q06",
+            "question": "What happens to a file that fails verification in a new intake batch?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-01",
+            "question": "What are the four stages of the service's workflow?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q25",
+            "question": "Why do operators rerun quality and latency checks after increasing TOP_K?",
+            "typo": null,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8503449055347546
+          },
+          {
+            "id": "q23",
+            "question": "For the planted instruction override in Batch B, which trace and answer outcomes are expected?",
+            "typo": null,
+            "recall_at_3": 0.0,
+            "recall_at_5": 0.5,
+            "mrr": 0.2,
+            "ndcg_at_5": 0.23719771276929622
+          },
+          {
+            "id": "llm-05",
+            "question": "After a repaired document passes verification, what does the ingestion writer replace and record?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q04",
+            "question": "Which prompt, model, and evidence details are preserved in each trace?",
+            "typo": null,
+            "recall_at_3": 0.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.25,
+            "ndcg_at_5": 0.43067655807339306
+          },
+          {
+            "id": "human-q05",
+            "question": "How are retrieved chunks ranked, and what details does each result preserve?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q08",
+            "question": "Which four ranking measures are reported by the retrieval evaluation?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q22",
+            "question": "What evidence must be compared before a candidate can replace the baseline?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q06",
+            "question": "At what cosine value is a document treated as a near duplicate?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "llm-04",
+            "question": "Which retrieval metrics are recorded by the evaluation?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q13",
+            "question": "Which identification and retrieval details must a query trace retain?",
+            "typo": null,
+            "recall_at_3": 0.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.2,
+            "ndcg_at_5": 0.38685280723454163
+          },
+          {
+            "id": "human-q01",
+            "question": "Which file formats can the intake process accept?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "q05",
+            "question": "Name the kinds of extraction problems that fail the quality check.",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q04",
+            "question": "What should happen to chunk embeddings when the same unchanged corpus is ingested again?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q24",
+            "question": "How is a rollback verified end to end after choosing an archived revision?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9197207891481876
+          },
+          {
+            "id": "q12",
+            "question": "What is the maximum p95 latency set in the release gate document?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q08",
+            "question": "How is a rollback performed and confirmed after a regression?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-02",
+            "question": "How are near duplicates detected and what threshold does the verifier apply?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q07",
+            "question": "How does retrieval handle chunks from an older superseded revision?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q02",
+            "question": "Which component is permitted to change vectors in the persistent collection?",
+            "typo": null,
+            "recall_at_3": 0.0,
+            "recall_at_5": 0.0,
+            "mrr": 0.0,
+            "ndcg_at_5": 0.0
+          },
+          {
+            "id": "q11",
+            "question": "How many paraphrase pairs and unrelated pairs are required for the embedding check?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q15",
+            "question": "Which process has read-write access to the persistent Chroma directory?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-07",
+            "question": "How does the operator restore a prior revision after a regression and verify that retrieval recovered?",
+            "typo": null,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8772153153380493
+          },
+          {
+            "id": "q09",
+            "question": "What should the guardrail do when a retrieved passage asks the model to ignore earlier instructions?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "human-q07",
+            "question": "After a repaired source passes, which chunks are replaced and what does the query owner verify?",
+            "typo": null,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          }
+        ],
+        "typo_queries": [
+          {
+            "id": "q03",
+            "question": "List the required fields on an intake recrod before it is accepted.",
+            "typo": "record->recrod",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "q01",
+            "question": "What satges handle a query from embedding through answer generation?",
+            "typo": "stages->satges",
+            "recall_at_3": 0.0,
+            "recall_at_5": 0.0,
+            "mrr": 0.0,
+            "ndcg_at_5": 0.0
+          },
+          {
+            "id": "human-q09",
+            "question": "Why must the evaluation suite be rerun after increaisng TOP_K?",
+            "typo": "increasing->increaisng",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q14",
+            "question": "After restoring a prior revision, what must the oeprator check besides API health?",
+            "typo": "operator->oeprator",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q21",
+            "question": "When version 1.3 replaces version 1.2, what is kept for rollbcak and what changes in retrieval?",
+            "typo": "rollback->rollbcak",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q02",
+            "question": "Which four verificatoin dimensions receive separate pass/fail results?",
+            "typo": "verification->verificatoin",
+            "recall_at_3": 0.0,
+            "recall_at_5": 0.0,
+            "mrr": 0.0,
+            "ndcg_at_5": 0.0
+          },
+          {
+            "id": "q10",
+            "question": "What ersponse is required when the archive lacks evidence for a requested fact?",
+            "typo": "response->ersponse",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-03",
+            "question": "What happens to a flagged chunk and how is the action ercorded?",
+            "typo": "recorded->ercorded",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "human-q03",
+            "question": "What release responsibilities bleong to the service owner?",
+            "typo": "belong->bleong",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-06",
+            "question": "Why is the vector collection sotred in a persistent Chroma directory?",
+            "typo": "stored->sotred",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q06",
+            "question": "What happens to a file that fails verification in a new intake batch?",
+            "typo": "happens->happens",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-01",
+            "question": "What are the four stages of the service's owrkflow?",
+            "typo": "workflow->owrkflow",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q25",
+            "question": "Why do operators rerun quality and latency cehcks after increasing TOP_K?",
+            "typo": "checks->cehcks",
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8503449055347546
+          },
+          {
+            "id": "q23",
+            "question": "For the planted instruction override in Batch B, which trace and answer ouctomes are expected?",
+            "typo": "outcomes->ouctomes",
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.5,
+            "mrr": 0.3333333333333333,
+            "ndcg_at_5": 0.3065735963827292
+          },
+          {
+            "id": "llm-05",
+            "question": "After a repiared document passes verification, what does the ingestion writer replace and record?",
+            "typo": "repaired->repiared",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q04",
+            "question": "Which prompt, model, and evidence details are presevred in each trace?",
+            "typo": "preserved->presevred",
+            "recall_at_3": 0.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.25,
+            "ndcg_at_5": 0.43067655807339306
+          },
+          {
+            "id": "human-q05",
+            "question": "How are retrieved chunks ranked, and what edtails does each result preserve?",
+            "typo": "details->edtails",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q08",
+            "question": "Which four ranking emasures are reported by the retrieval evaluation?",
+            "typo": "measures->emasures",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q22",
+            "question": "What evidence must be compared before a candiadte can replace the baseline?",
+            "typo": "candidate->candiadte",
+            "recall_at_3": 0.0,
+            "recall_at_5": 0.0,
+            "mrr": 0.0,
+            "ndcg_at_5": 0.0
+          },
+          {
+            "id": "q06",
+            "question": "At what cosine value is a document traeted as a near duplicate?",
+            "typo": "treated->traeted",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "llm-04",
+            "question": "Which retreival metrics are recorded by the evaluation?",
+            "typo": "retrieval->retreival",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "q13",
+            "question": "Which identification and retireval details must a query trace retain?",
+            "typo": "retrieval->retireval",
+            "recall_at_3": 0.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.2,
+            "ndcg_at_5": 0.38685280723454163
+          },
+          {
+            "id": "human-q01",
+            "question": "Which file formats can the intkae process accept?",
+            "typo": "intake->intkae",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q05",
+            "question": "Name the kinds of extrcation problems that fail the quality check.",
+            "typo": "extraction->extrcation",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q04",
+            "question": "What sohuld happen to chunk embeddings when the same unchanged corpus is ingested again?",
+            "typo": "should->sohuld",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q24",
+            "question": "How is a rollback verified end to end after choosing an archived revision?",
+            "typo": "rollback->rollback",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9197207891481876
+          },
+          {
+            "id": "q12",
+            "question": "What is the maximum p95 latency set in the release gate odcument?",
+            "typo": "document->odcument",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "human-q08",
+            "question": "How is a rollback performed and confrimed after a regression?",
+            "typo": "confirmed->confrimed",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-02",
+            "question": "How are near duplicates detected and what threshold does the veirfier apply?",
+            "typo": "verifier->veirfier",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q07",
+            "question": "How does retrieval handle chunks from an older supreseded revision?",
+            "typo": "superseded->supreseded",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q02",
+            "question": "Which component is pemritted to change vectors in the persistent collection?",
+            "typo": "permitted->pemritted",
+            "recall_at_3": 0.0,
+            "recall_at_5": 0.0,
+            "mrr": 0.0,
+            "ndcg_at_5": 0.0
+          },
+          {
+            "id": "q11",
+            "question": "How many paraphrase pairs and unrelated pairs are reqiured for the embedding check?",
+            "typo": "required->reqiured",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "q15",
+            "question": "Which process has read-write cacess to the persistent Chroma directory?",
+            "typo": "access->cacess",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0
+          },
+          {
+            "id": "llm-07",
+            "question": "How does the oeprator restore a prior revision after a regression and verify that retrieval recovered?",
+            "typo": "operator->oeprator",
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8503449055347546
+          },
+          {
+            "id": "q09",
+            "question": "What should the guardrail do when a retrieved passage asks the model to ingore earlier instructions?",
+            "typo": "ignore->ingore",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          },
+          {
+            "id": "human-q07",
+            "question": "After a repaired source passes, which chunks are repalced and what does the query owner verify?",
+            "typo": "replaced->repalced",
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309297535714575
+          }
+        ]
+      }
+    },
+    "end_to_end": {
+      "timestamp": "2026-11-26T15:57:53.896688+00:00",
+      "seed": 4032,
+      "collection": "e3-before-b-500",
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "generation_and_judge_model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "temperature": 0,
+      "golden_counts": {
+        "base_questions": 43,
+        "completed_human_drafts": 10,
+        "already_merged_human_drafts": 10,
+        "unfilled_human_placeholders": 0
+      },
+      "metrics": {
+        "faithfulness": 1.0,
+        "faithfulness_scored_questions": 43,
+        "faithfulness_answered_only": 1.0,
+        "abstention_correctness": 1.0,
+        "correct_abstentions": 7,
+        "unanswerable_count": 7,
+        "false_abstention_rate": 0.111111,
+        "false_abstentions": 4,
+        "answer_expected_count": 36,
+        "citation_validity": 0.888889,
+        "citation_valid_count": 32,
+        "citation_evaluable_count": 36,
+        "p50_latency_ms": 12132.882,
+        "p95_latency_ms": 30392.909,
+        "mean_judge_latency_ms": 6020.72,
+        "llm_judge_calls": 32,
+        "vacuous_truth_abstentions": 11,
+        "query_count": 43
+      },
+      "answers": [
+        {
+          "id": "q01",
+          "question": "What stages handle a query from embedding through answer generation?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "The service has four runtime stages: embed the query, retrieve active passages, assemble a bounded prompt, and generate a cited answer. [RAG Service Charter v1.0, p. 2]",
+          "citations": [
+            {
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "title": "RAG Service Charter",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 2,
+              "chunk_id": "service-charter-1.0-0002-48421c4ae63c6d37",
+              "inline": "[RAG Service Charter v1.0, p. 2]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "evaluation-protocol-1.2-0003-fdd27601c010175d",
+              "doc_id": "evaluation-protocol",
+              "doc_version": "1.2",
+              "score": 0.426249
+            },
+            {
+              "chunk_id": "retrieval-quality-1.3-0001-11c3798526edec70",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.406903
+            },
+            {
+              "chunk_id": "service-charter-1.0-0002-48421c4ae63c6d37",
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "score": 0.393368
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "service-charter-1.0-0002-48421c4ae63c6d37",
+              "doc_id": "service-charter",
+              "page": 2,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "fully supported",
+          "faithfulness_method": "json",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 18004.667,
+          "judge_latency_ms": 9460.545,
+          "trace_id": "bf0f2fb1-1513-47d9-9bd3-d8a2ac5c9b5b",
+          "context_excerpt": "[Evidence 1; Offline Evaluation Protocol v1.2; page 3]\nA fixed random seed controls question order, noise selection, and any randomized candidate generation. The complete suite runs twice. The result contains both run summaries and the per-metric difference. Remaining generation variation is reported rather than hidden. If an LLM judge is used for faithfulness, at least eight answers are independently labelled by a person and judge agreement is calculated from those reviewed pairs.\n\n[Evidence 2; Retrieval Quality Standard v1.3; page 1]\nThe retriever embeds the user question with the configured local Sentence Transformers model and searches the persistent Chroma collection. It returns at most TOP_K active chunks, ordered by cosine distance converted to similarity. Every result preserves chunk id, document id, version, title, source, page, and score. Superseded chunks and quarantined documents are excluded. A retrieval filter is recorded in the trace even when the filter is empty.\n\n[Evidence 3; RAG Service Charter v1.0; page 2]\nThe service has four runtime stages: embed the query, retrieve active passages, assemble a bounded prompt, and generate a cited answer. Ingestion is a separate writer process. The API process may read the persistent collection but must never add, update, or delete vectors. Each response carries a trace identifier so an operator can locate the exact retrieved passages and prompt. A service restart must not remove the corpus or trace archive."
+        },
+        {
+          "id": "q02",
+          "question": "Which component is permitted to change vectors in the persistent collection?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "Ingestion Job [Persistent Storage and Backup Standard v1.1, p. 1]",
+          "citations": [
+            {
+              "doc_id": "storage-backup",
+              "doc_version": "1.1",
+              "title": "Persistent Storage and Backup Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 1,
+              "chunk_id": "storage-backup-1.1-0001-f666141c6350da58",
+              "inline": "[Persistent Storage and Backup Standard v1.1, p. 1]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "storage-backup-1.1-0001-f666141c6350da58",
+              "doc_id": "storage-backup",
+              "doc_version": "1.1",
+              "score": 0.549886
+            },
+            {
+              "chunk_id": "versioning-standard-1.3-0001-8028d82ee5e9fbf7",
+              "doc_id": "versioning-standard",
+              "doc_version": "1.3",
+              "score": 0.352407
+            },
+            {
+              "chunk_id": "storage-backup-1.1-0003-1cfb59769e0d6f37",
+              "doc_id": "storage-backup",
+              "doc_version": "1.1",
+              "score": 0.330216
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "storage-backup-1.1-0001-f666141c6350da58",
+              "doc_id": "storage-backup",
+              "page": 1,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 13615.58,
+          "judge_latency_ms": 5609.007,
+          "trace_id": "12dce435-e165-438a-9ead-18f7d44a168b",
+          "context_excerpt": "[Evidence 1; Persistent Storage and Backup Standard v1.1; page 1]\nThe vector collection uses a persistent Chroma directory so it can be mounted from a persistent volume. The data lake, quarantine directory, archived revisions, traces, and evaluation results also need durable storage. The API mounts the vector directory read-only. The ingestion job mounts it read-write and owns all collection updates. Local development uses the same path contract through VECTOR_DIR.\n\n[Evidence 2; Version and Archive Standard v1.3; page 1]\nA document identifier remains stable across revisions. Each revision has an explicit version string and a source hash. When a newer version arrives, the ingestion job archives the prior source, marks its vectors superseded, and indexes the replacement as active. The active collection retains the prior vector rows for audit and rollback, but retrieval filters exclude superseded rows. Version 1.3 adds an operator confirmation step before a version is published.\n\n[Evidence 3; Persistent Storage and Backup Standard v1.1; page 3]\nTemporary work files are written outside the active collection and removed after a successful run. Quarantined sources are retained with their reasons so a curator can repair them. Archived revisions are immutable except when copied for an explicit restore. Evaluation results and trace samples are committed to the repository only after their content has been checked for keys and other secrets."
+        },
+        {
+          "id": "q03",
+          "question": "List the required fields on an intake record before it is accepted.",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "I don't know based on the documents",
+          "citations": [],
+          "retrieved": [
+            {
+              "chunk_id": "intake-standard-1.4-0001-0f08c5234e52aee2",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.390575
+            },
+            {
+              "chunk_id": "intake-standard-1.4-0002-a36d146788329262",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.373531
+            },
+            {
+              "chunk_id": "incident-recovery-1.3-0003-74e3215cf3a819c3",
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "score": 0.323787
+            }
+          ],
+          "citation_location_checks": [],
+          "citation_valid": false,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The canonical abstention contains no factual claims.",
+          "faithfulness_method": "vacuous_truth_abstention",
+          "citation_supported_by_judge": false,
+          "abstention_correct": false,
+          "false_abstention": true,
+          "latency_ms": 30392.909,
+          "judge_latency_ms": 0.0,
+          "trace_id": "355cfded-f670-41f0-b204-cd199f1532b3",
+          "context_excerpt": "[Evidence 1; Document Intake Standard v1.4; page 1]\nAn intake batch is a dated set of source files supplied to the Aster Research Lab assistant. Accepted formats are UTF-8 Markdown, UTF-8 text, and searchable PDF. Each file carries a stable document identifier, a title, a date or version, a source description, and a page count. The manifest records the SHA-256 hash of the extracted body, the original filename, and the batch label. The batch operator preserves original source files until verification finishes.\n\n[Evidence 2; Document Intake Standard v1.4; page 2]\nThe intake job reads files in stable path order and never follows symbolic links outside the selected data directory. It ignores the archive, quarantine, and vector-store directories. A new batch is verified before chunking. A file that fails verification is moved to quarantine with its report record; passing files proceed to the chunker. Operators compare the batch manifest with the last successful run before they publish a collection.\n\n[Evidence 3; Incident and Recovery Runbook v1.3; page 3]\nAfter an incident, the owner updates the verification report, the evaluation result, and the decision record. A source-specific extraction problem needs a fixture or a parser correction. A prompt-injection event needs a guardrail test. A missing coverage topic becomes a proposed golden question only after review. The incident record identifies the observed symptom, trace evidence, repair, and regression check."
+        },
+        {
+          "id": "q04",
+          "question": "What should happen to chunk embeddings when the same unchanged corpus is ingested again?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "No new chunk embeddings will be created if the same unchanged corpus is ingested again. [Document Intake Standard v1.4, p. 3]",
+          "citations": [
+            {
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "title": "Document Intake Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "intake-standard-1.4-0003-4bf027b986286251",
+              "inline": "[Document Intake Standard v1.4, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "intake-standard-1.4-0003-4bf027b986286251",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.576108
+            },
+            {
+              "chunk_id": "evaluation-protocol-1.2-0002-f6e980fea2cd6faa",
+              "doc_id": "evaluation-protocol",
+              "doc_version": "1.2",
+              "score": 0.497209
+            },
+            {
+              "chunk_id": "retrieval-quality-1.3-0001-11c3798526edec70",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.448223
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "intake-standard-1.4-0003-4bf027b986286251",
+              "doc_id": "intake-standard",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The answer supports the given context completely.",
+          "faithfulness_method": "json",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 15879.498,
+          "judge_latency_ms": 9813.598,
+          "trace_id": "96bc7c90-3aa9-4c3f-a73b-e075bc3ecb1a",
+          "context_excerpt": "[Evidence 1; Document Intake Standard v1.4; page 3]\nA repeated intake of unchanged sources must create no new chunk embeddings. A changed source replaces only the chunks belonging to that document. A full snapshot run removes chunks for a document that has been deleted from that snapshot. Incremental batch imports leave unrelated documents in place. The result file records discovered files, verified files, quarantined files, inserted chunks, replaced chunks, skipped chunks, and deleted chunks.\n\n[Evidence 2; Offline Evaluation Protocol v1.2; page 2]\nThe embedding module check compares at least fifteen paraphrase pairs with at least fifteen unrelated pairs. It records mean cosine similarity for each group, their gap, embedding time per chunk, and the largest difference when the same text is embedded twice. The retrieval check records recall at three and five, MRR, nDCG at five, and the change after a noise test. The end-to-end check records faithfulness, correct abstentions, citation validity, and p50 and p95 latency.\n\n[Evidence 3; Retrieval Quality Standard v1.3; page 1]\nThe retriever embeds the user question with the configured local Sentence Transformers model and searches the persistent Chroma collection. It returns at most TOP_K active chunks, ordered by cosine distance converted to similarity. Every result preserves chunk id, document id, version, title, source, page, and score. Superseded chunks and quarantined documents are excluded. A retrieval filter is recorded in the trace even when the filter is empty."
+        },
+        {
+          "id": "q05",
+          "question": "Name the kinds of extraction problems that fail the quality check.",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "['source-specific extraction problem', 'prompt-injection event'] [Incident and Recovery Runbook v1.3, p. 3]",
+          "citations": [
+            {
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "title": "Incident and Recovery Runbook",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "incident-recovery-1.3-0003-74e3215cf3a819c3",
+              "inline": "[Incident and Recovery Runbook v1.3, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "verification-standard-2.2-0001-6755e594b4547376",
+              "doc_id": "verification-standard",
+              "doc_version": "2.2",
+              "score": 0.579595
+            },
+            {
+              "chunk_id": "incident-recovery-1.3-0003-74e3215cf3a819c3",
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "score": 0.506339
+            },
+            {
+              "chunk_id": "document-repair-1.0-0002-adfd541733272c30",
+              "doc_id": "document-repair",
+              "doc_version": "1.0",
+              "score": 0.495838
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "incident-recovery-1.3-0003-74e3215cf3a819c3",
+              "doc_id": "incident-recovery",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 17146.392,
+          "judge_latency_ms": 5321.325,
+          "trace_id": "25a88b3e-4728-4fac-8b4d-a2733f483181",
+          "context_excerpt": "[Evidence 1; Document Verification Standard v2.2; page 1]\nQuality verification rejects empty text, garbled extraction, or an extraction failure. The checker requires readable text and rejects documents when replacement characters or non-printing characters dominate. A text file ending halfway through a sentence is incomplete when the manifest also marks it truncated. The verifier records a separate pass or fail for quality, completeness, recency, and uniqueness, with a concise reason for each result.\n\n[Evidence 2; Incident and Recovery Runbook v1.3; page 3]\nAfter an incident, the owner updates the verification report, the evaluation result, and the decision record. A source-specific extraction problem needs a fixture or a parser correction. A prompt-injection event needs a guardrail test. A missing coverage topic becomes a proposed golden question only after review. The incident record identifies the observed symptom, trace evidence, repair, and regression check.\n\n[Evidence 3; Document Repair Procedure v1.0; page 2]\nThe operator reruns verification on the repaired document before it reaches chunking. Quality checks readable extraction, completeness checks required metadata and truncation, recency checks active revisions, and uniqueness checks exact and near copies. A single failed check is enough to keep the source out of the active collection."
+        },
+        {
+          "id": "q06",
+          "question": "At what cosine value is a document treated as a near duplicate?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "Near duplicates use cosine similarity between local document embeddings. [Document Verification Standard v2.2, p. 2]",
+          "citations": [
+            {
+              "doc_id": "verification-standard",
+              "doc_version": "2.2",
+              "title": "Document Verification Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 2,
+              "chunk_id": "verification-standard-2.2-0002-7bf733facead0c88",
+              "inline": "[Document Verification Standard v2.2, p. 2]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "verification-standard-2.2-0002-7bf733facead0c88",
+              "doc_id": "verification-standard",
+              "doc_version": "2.2",
+              "score": 0.540038
+            },
+            {
+              "chunk_id": "verification-standard-2.2-0003-82761bbebf89b545",
+              "doc_id": "verification-standard",
+              "doc_version": "2.2",
+              "score": 0.44904
+            },
+            {
+              "chunk_id": "evaluation-protocol-1.2-0002-f6e980fea2cd6faa",
+              "doc_id": "evaluation-protocol",
+              "doc_version": "1.2",
+              "score": 0.397625
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "verification-standard-2.2-0002-7bf733facead0c88",
+              "doc_id": "verification-standard",
+              "page": 2,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 10490.664,
+          "judge_latency_ms": 5261.603,
+          "trace_id": "a37f2504-7ea5-47a3-a87d-631154bb23a5",
+          "context_excerpt": "[Evidence 1; Document Verification Standard v2.2; page 2]\nCompleteness verification requires source, title, a date or version, and page count. The declared page count must match extracted pages. Exact duplicates use SHA-256 over normalized body text. Near duplicates use cosine similarity between local document embeddings. Version 2.2 changes the near-duplicate quarantine threshold from 0.94 to 0.91; the new value applies to candidates in this revision and later revisions.\n\n[Evidence 2; Document Verification Standard v2.2; page 3]\nA pair at or above the active threshold is quarantined unless both records share a document identifier and are versions of the same source. The report includes the matching document id and measured similarity. A report must identify the verification-standard version used so an operator can distinguish historical outcomes calculated under the prior 0.94 threshold.\n\n[Evidence 3; Offline Evaluation Protocol v1.2; page 2]\nThe embedding module check compares at least fifteen paraphrase pairs with at least fifteen unrelated pairs. It records mean cosine similarity for each group, their gap, embedding time per chunk, and the largest difference when the same text is embedded twice. The retrieval check records recall at three and five, MRR, nDCG at five, and the change after a noise test. The end-to-end check records faithfulness, correct abstentions, citation validity, and p50 and p95 latency."
+        },
+        {
+          "id": "q07",
+          "question": "How does retrieval handle chunks from an older superseded revision?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "Retrieval handles chunks from an older superseded revision by preserving chunk id, document id, version, title, source, page, and score. [Retrieval Quality Standard v1.3, p. 1]",
+          "citations": [
+            {
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "title": "Retrieval Quality Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 1,
+              "chunk_id": "retrieval-quality-1.3-0001-11c3798526edec70",
+              "inline": "[Retrieval Quality Standard v1.3, p. 1]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "versioning-standard-1.3-0001-8028d82ee5e9fbf7",
+              "doc_id": "versioning-standard",
+              "doc_version": "1.3",
+              "score": 0.679053
+            },
+            {
+              "chunk_id": "versioning-standard-1.3-0002-170f76b657be0848",
+              "doc_id": "versioning-standard",
+              "doc_version": "1.3",
+              "score": 0.622937
+            },
+            {
+              "chunk_id": "retrieval-quality-1.3-0001-11c3798526edec70",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.582188
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "retrieval-quality-1.3-0001-11c3798526edec70",
+              "doc_id": "retrieval-quality",
+              "page": 1,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "fully supported",
+          "faithfulness_method": "json",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 22021.411,
+          "judge_latency_ms": 10541.477,
+          "trace_id": "700fbaf3-65bf-45d5-b87a-e2ea5e459657",
+          "context_excerpt": "[Evidence 1; Version and Archive Standard v1.3; page 1]\nA document identifier remains stable across revisions. Each revision has an explicit version string and a source hash. When a newer version arrives, the ingestion job archives the prior source, marks its vectors superseded, and indexes the replacement as active. The active collection retains the prior vector rows for audit and rollback, but retrieval filters exclude superseded rows. Version 1.3 adds an operator confirmation step before a version is published.\n\n[Evidence 2; Version and Archive Standard v1.3; page 2]\nVersion comparison uses numeric components for dotted strings such as 1.2 and 2.0. A release date is consulted only when version strings cannot be compared. A file with the same document identifier and the same content hash is skipped. A new hash for a higher version replaces only the chunks for that document, and the ingestion report records the number of old and new chunks.\n\n[Evidence 3; Retrieval Quality Standard v1.3; page 1]\nThe retriever embeds the user question with the configured local Sentence Transformers model and searches the persistent Chroma collection. It returns at most TOP_K active chunks, ordered by cosine distance converted to similarity. Every result preserves chunk id, document id, version, title, source, page, and score. Superseded chunks and quarantined documents are excluded. A retrieval filter is recorded in the trace even when the filter is empty."
+        },
+        {
+          "id": "q08",
+          "question": "Which four ranking measures are reported by the retrieval evaluation?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "The noise check adds three unrelated test passages to a copy of the candidate ranking and measures the same retrieval metrics again. [Retrieval Quality Standard v1.3, p. 3]",
+          "citations": [
+            {
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "title": "Retrieval Quality Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "retrieval-quality-1.3-0003-1c31d249d7d97509",
+              "inline": "[Retrieval Quality Standard v1.3, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "retrieval-quality-1.3-0002-a3930b97e192f16b",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.632782
+            },
+            {
+              "chunk_id": "retrieval-quality-1.3-0003-1c31d249d7d97509",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.474029
+            },
+            {
+              "chunk_id": "release-gate-1.1-0001-13ee09e029fb6590",
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "score": 0.464007
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "retrieval-quality-1.3-0003-1c31d249d7d97509",
+              "doc_id": "retrieval-quality",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "Fully supported",
+          "faithfulness_method": "json",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 15985.676,
+          "judge_latency_ms": 8512.501,
+          "trace_id": "bded82fb-3abe-4bc9-9706-1ddded1fff9f",
+          "context_excerpt": "[Evidence 1; Retrieval Quality Standard v1.3; page 2]\nRecall at k measures whether at least one relevant document and page appears among the first k results. Mean reciprocal rank rewards a relevant item appearing near the top. Normalized discounted cumulative gain gives more credit to relevant results at earlier ranks. The evaluation reports recall at three and five, MRR, and nDCG at five. Each metric includes its query count and relevance definition so an operator can reproduce the calculation.\n\n[Evidence 2; Retrieval Quality Standard v1.3; page 3]\nThe noise check adds three unrelated test passages to a copy of the candidate ranking and measures the same retrieval metrics again. It does not write those passages to the production Chroma collection. A second check introduces deterministic query typos. The report records the absolute change from the clean run and keeps the random seed with the result file. A failed retrieval metric blocks candidate release even if generated answers sound convincing.\n\n[Evidence 3; Candidate Release Gate v1.1; page 1]\nA candidate changes one selected pipeline setting while all other settings remain fixed. The baseline and candidate use the same corpus, golden set, random seed, embedding model, and judge procedure. The report compares embedding behavior, retrieval metrics, end-to-end quality, and latency. The candidate JSON records the settings and result path so the gate can be replayed without relying on an untracked notebook."
+        },
+        {
+          "id": "q09",
+          "question": "What should the guardrail do when a retrieved passage asks the model to ignore earlier instructions?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "Record the guardrail action [Prompt Injection Test Record v1.0, p. 3]",
+          "citations": [
+            {
+              "doc_id": "injection-test-record",
+              "doc_version": "1.0",
+              "title": "Prompt Injection Test Record",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "injection-test-record-1.0-0003-a82a4cd5e9b2fd86",
+              "inline": "[Prompt Injection Test Record v1.0, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "prompt-safety-1.5-0003-c3b535ac197d2878",
+              "doc_id": "prompt-safety",
+              "doc_version": "1.5",
+              "score": 0.685451
+            },
+            {
+              "chunk_id": "prompt-safety-1.5-0002-3240ca7172730975",
+              "doc_id": "prompt-safety",
+              "doc_version": "1.5",
+              "score": 0.616776
+            },
+            {
+              "chunk_id": "injection-test-record-1.0-0003-a82a4cd5e9b2fd86",
+              "doc_id": "injection-test-record",
+              "doc_version": "1.0",
+              "score": 0.56829
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "injection-test-record-1.0-0003-a82a4cd5e9b2fd86",
+              "doc_id": "injection-test-record",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 10417.933,
+          "judge_latency_ms": 5019.848,
+          "trace_id": "22fd8372-a6ac-435f-8266-1b0bce5cd2a5",
+          "context_excerpt": "[Evidence 1; Prompt Injection Test Record v1.0; page 3]\nThe incident reviewer checks that the generator did not repeat hidden prompt text or secrets. The reviewer opens the recorded trace, confirms the flagged chunk was excluded from the final prompt, and verifies that a guardrail action was recorded. The test is repeated after a prompt or model change."
+        },
+        {
+          "id": "q10",
+          "question": "What response is required when the archive lacks evidence for a requested fact?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "An abstention [Citation and Abstention Standard v1.0, p. 2]",
+          "citations": [
+            {
+              "doc_id": "citations-abstention",
+              "doc_version": "1.0",
+              "title": "Citation and Abstention Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 2,
+              "chunk_id": "citations-abstention-1.0-0002-f1a9aa247bac4349",
+              "inline": "[Citation and Abstention Standard v1.0, p. 2]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "citations-abstention-1.0-0002-f1a9aa247bac4349",
+              "doc_id": "citations-abstention",
+              "doc_version": "1.0",
+              "score": 0.723481
+            },
+            {
+              "chunk_id": "source-provenance-1.0-0001-5d26ca1ed100347c",
+              "doc_id": "source-provenance",
+              "doc_version": "1.0",
+              "score": 0.516934
+            },
+            {
+              "chunk_id": "service-charter-1.0-0001-fe52b8bafc92a0f3",
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "score": 0.507294
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "citations-abstention-1.0-0002-f1a9aa247bac4349",
+              "doc_id": "citations-abstention",
+              "page": 2,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 17124263.267,
+          "judge_latency_ms": 7757.336,
+          "trace_id": "fa5b954f-5d68-4d37-9d9f-a6b4029d9e05",
+          "context_excerpt": "[Evidence 1; Citation and Abstention Standard v1.0; page 2]\nThe service abstains when retrieval provides no evidence for the requested fact, when the relevant passage was withheld by a guardrail, or when the answer depends on personal or live information absent from the archive. The standard abstention says that the archive does not contain enough information to answer reliably. An abstention has no factual citation and is counted separately from an empty response or a server error.\n\n[Evidence 2; Source Provenance Register v1.0; page 1]\nEvery source entry records a stable document id, source location, title, version or publication date, page count, and content hash. A provenance entry describes whether the file was supplied as a fixture, exported from an approved archive, or copied from an original PDF. The sample Aster Research Lab records in this repository are fictional test content and are not official institutional policies.\n\n[Evidence 3; RAG Service Charter v1.0; page 1]\nThe Aster Research Lab assistant answers operational questions from the controlled policy archive. It returns the source title, document version, and page with each supported answer. The service does not treat a fluent answer as evidence. A response without a supporting passage must be marked as an abstention. This charter applies to the sample deployment and does not establish policy for any real university or employer. The service owner reviews the source list before each release."
+        },
+        {
+          "id": "q11",
+          "question": "How many paraphrase pairs and unrelated pairs are required for the embedding check?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "at least fifteen [Offline Evaluation Protocol v1.2, p. 2]",
+          "citations": [
+            {
+              "doc_id": "evaluation-protocol",
+              "doc_version": "1.2",
+              "title": "Offline Evaluation Protocol",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 2,
+              "chunk_id": "evaluation-protocol-1.2-0002-f6e980fea2cd6faa",
+              "inline": "[Offline Evaluation Protocol v1.2, p. 2]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "evaluation-protocol-1.2-0002-f6e980fea2cd6faa",
+              "doc_id": "evaluation-protocol",
+              "doc_version": "1.2",
+              "score": 0.75165
+            },
+            {
+              "chunk_id": "evaluation-protocol-1.2-0001-a528f8237f9828f3",
+              "doc_id": "evaluation-protocol",
+              "doc_version": "1.2",
+              "score": 0.382565
+            },
+            {
+              "chunk_id": "verification-standard-2.2-0002-7bf733facead0c88",
+              "doc_id": "verification-standard",
+              "doc_version": "2.2",
+              "score": 0.344568
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "evaluation-protocol-1.2-0002-f6e980fea2cd6faa",
+              "doc_id": "evaluation-protocol",
+              "page": 2,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 14331.01,
+          "judge_latency_ms": 5291.937,
+          "trace_id": "638cfff8-3975-4147-88d2-63d5c984d77f",
+          "context_excerpt": "[Evidence 1; Offline Evaluation Protocol v1.2; page 2]\nThe embedding module check compares at least fifteen paraphrase pairs with at least fifteen unrelated pairs. It records mean cosine similarity for each group, their gap, embedding time per chunk, and the largest difference when the same text is embedded twice. The retrieval check records recall at three and five, MRR, nDCG at five, and the change after a noise test. The end-to-end check records faithfulness, correct abstentions, citation validity, and p50 and p95 latency.\n\n[Evidence 2; Offline Evaluation Protocol v1.2; page 1]\nThe golden set contains at least twenty-five questions: fifteen answerable questions with a document and page, five questions that should be unanswerable, and five hard questions that use paraphrases, multiple chunks, or the second batch. Each item records whether its wording is human or synthetic, its review state, its answerability, and its relevant document and page. Questions are reviewed for ambiguity before their labels are final.\n\n[Evidence 3; Document Verification Standard v2.2; page 2]\nCompleteness verification requires source, title, a date or version, and page count. The declared page count must match extracted pages. Exact duplicates use SHA-256 over normalized body text. Near duplicates use cosine similarity between local document embeddings. Version 2.2 changes the near-duplicate quarantine threshold from 0.94 to 0.91; the new value applies to candidates in this revision and later revisions."
+        },
+        {
+          "id": "q12",
+          "question": "What is the maximum p95 latency set in the release gate document?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "The default gate rejects a recall-at-five drop greater than two percentage points, faithfulness below 0.50, a p95 latency above 30,000 milliseconds, or abstention correctness below the baseline. [Candidate Release Gate v1.1, p. 2]",
+          "citations": [
+            {
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "title": "Candidate Release Gate",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 2,
+              "chunk_id": "release-gate-1.1-0002-a649103d00026d68",
+              "inline": "[Candidate Release Gate v1.1, p. 2]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "release-gate-1.1-0002-a649103d00026d68",
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "score": 0.560907
+            },
+            {
+              "chunk_id": "trace-observability-2.0-0002-243680697490ae9b",
+              "doc_id": "trace-observability",
+              "doc_version": "2.0",
+              "score": 0.508729
+            },
+            {
+              "chunk_id": "latency-runbook-1.0-0003-bf903381f66923f8",
+              "doc_id": "latency-runbook",
+              "doc_version": "1.0",
+              "score": 0.463122
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "release-gate-1.1-0002-a649103d00026d68",
+              "doc_id": "release-gate",
+              "page": 2,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 9521.425,
+          "judge_latency_ms": 5174.373,
+          "trace_id": "814d40b1-64d0-4359-80ee-0a034e65af93",
+          "context_excerpt": "[Evidence 1; Candidate Release Gate v1.1; page 2]\nThe default gate rejects a recall-at-five drop greater than two percentage points, faithfulness below 0.50, a p95 latency above 30,000 milliseconds, or abstention correctness below the baseline. Faithfulness uses a disclosed retrieval-reference and citation check, not an LLM judge. The latency ceiling accounts for a small local CPU model. Thresholds are read from gate.yaml, not embedded in the API image. A deliberately poor candidate is retained as a failing example and a passing candidate is also retained with its evidence. The gate exits with status one on failure.\n\n[Evidence 2; Trace and Observability Standard v2.0; page 2]\nLatency values cover embedding, retrieval, reranking, generation, and total request time in milliseconds. The top-one similarity distribution, abstention rate, cache hit rate, per-stage p95 latency, and count of injection attempts are summarized from traces over a requested time window. The metrics endpoint reports current process counters and a health status without changing the vector collection.\n\n[Evidence 3; Latency and Load Runbook v1.0; page 3]\nWhen latency exceeds the threshold, the operator checks model load time, request queueing, retrieved context size, and per-stage trace values. Increasing TOP_K can improve recall but also increases prompt length and generation time. Any candidate change must rerun the same suite so the quality and latency trade-off is visible."
+        },
+        {
+          "id": "q13",
+          "question": "Which identification and retrieval details must a query trace retain?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "Only the trace id, exactly the prompt and retrieved context. [Trace and Observability Standard v2.0, p. 3]",
+          "citations": [
+            {
+              "doc_id": "trace-observability",
+              "doc_version": "2.0",
+              "title": "Trace and Observability Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "trace-observability-2.0-0003-4adec3edb36a956c",
+              "inline": "[Trace and Observability Standard v2.0, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "trace-observability-2.0-0003-4adec3edb36a956c",
+              "doc_id": "trace-observability",
+              "doc_version": "2.0",
+              "score": 0.58035
+            },
+            {
+              "chunk_id": "incident-recovery-1.3-0001-ec6ac14f7182fdb7",
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "score": 0.568851
+            },
+            {
+              "chunk_id": "retrieval-quality-1.3-0001-11c3798526edec70",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.557144
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "trace-observability-2.0-0003-4adec3edb36a956c",
+              "doc_id": "trace-observability",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The answer supports all of the facts stated in the question.",
+          "faithfulness_method": "json",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 16995.99,
+          "judge_latency_ms": 12958.257,
+          "trace_id": "0161bc77-0ca0-4ace-93d6-0f990f50fdea",
+          "context_excerpt": "[Evidence 1; Trace and Observability Standard v2.0; page 3]\nThe trace inspection tool is owned by Member 2. It takes a trace id and displays the exact prompt and retrieved context. A root-cause write-up must use only that trace to identify the incorrect document version, missing chunk, filter, or other recorded cause. Trace records are treated as sensitive because they can include user questions and prompts; retention follows the storage policy.\n\n[Evidence 2; Incident and Recovery Runbook v1.3; page 1]\nA retrieval incident begins when the API is healthy but returns missing evidence, stale versions, invalid citations, or unexpected abstentions. The operator captures the trace id, checks the collection and embedding version, and reads the exact retrieval filter and ranked chunks. If the source is stale, the ingestion job is run against a reviewed batch. If a document is corrupt or incomplete, it stays in quarantine until corrected.\n\n[Evidence 3; Retrieval Quality Standard v1.3; page 1]\nThe retriever embeds the user question with the configured local Sentence Transformers model and searches the persistent Chroma collection. It returns at most TOP_K active chunks, ordered by cosine distance converted to similarity. Every result preserves chunk id, document id, version, title, source, page, and score. Superseded chunks and quarantined documents are excluded. A retrieval filter is recorded in the trace even when the filter is empty."
+        },
+        {
+          "id": "q14",
+          "question": "After restoring a prior revision, what must the operator check besides API health?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "If a new document revision causes a regression, the operator restores the last known good version by document id and version. [Incident and Recovery Runbook v1.3, p. 2]",
+          "citations": [
+            {
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "title": "Incident and Recovery Runbook",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 2,
+              "chunk_id": "incident-recovery-1.3-0002-7729137733046acd",
+              "inline": "[Incident and Recovery Runbook v1.3, p. 2]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "incident-recovery-1.3-0002-7729137733046acd",
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "score": 0.705355
+            },
+            {
+              "chunk_id": "source-provenance-1.0-0003-7b1bc0f0e3ae0dd4",
+              "doc_id": "source-provenance",
+              "doc_version": "1.0",
+              "score": 0.526009
+            },
+            {
+              "chunk_id": "document-repair-1.0-0002-adfd541733272c30",
+              "doc_id": "document-repair",
+              "doc_version": "1.0",
+              "score": 0.490275
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "incident-recovery-1.3-0002-7729137733046acd",
+              "doc_id": "incident-recovery",
+              "page": 2,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The answer supports the provided context.",
+          "faithfulness_method": "json",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 10610.145,
+          "judge_latency_ms": 9910.412,
+          "trace_id": "d05b9487-7468-46b0-b71d-44082e1812b0",
+          "context_excerpt": "[Evidence 1; Incident and Recovery Runbook v1.3; page 2]\nIf a new document revision causes a regression, the operator restores the last known good version by document id and version. The ingestion job is the only writer and records the rollback. The operator then submits a test question that targets the affected clause and checks that the returned trace shows the expected active version. A successful health check alone does not prove that retrieval has recovered.\n\n[Evidence 2; Source Provenance Register v1.0; page 3]\nWhen a source is replaced, the manifest links the new version to the previous version and the verification report for that run. Archived versions keep their original hashes. Restoring an older version adds a rollback event without deleting the newer provenance record.\n\n[Evidence 3; Document Repair Procedure v1.0; page 2]\nThe operator reruns verification on the repaired document before it reaches chunking. Quality checks readable extraction, completeness checks required metadata and truncation, recency checks active revisions, and uniqueness checks exact and near copies. A single failed check is enough to keep the source out of the active collection."
+        },
+        {
+          "id": "q15",
+          "question": "Which process has read-write access to the persistent Chroma directory?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "ingestion job [Persistent Storage and Backup Standard v1.1, p. 1]",
+          "citations": [
+            {
+              "doc_id": "storage-backup",
+              "doc_version": "1.1",
+              "title": "Persistent Storage and Backup Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 1,
+              "chunk_id": "storage-backup-1.1-0001-f666141c6350da58",
+              "inline": "[Persistent Storage and Backup Standard v1.1, p. 1]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "storage-backup-1.1-0001-f666141c6350da58",
+              "doc_id": "storage-backup",
+              "doc_version": "1.1",
+              "score": 0.550591
+            },
+            {
+              "chunk_id": "storage-backup-1.1-0002-9bce0bdeaa9b082a",
+              "doc_id": "storage-backup",
+              "doc_version": "1.1",
+              "score": 0.471657
+            },
+            {
+              "chunk_id": "retrieval-quality-1.3-0001-11c3798526edec70",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.351264
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "storage-backup-1.1-0001-f666141c6350da58",
+              "doc_id": "storage-backup",
+              "page": 1,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 11448.958,
+          "judge_latency_ms": 3236.0,
+          "trace_id": "58aa91a7-1808-4162-b8d1-858736f9a629",
+          "context_excerpt": "[Evidence 1; Persistent Storage and Backup Standard v1.1; page 1]\nThe vector collection uses a persistent Chroma directory so it can be mounted from a persistent volume. The data lake, quarantine directory, archived revisions, traces, and evaluation results also need durable storage. The API mounts the vector directory read-only. The ingestion job mounts it read-write and owns all collection updates. Local development uses the same path contract through VECTOR_DIR.\n\n[Evidence 2; Persistent Storage and Backup Standard v1.1; page 2]\nA backup captures the Chroma data directory and the source manifest at a consistent point after ingestion completes. Operators record the backup timestamp, collection name, active document versions, and verification report. Restoring a backup is followed by a document-count comparison and a query against a known answer. The backup is not considered valid until the restored collection can be queried with the configured embedding model.\n\n[Evidence 3; Retrieval Quality Standard v1.3; page 1]\nThe retriever embeds the user question with the configured local Sentence Transformers model and searches the persistent Chroma collection. It returns at most TOP_K active chunks, ordered by cosine distance converted to similarity. Every result preserves chunk id, document id, version, title, source, page, and score. Superseded chunks and quarantined documents are excluded. A retrieval filter is recorded in the trace even when the filter is empty."
+        },
+        {
+          "id": "q16",
+          "question": "What is the current room temperature in the Aster lab server room?",
+          "type": "unanswerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "abstain",
+          "answer": "I don't know based on the documents",
+          "citations": [],
+          "retrieved": [
+            {
+              "chunk_id": "service-charter-1.0-0001-fe52b8bafc92a0f3",
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "score": 0.291665
+            },
+            {
+              "chunk_id": "injection-test-record-1.0-0001-f81889560ce6c0fe",
+              "doc_id": "injection-test-record",
+              "doc_version": "1.0",
+              "score": 0.230527
+            },
+            {
+              "chunk_id": "intake-standard-1.4-0001-0f08c5234e52aee2",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.207328
+            }
+          ],
+          "citation_location_checks": [],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The canonical abstention contains no factual claims.",
+          "faithfulness_method": "vacuous_truth_abstention",
+          "citation_supported_by_judge": false,
+          "abstention_correct": true,
+          "false_abstention": false,
+          "latency_ms": 73.891,
+          "judge_latency_ms": 0.0,
+          "trace_id": "b20120a1-099f-4e2f-85cb-4747c822bd71",
+          "context_excerpt": ""
+        },
+        {
+          "id": "q17",
+          "question": "What is the personal mobile number of the on-call engineer tonight?",
+          "type": "unanswerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "abstain",
+          "answer": "I don't know based on the documents",
+          "citations": [],
+          "retrieved": [
+            {
+              "chunk_id": "feedback-loop-1.0-0003-ef3fc0ef00c50621",
+              "doc_id": "feedback-loop",
+              "doc_version": "1.0",
+              "score": 0.292174
+            },
+            {
+              "chunk_id": "service-charter-1.0-0001-fe52b8bafc92a0f3",
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "score": 0.195825
+            },
+            {
+              "chunk_id": "release-gate-1.1-0001-13ee09e029fb6590",
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "score": 0.175016
+            }
+          ],
+          "citation_location_checks": [],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The canonical abstention contains no factual claims.",
+          "faithfulness_method": "vacuous_truth_abstention",
+          "citation_supported_by_judge": false,
+          "abstention_correct": true,
+          "false_abstention": false,
+          "latency_ms": 67.909,
+          "judge_latency_ms": 0.0,
+          "trace_id": "92b0f28d-4478-4250-91c5-49e3006632dc",
+          "context_excerpt": ""
+        },
+        {
+          "id": "q18",
+          "question": "How much electricity did the lab consume on 3 October?",
+          "type": "unanswerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "abstain",
+          "answer": "I don't know based on the documents",
+          "citations": [],
+          "retrieved": [
+            {
+              "chunk_id": "service-charter-1.0-0001-fe52b8bafc92a0f3",
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "score": 0.215047
+            },
+            {
+              "chunk_id": "injection-test-record-1.0-0003-a82a4cd5e9b2fd86",
+              "doc_id": "injection-test-record",
+              "doc_version": "1.0",
+              "score": 0.170388
+            },
+            {
+              "chunk_id": "incident-recovery-1.3-0003-74e3215cf3a819c3",
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "score": 0.16736
+            }
+          ],
+          "citation_location_checks": [],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The canonical abstention contains no factual claims.",
+          "faithfulness_method": "vacuous_truth_abstention",
+          "citation_supported_by_judge": false,
+          "abstention_correct": true,
+          "false_abstention": false,
+          "latency_ms": 66.483,
+          "judge_latency_ms": 0.0,
+          "trace_id": "1a305acd-2e28-4a76-8d0c-9b5d30caa77f",
+          "context_excerpt": ""
+        },
+        {
+          "id": "q19",
+          "question": "At what time is the operations team's next private meeting?",
+          "type": "unanswerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "abstain",
+          "answer": "I don't know based on the documents",
+          "citations": [],
+          "retrieved": [
+            {
+              "chunk_id": "release-gate-1.1-0003-dcbb2d33f5f8537e",
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "score": 0.264064
+            },
+            {
+              "chunk_id": "feedback-loop-1.0-0003-ef3fc0ef00c50621",
+              "doc_id": "feedback-loop",
+              "doc_version": "1.0",
+              "score": 0.221115
+            },
+            {
+              "chunk_id": "review-register-1.0-0003-1528ed80b6c8ed95",
+              "doc_id": "review-register",
+              "doc_version": "1.0",
+              "score": 0.186111
+            }
+          ],
+          "citation_location_checks": [],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The canonical abstention contains no factual claims.",
+          "faithfulness_method": "vacuous_truth_abstention",
+          "citation_supported_by_judge": false,
+          "abstention_correct": true,
+          "false_abstention": false,
+          "latency_ms": 64.484,
+          "judge_latency_ms": 0.0,
+          "trace_id": "0de84526-7c9f-4a6c-9c6b-da5edd34e735",
+          "context_excerpt": ""
+        },
+        {
+          "id": "q20",
+          "question": "What is the unpaid leave balance of researcher A-104?",
+          "type": "unanswerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "abstain",
+          "answer": "I don't know based on the documents",
+          "citations": [],
+          "retrieved": [
+            {
+              "chunk_id": "service-charter-1.0-0001-fe52b8bafc92a0f3",
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "score": 0.323141
+            },
+            {
+              "chunk_id": "source-provenance-1.0-0001-5d26ca1ed100347c",
+              "doc_id": "source-provenance",
+              "doc_version": "1.0",
+              "score": 0.272514
+            },
+            {
+              "chunk_id": "storage-backup-1.1-0003-1cfb59769e0d6f37",
+              "doc_id": "storage-backup",
+              "doc_version": "1.1",
+              "score": 0.264221
+            }
+          ],
+          "citation_location_checks": [],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The canonical abstention contains no factual claims.",
+          "faithfulness_method": "vacuous_truth_abstention",
+          "citation_supported_by_judge": false,
+          "abstention_correct": true,
+          "false_abstention": false,
+          "latency_ms": 69.915,
+          "judge_latency_ms": 0.0,
+          "trace_id": "6501eb82-8130-4a2e-9efd-3c297f4013a2",
+          "context_excerpt": ""
+        },
+        {
+          "id": "q21",
+          "question": "When version 1.3 replaces version 1.2, what is kept for rollback and what changes in retrieval?",
+          "type": "hard",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "A rollback names the stable document id and archived version. [Version and Archive Standard v1.3, p. 3]",
+          "citations": [
+            {
+              "doc_id": "versioning-standard",
+              "doc_version": "1.3",
+              "title": "Version and Archive Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "versioning-standard-1.3-0003-d7945a01b0e19ff0",
+              "inline": "[Version and Archive Standard v1.3, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "versioning-standard-1.3-0003-d7945a01b0e19ff0",
+              "doc_id": "versioning-standard",
+              "doc_version": "1.3",
+              "score": 0.683887
+            },
+            {
+              "chunk_id": "versioning-standard-1.3-0001-8028d82ee5e9fbf7",
+              "doc_id": "versioning-standard",
+              "doc_version": "1.3",
+              "score": 0.640619
+            },
+            {
+              "chunk_id": "source-provenance-1.0-0003-7b1bc0f0e3ae0dd4",
+              "doc_id": "source-provenance",
+              "doc_version": "1.0",
+              "score": 0.607529
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "versioning-standard-1.3-0003-d7945a01b0e19ff0",
+              "doc_id": "versioning-standard",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 8328.955,
+          "judge_latency_ms": 3616.859,
+          "trace_id": "a9ae3994-bb08-4abe-8bb1-06c04c8fbe27",
+          "context_excerpt": "[Evidence 1; Version and Archive Standard v1.3; page 3]\nA rollback names the stable document id and archived version. The ingestion writer marks the active revision superseded and restores the selected archived source. The rollback event records who initiated the request, the previous active version, the restored version, and the reason. The new retrieval trace must show the restored version. The archived newer file remains available for a later corrected release.\n\n[Evidence 2; Version and Archive Standard v1.3; page 1]\nA document identifier remains stable across revisions. Each revision has an explicit version string and a source hash. When a newer version arrives, the ingestion job archives the prior source, marks its vectors superseded, and indexes the replacement as active. The active collection retains the prior vector rows for audit and rollback, but retrieval filters exclude superseded rows. Version 1.3 adds an operator confirmation step before a version is published.\n\n[Evidence 3; Source Provenance Register v1.0; page 3]\nWhen a source is replaced, the manifest links the new version to the previous version and the verification report for that run. Archived versions keep their original hashes. Restoring an older version adds a rollback event without deleting the newer provenance record."
+        },
+        {
+          "id": "q22",
+          "question": "What evidence must be compared before a candidate can replace the baseline?",
+          "type": "hard",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "The candidate must compare the settings recorded in the candidate JSON. [Candidate Release Gate v1.1, p. 1]",
+          "citations": [
+            {
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "title": "Candidate Release Gate",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 1,
+              "chunk_id": "release-gate-1.1-0001-13ee09e029fb6590",
+              "inline": "[Candidate Release Gate v1.1, p. 1]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "release-gate-1.1-0001-13ee09e029fb6590",
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "score": 0.310314
+            },
+            {
+              "chunk_id": "incident-recovery-1.3-0003-74e3215cf3a819c3",
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "score": 0.299975
+            },
+            {
+              "chunk_id": "verification-standard-2.2-0003-82761bbebf89b545",
+              "doc_id": "verification-standard",
+              "doc_version": "2.2",
+              "score": 0.296428
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "release-gate-1.1-0001-13ee09e029fb6590",
+              "doc_id": "release-gate",
+              "page": 1,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 10482.625,
+          "judge_latency_ms": 3714.272,
+          "trace_id": "48858253-10d1-40e6-b302-bff79033146f",
+          "context_excerpt": "[Evidence 1; Candidate Release Gate v1.1; page 1]\nA candidate changes one selected pipeline setting while all other settings remain fixed. The baseline and candidate use the same corpus, golden set, random seed, embedding model, and judge procedure. The report compares embedding behavior, retrieval metrics, end-to-end quality, and latency. The candidate JSON records the settings and result path so the gate can be replayed without relying on an untracked notebook.\n\n[Evidence 2; Incident and Recovery Runbook v1.3; page 3]\nAfter an incident, the owner updates the verification report, the evaluation result, and the decision record. A source-specific extraction problem needs a fixture or a parser correction. A prompt-injection event needs a guardrail test. A missing coverage topic becomes a proposed golden question only after review. The incident record identifies the observed symptom, trace evidence, repair, and regression check.\n\n[Evidence 3; Document Verification Standard v2.2; page 3]\nA pair at or above the active threshold is quarantined unless both records share a document identifier and are versions of the same source. The report includes the matching document id and measured similarity. A report must identify the verification-standard version used so an operator can distinguish historical outcomes calculated under the prior 0.94 threshold."
+        },
+        {
+          "id": "q23",
+          "question": "For the planted instruction override in Batch B, which trace and answer outcomes are expected?",
+          "type": "hard",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "I don't know based on the documents",
+          "citations": [],
+          "retrieved": [
+            {
+              "chunk_id": "injection-test-record-1.0-0003-a82a4cd5e9b2fd86",
+              "doc_id": "injection-test-record",
+              "doc_version": "1.0",
+              "score": 0.408388
+            },
+            {
+              "chunk_id": "evaluation-protocol-1.2-0003-fdd27601c010175d",
+              "doc_id": "evaluation-protocol",
+              "doc_version": "1.2",
+              "score": 0.403322
+            },
+            {
+              "chunk_id": "intake-standard-1.4-0001-0f08c5234e52aee2",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.397276
+            }
+          ],
+          "citation_location_checks": [],
+          "citation_valid": false,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The canonical abstention contains no factual claims.",
+          "faithfulness_method": "vacuous_truth_abstention",
+          "citation_supported_by_judge": false,
+          "abstention_correct": false,
+          "false_abstention": true,
+          "latency_ms": 84.275,
+          "judge_latency_ms": 0.0,
+          "trace_id": "76ff9ce2-de2a-49ac-8768-e63fa7cc8ba1",
+          "context_excerpt": ""
+        },
+        {
+          "id": "q24",
+          "question": "How is a rollback verified end to end after choosing an archived revision?",
+          "type": "hard",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "A rollback names the stable document id and archived version. [Version and Archive Standard v1.3, p. 3]",
+          "citations": [
+            {
+              "doc_id": "versioning-standard",
+              "doc_version": "1.3",
+              "title": "Version and Archive Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "versioning-standard-1.3-0003-d7945a01b0e19ff0",
+              "inline": "[Version and Archive Standard v1.3, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "versioning-standard-1.3-0003-d7945a01b0e19ff0",
+              "doc_id": "versioning-standard",
+              "doc_version": "1.3",
+              "score": 0.659425
+            },
+            {
+              "chunk_id": "source-provenance-1.0-0003-7b1bc0f0e3ae0dd4",
+              "doc_id": "source-provenance",
+              "doc_version": "1.0",
+              "score": 0.598115
+            },
+            {
+              "chunk_id": "incident-recovery-1.3-0002-7729137733046acd",
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "score": 0.546728
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "versioning-standard-1.3-0003-d7945a01b0e19ff0",
+              "doc_id": "versioning-standard",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 22551.755,
+          "judge_latency_ms": 3398.469,
+          "trace_id": "13a65f73-0a07-49cd-874b-c6dca6c5bde2",
+          "context_excerpt": "[Evidence 1; Version and Archive Standard v1.3; page 3]\nA rollback names the stable document id and archived version. The ingestion writer marks the active revision superseded and restores the selected archived source. The rollback event records who initiated the request, the previous active version, the restored version, and the reason. The new retrieval trace must show the restored version. The archived newer file remains available for a later corrected release.\n\n[Evidence 2; Source Provenance Register v1.0; page 3]\nWhen a source is replaced, the manifest links the new version to the previous version and the verification report for that run. Archived versions keep their original hashes. Restoring an older version adds a rollback event without deleting the newer provenance record.\n\n[Evidence 3; Incident and Recovery Runbook v1.3; page 2]\nIf a new document revision causes a regression, the operator restores the last known good version by document id and version. The ingestion job is the only writer and records the rollback. The operator then submits a test question that targets the affected clause and checks that the returned trace shows the expected active version. A successful health check alone does not prove that retrieval has recovered."
+        },
+        {
+          "id": "q25",
+          "question": "Why do operators rerun quality and latency checks after increasing TOP_K?",
+          "type": "hard",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "Any candidate change must rerun the same suite so the quality and latency trade-off is visible. [Latency and Load Runbook v1.0, p. 3]",
+          "citations": [
+            {
+              "doc_id": "latency-runbook",
+              "doc_version": "1.0",
+              "title": "Latency and Load Runbook",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "latency-runbook-1.0-0003-bf903381f66923f8",
+              "inline": "[Latency and Load Runbook v1.0, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "latency-runbook-1.0-0003-bf903381f66923f8",
+              "doc_id": "latency-runbook",
+              "doc_version": "1.0",
+              "score": 0.751598
+            },
+            {
+              "chunk_id": "trace-observability-2.0-0002-243680697490ae9b",
+              "doc_id": "trace-observability",
+              "doc_version": "2.0",
+              "score": 0.41665
+            },
+            {
+              "chunk_id": "release-gate-1.1-0002-a649103d00026d68",
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "score": 0.406037
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "latency-runbook-1.0-0003-bf903381f66923f8",
+              "doc_id": "latency-runbook",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 10493.416,
+          "judge_latency_ms": 3494.524,
+          "trace_id": "1fc0b7ed-dff8-43b7-a120-b9678a00ba6c",
+          "context_excerpt": "[Evidence 1; Latency and Load Runbook v1.0; page 3]\nWhen latency exceeds the threshold, the operator checks model load time, request queueing, retrieved context size, and per-stage trace values. Increasing TOP_K can improve recall but also increases prompt length and generation time. Any candidate change must rerun the same suite so the quality and latency trade-off is visible.\n\n[Evidence 2; Trace and Observability Standard v2.0; page 2]\nLatency values cover embedding, retrieval, reranking, generation, and total request time in milliseconds. The top-one similarity distribution, abstention rate, cache hit rate, per-stage p95 latency, and count of injection attempts are summarized from traces over a requested time window. The metrics endpoint reports current process counters and a health status without changing the vector collection.\n\n[Evidence 3; Candidate Release Gate v1.1; page 2]\nThe default gate rejects a recall-at-five drop greater than two percentage points, faithfulness below 0.50, a p95 latency above 30,000 milliseconds, or abstention correctness below the baseline. Faithfulness uses a disclosed retrieval-reference and citation check, not an LLM judge. The latency ceiling accounts for a small local CPU model. Thresholds are read from gate.yaml, not embedded in the API image. A deliberately poor candidate is retained as a failing example and a passing candidate is also retained with its evidence. The gate exits with status one on failure."
+        },
+        {
+          "id": "llm-01",
+          "question": "What are the four stages of the service's workflow?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "embed the query, retrieve active passages, assemble a bounded prompt, and generate a cited answer. [RAG Service Charter v1.0, p. 2]",
+          "citations": [
+            {
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "title": "RAG Service Charter",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 2,
+              "chunk_id": "service-charter-1.0-0002-48421c4ae63c6d37",
+              "inline": "[RAG Service Charter v1.0, p. 2]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "service-charter-1.0-0002-48421c4ae63c6d37",
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "score": 0.501444
+            },
+            {
+              "chunk_id": "release-gate-1.1-0001-13ee09e029fb6590",
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "score": 0.296143
+            },
+            {
+              "chunk_id": "intake-standard-1.4-0001-0f08c5234e52aee2",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.285402
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "service-charter-1.0-0002-48421c4ae63c6d37",
+              "doc_id": "service-charter",
+              "page": 2,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 12141.483,
+          "judge_latency_ms": 3475.987,
+          "trace_id": "83c19efb-9e68-4ece-a92c-7c004a1426e3",
+          "context_excerpt": "[Evidence 1; RAG Service Charter v1.0; page 2]\nThe service has four runtime stages: embed the query, retrieve active passages, assemble a bounded prompt, and generate a cited answer. Ingestion is a separate writer process. The API process may read the persistent collection but must never add, update, or delete vectors. Each response carries a trace identifier so an operator can locate the exact retrieved passages and prompt. A service restart must not remove the corpus or trace archive.\n\n[Evidence 2; Candidate Release Gate v1.1; page 1]\nA candidate changes one selected pipeline setting while all other settings remain fixed. The baseline and candidate use the same corpus, golden set, random seed, embedding model, and judge procedure. The report compares embedding behavior, retrieval metrics, end-to-end quality, and latency. The candidate JSON records the settings and result path so the gate can be replayed without relying on an untracked notebook.\n\n[Evidence 3; Document Intake Standard v1.4; page 1]\nAn intake batch is a dated set of source files supplied to the Aster Research Lab assistant. Accepted formats are UTF-8 Markdown, UTF-8 text, and searchable PDF. Each file carries a stable document identifier, a title, a date or version, a source description, and a page count. The manifest records the SHA-256 hash of the extracted body, the original filename, and the batch label. The batch operator preserves original source files until verification finishes."
+        },
+        {
+          "id": "llm-02",
+          "question": "How are near duplicates detected and what threshold does the verifier apply?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "Near duplicates are identified by comparing the local document embeddings with those of the closest gold standard document. The verifier applies a threshold of 0.91 for near duplicates. [Document Verification Standard v2.2, p. 2]",
+          "citations": [
+            {
+              "doc_id": "verification-standard",
+              "doc_version": "2.2",
+              "title": "Document Verification Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 2,
+              "chunk_id": "verification-standard-2.2-0002-7bf733facead0c88",
+              "inline": "[Document Verification Standard v2.2, p. 2]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "verification-standard-2.2-0003-82761bbebf89b545",
+              "doc_id": "verification-standard",
+              "doc_version": "2.2",
+              "score": 0.543996
+            },
+            {
+              "chunk_id": "verification-standard-2.2-0002-7bf733facead0c88",
+              "doc_id": "verification-standard",
+              "doc_version": "2.2",
+              "score": 0.528867
+            },
+            {
+              "chunk_id": "feedback-loop-1.0-0002-d2224e5304ac25bc",
+              "doc_id": "feedback-loop",
+              "doc_version": "1.0",
+              "score": 0.337164
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "verification-standard-2.2-0002-7bf733facead0c88",
+              "doc_id": "verification-standard",
+              "page": 2,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 17933.57,
+          "judge_latency_ms": 3555.952,
+          "trace_id": "e1d50960-380c-4b6d-ba45-e7fde8f3a186",
+          "context_excerpt": "[Evidence 1; Document Verification Standard v2.2; page 3]\nA pair at or above the active threshold is quarantined unless both records share a document identifier and are versions of the same source. The report includes the matching document id and measured similarity. A report must identify the verification-standard version used so an operator can distinguish historical outcomes calculated under the prior 0.94 threshold.\n\n[Evidence 2; Document Verification Standard v2.2; page 2]\nCompleteness verification requires source, title, a date or version, and page count. The declared page count must match extracted pages. Exact duplicates use SHA-256 over normalized body text. Near duplicates use cosine similarity between local document embeddings. Version 2.2 changes the near-duplicate quarantine threshold from 0.94 to 0.91; the new value applies to candidates in this revision and later revisions.\n\n[Evidence 3; Evaluation Feedback Loop v1.0; page 2]\nCoverage compares live queries with the closest golden question using the same embedding model. The selected threshold is documented with the run. The uncovered list includes the query, its closest score, and a short topic label. A coverage failure exits non-zero so a scheduled check can alert the owner."
+        },
+        {
+          "id": "llm-03",
+          "question": "What happens to a flagged chunk and how is the action recorded?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "A flagged chunk is excluded from the final prompt and a guardrail action is recorded. [Prompt Injection Test Record v1.0, p. 3]",
+          "citations": [
+            {
+              "doc_id": "injection-test-record",
+              "doc_version": "1.0",
+              "title": "Prompt Injection Test Record",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "injection-test-record-1.0-0003-a82a4cd5e9b2fd86",
+              "inline": "[Prompt Injection Test Record v1.0, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "prompt-safety-1.5-0002-3240ca7172730975",
+              "doc_id": "prompt-safety",
+              "doc_version": "1.5",
+              "score": 0.413568
+            },
+            {
+              "chunk_id": "injection-test-record-1.0-0003-a82a4cd5e9b2fd86",
+              "doc_id": "injection-test-record",
+              "doc_version": "1.0",
+              "score": 0.398028
+            },
+            {
+              "chunk_id": "document-repair-1.0-0002-adfd541733272c30",
+              "doc_id": "document-repair",
+              "doc_version": "1.0",
+              "score": 0.396503
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "injection-test-record-1.0-0003-a82a4cd5e9b2fd86",
+              "doc_id": "injection-test-record",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 17581.656,
+          "judge_latency_ms": 3597.984,
+          "trace_id": "0af970b5-cbe8-4cb4-a356-fd814358f6d0",
+          "context_excerpt": "[Evidence 1; Prompt Injection Test Record v1.0; page 3]\nThe incident reviewer checks that the generator did not repeat hidden prompt text or secrets. The reviewer opens the recorded trace, confirms the flagged chunk was excluded from the final prompt, and verifies that a guardrail action was recorded. The test is repeated after a prompt or model change.\n\n[Evidence 2; Document Repair Procedure v1.0; page 2]\nThe operator reruns verification on the repaired document before it reaches chunking. Quality checks readable extraction, completeness checks required metadata and truncation, recency checks active revisions, and uniqueness checks exact and near copies. A single failed check is enough to keep the source out of the active collection."
+        },
+        {
+          "id": "llm-04",
+          "question": "Which retrieval metrics are recorded by the evaluation?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "I don't know based on the documents",
+          "citations": [],
+          "retrieved": [
+            {
+              "chunk_id": "retrieval-quality-1.3-0002-a3930b97e192f16b",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.641137
+            },
+            {
+              "chunk_id": "trace-observability-2.0-0002-243680697490ae9b",
+              "doc_id": "trace-observability",
+              "doc_version": "2.0",
+              "score": 0.516444
+            },
+            {
+              "chunk_id": "latency-runbook-1.0-0001-b269e0995901de8d",
+              "doc_id": "latency-runbook",
+              "doc_version": "1.0",
+              "score": 0.506704
+            }
+          ],
+          "citation_location_checks": [],
+          "citation_valid": false,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The canonical abstention contains no factual claims.",
+          "faithfulness_method": "vacuous_truth_abstention",
+          "citation_supported_by_judge": false,
+          "abstention_correct": false,
+          "false_abstention": true,
+          "latency_ms": 10654.056,
+          "judge_latency_ms": 0.0,
+          "trace_id": "27c8524e-9bcf-4681-8822-fad02d124900",
+          "context_excerpt": "[Evidence 1; Retrieval Quality Standard v1.3; page 2]\nRecall at k measures whether at least one relevant document and page appears among the first k results. Mean reciprocal rank rewards a relevant item appearing near the top. Normalized discounted cumulative gain gives more credit to relevant results at earlier ranks. The evaluation reports recall at three and five, MRR, and nDCG at five. Each metric includes its query count and relevance definition so an operator can reproduce the calculation.\n\n[Evidence 2; Trace and Observability Standard v2.0; page 2]\nLatency values cover embedding, retrieval, reranking, generation, and total request time in milliseconds. The top-one similarity distribution, abstention rate, cache hit rate, per-stage p95 latency, and count of injection attempts are summarized from traces over a requested time window. The metrics endpoint reports current process counters and a health status without changing the vector collection.\n\n[Evidence 3; Latency and Load Runbook v1.0; page 1]\nThe latency report separates embedding, retrieval, reranking, and generation time. The total includes request validation and trace writing. Percentiles are calculated over successful and abstained queries, while errors are listed separately. A slow generator must not be hidden by reporting only retrieval time."
+        },
+        {
+          "id": "llm-05",
+          "question": "After a repaired document passes verification, what does the ingestion writer replace and record?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "only that document's chunks [Document Repair Procedure v1.0, p. 3]",
+          "citations": [
+            {
+              "doc_id": "document-repair",
+              "doc_version": "1.0",
+              "title": "Document Repair Procedure",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "document-repair-1.0-0003-ac0683ddc5dcf969",
+              "inline": "[Document Repair Procedure v1.0, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "document-repair-1.0-0003-ac0683ddc5dcf969",
+              "doc_id": "document-repair",
+              "doc_version": "1.0",
+              "score": 0.730282
+            },
+            {
+              "chunk_id": "document-repair-1.0-0002-adfd541733272c30",
+              "doc_id": "document-repair",
+              "doc_version": "1.0",
+              "score": 0.628209
+            },
+            {
+              "chunk_id": "incident-recovery-1.3-0002-7729137733046acd",
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "score": 0.594356
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "document-repair-1.0-0003-ac0683ddc5dcf969",
+              "doc_id": "document-repair",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The answer supports the provided context.",
+          "faithfulness_method": "json",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 9642.839,
+          "judge_latency_ms": 7524.692,
+          "trace_id": "d8a416d5-adf4-400d-a1db-08c08e7f86f5",
+          "context_excerpt": "[Evidence 1; Document Repair Procedure v1.0; page 3]\nOnce the document passes, the ingestion writer replaces only that document's chunks and records the inserted and removed chunk counts. The query owner then runs a targeted question and checks the retrieved page and document version. If the repair changes an answer, the evaluation result records the change and the trace shows the supporting passage.\n\n[Evidence 2; Document Repair Procedure v1.0; page 2]\nThe operator reruns verification on the repaired document before it reaches chunking. Quality checks readable extraction, completeness checks required metadata and truncation, recency checks active revisions, and uniqueness checks exact and near copies. A single failed check is enough to keep the source out of the active collection.\n\n[Evidence 3; Incident and Recovery Runbook v1.3; page 2]\nIf a new document revision causes a regression, the operator restores the last known good version by document id and version. The ingestion job is the only writer and records the rollback. The operator then submits a test question that targets the affected clause and checks that the returned trace shows the expected active version. A successful health check alone does not prove that retrieval has recovered."
+        },
+        {
+          "id": "llm-06",
+          "question": "Why is the vector collection stored in a persistent Chroma directory?",
+          "type": "answerable",
+          "source": "synthetic",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "The vector collection uses a persistent Chroma directory so it can be mounted from a persistent volume. [Persistent Storage and Backup Standard v1.1, p. 1]",
+          "citations": [
+            {
+              "doc_id": "storage-backup",
+              "doc_version": "1.1",
+              "title": "Persistent Storage and Backup Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 1,
+              "chunk_id": "storage-backup-1.1-0001-f666141c6350da58",
+              "inline": "[Persistent Storage and Backup Standard v1.1, p. 1]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "storage-backup-1.1-0001-f666141c6350da58",
+              "doc_id": "storage-backup",
+              "doc_version": "1.1",
+              "score": 0.742405
+            },
+            {
+              "chunk_id": "storage-backup-1.1-0002-9bce0bdeaa9b082a",
+              "doc_id": "storage-backup",
+              "doc_version": "1.1",
+              "score": 0.551049
+            },
+            {
+              "chunk_id": "retrieval-quality-1.3-0001-11c3798526edec70",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.48317
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "storage-backup-1.1-0001-f666141c6350da58",
+              "doc_id": "storage-backup",
+              "page": 1,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 10757.025,
+          "judge_latency_ms": 3728.16,
+          "trace_id": "4b88b590-ee7c-4e3f-bdce-e7268e5d2546",
+          "context_excerpt": "[Evidence 1; Persistent Storage and Backup Standard v1.1; page 1]\nThe vector collection uses a persistent Chroma directory so it can be mounted from a persistent volume. The data lake, quarantine directory, archived revisions, traces, and evaluation results also need durable storage. The API mounts the vector directory read-only. The ingestion job mounts it read-write and owns all collection updates. Local development uses the same path contract through VECTOR_DIR.\n\n[Evidence 2; Persistent Storage and Backup Standard v1.1; page 2]\nA backup captures the Chroma data directory and the source manifest at a consistent point after ingestion completes. Operators record the backup timestamp, collection name, active document versions, and verification report. Restoring a backup is followed by a document-count comparison and a query against a known answer. The backup is not considered valid until the restored collection can be queried with the configured embedding model.\n\n[Evidence 3; Retrieval Quality Standard v1.3; page 1]\nThe retriever embeds the user question with the configured local Sentence Transformers model and searches the persistent Chroma collection. It returns at most TOP_K active chunks, ordered by cosine distance converted to similarity. Every result preserves chunk id, document id, version, title, source, page, and score. Superseded chunks and quarantined documents are excluded. A retrieval filter is recorded in the trace even when the filter is empty."
+        },
+        {
+          "id": "llm-07",
+          "question": "How does the operator restore a prior revision after a regression and verify that retrieval recovered?",
+          "type": "hard",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "answer",
+          "answer": "The operator restores the last known good version by document ID and version. [Incident and Recovery Runbook v1.3, p. 2]",
+          "citations": [
+            {
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "title": "Incident and Recovery Runbook",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 2,
+              "chunk_id": "incident-recovery-1.3-0002-7729137733046acd",
+              "inline": "[Incident and Recovery Runbook v1.3, p. 2]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "incident-recovery-1.3-0002-7729137733046acd",
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "score": 0.664855
+            },
+            {
+              "chunk_id": "versioning-standard-1.3-0001-8028d82ee5e9fbf7",
+              "doc_id": "versioning-standard",
+              "doc_version": "1.3",
+              "score": 0.498246
+            },
+            {
+              "chunk_id": "document-repair-1.0-0002-adfd541733272c30",
+              "doc_id": "document-repair",
+              "doc_version": "1.0",
+              "score": 0.484666
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "incident-recovery-1.3-0002-7729137733046acd",
+              "doc_id": "incident-recovery",
+              "page": 2,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 11150.413,
+          "judge_latency_ms": 9719.216,
+          "trace_id": "8d3b6ad0-1dc8-4825-af77-16e6da7b288c",
+          "context_excerpt": "[Evidence 1; Incident and Recovery Runbook v1.3; page 2]\nIf a new document revision causes a regression, the operator restores the last known good version by document id and version. The ingestion job is the only writer and records the rollback. The operator then submits a test question that targets the affected clause and checks that the returned trace shows the expected active version. A successful health check alone does not prove that retrieval has recovered.\n\n[Evidence 2; Version and Archive Standard v1.3; page 1]\nA document identifier remains stable across revisions. Each revision has an explicit version string and a source hash. When a newer version arrives, the ingestion job archives the prior source, marks its vectors superseded, and indexes the replacement as active. The active collection retains the prior vector rows for audit and rollback, but retrieval filters exclude superseded rows. Version 1.3 adds an operator confirmation step before a version is published.\n\n[Evidence 3; Document Repair Procedure v1.0; page 2]\nThe operator reruns verification on the repaired document before it reaches chunking. Quality checks readable extraction, completeness checks required metadata and truncation, recency checks active revisions, and uniqueness checks exact and near copies. A single failed check is enough to keep the source out of the active collection."
+        },
+        {
+          "id": "synth-u01",
+          "question": "What is the current personal mobile number of the on-call engineer?",
+          "type": "unanswerable",
+          "source": "synthetic",
+          "reviewed": false,
+          "expected_behavior": "abstain",
+          "answer": "I don't know based on the documents",
+          "citations": [],
+          "retrieved": [
+            {
+              "chunk_id": "feedback-loop-1.0-0003-ef3fc0ef00c50621",
+              "doc_id": "feedback-loop",
+              "doc_version": "1.0",
+              "score": 0.280887
+            },
+            {
+              "chunk_id": "service-charter-1.0-0001-fe52b8bafc92a0f3",
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "score": 0.201926
+            },
+            {
+              "chunk_id": "release-gate-1.1-0002-a649103d00026d68",
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "score": 0.181233
+            }
+          ],
+          "citation_location_checks": [],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The canonical abstention contains no factual claims.",
+          "faithfulness_method": "vacuous_truth_abstention",
+          "citation_supported_by_judge": false,
+          "abstention_correct": true,
+          "false_abstention": false,
+          "latency_ms": 151.815,
+          "judge_latency_ms": 0.0,
+          "trace_id": "fbbed96b-26b9-4320-a56a-173c9c756ade",
+          "context_excerpt": ""
+        },
+        {
+          "id": "human-q01",
+          "question": "Which file formats can the intake process accept?",
+          "type": "answerable",
+          "source": "human",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "['UTF-8 Markdown', 'UTF-8 text', 'searchable PDF'] [Document Intake Standard v1.4, p. 1]",
+          "citations": [
+            {
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "title": "Document Intake Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 1,
+              "chunk_id": "intake-standard-1.4-0001-0f08c5234e52aee2",
+              "inline": "[Document Intake Standard v1.4, p. 1]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "intake-standard-1.4-0002-a36d146788329262",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.597224
+            },
+            {
+              "chunk_id": "intake-standard-1.4-0001-0f08c5234e52aee2",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.585526
+            },
+            {
+              "chunk_id": "source-provenance-1.0-0002-4c83879a200e6f45",
+              "doc_id": "source-provenance",
+              "doc_version": "1.0",
+              "score": 0.385196
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "intake-standard-1.4-0001-0f08c5234e52aee2",
+              "doc_id": "intake-standard",
+              "page": 1,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 17103.7,
+          "judge_latency_ms": 3469.621,
+          "trace_id": "b864245c-872b-43da-bc97-de65497a7b1d",
+          "context_excerpt": "[Evidence 1; Document Intake Standard v1.4; page 2]\nThe intake job reads files in stable path order and never follows symbolic links outside the selected data directory. It ignores the archive, quarantine, and vector-store directories. A new batch is verified before chunking. A file that fails verification is moved to quarantine with its report record; passing files proceed to the chunker. Operators compare the batch manifest with the last successful run before they publish a collection.\n\n[Evidence 2; Document Intake Standard v1.4; page 1]\nAn intake batch is a dated set of source files supplied to the Aster Research Lab assistant. Accepted formats are UTF-8 Markdown, UTF-8 text, and searchable PDF. Each file carries a stable document identifier, a title, a date or version, a source description, and a page count. The manifest records the SHA-256 hash of the extracted body, the original filename, and the batch label. The batch operator preserves original source files until verification finishes.\n\n[Evidence 3; Source Provenance Register v1.0; page 2]\nThe manifest stores the original filename and the intake batch identifier. It records the extraction parser and the embedding model version used for the index run. A document with uncertain authorship or missing source context fails completeness rather than being promoted as an authoritative policy."
+        },
+        {
+          "id": "human-q02",
+          "question": "Which four verification dimensions receive separate pass/fail results?",
+          "type": "answerable",
+          "source": "human",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "The verifier records a separate pass or fail for quality, completeness, recency, and uniqueness, with a concise reason for each result. [Document Verification Standard v2.2, p. 1]",
+          "citations": [
+            {
+              "doc_id": "verification-standard",
+              "doc_version": "2.2",
+              "title": "Document Verification Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 1,
+              "chunk_id": "verification-standard-2.2-0001-6755e594b4547376",
+              "inline": "[Document Verification Standard v2.2, p. 1]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "release-gate-1.1-0002-a649103d00026d68",
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "score": 0.382017
+            },
+            {
+              "chunk_id": "verification-standard-2.2-0001-6755e594b4547376",
+              "doc_id": "verification-standard",
+              "doc_version": "2.2",
+              "score": 0.3652
+            },
+            {
+              "chunk_id": "review-register-1.0-0001-6c6691be9187e4fe",
+              "doc_id": "review-register",
+              "doc_version": "1.0",
+              "score": 0.341191
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "verification-standard-2.2-0001-6755e594b4547376",
+              "doc_id": "verification-standard",
+              "page": 1,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 16513.02,
+          "judge_latency_ms": 3619.033,
+          "trace_id": "df31d407-17c3-48a3-8f93-069a1a441e44",
+          "context_excerpt": "[Evidence 1; Candidate Release Gate v1.1; page 2]\nThe default gate rejects a recall-at-five drop greater than two percentage points, faithfulness below 0.50, a p95 latency above 30,000 milliseconds, or abstention correctness below the baseline. Faithfulness uses a disclosed retrieval-reference and citation check, not an LLM judge. The latency ceiling accounts for a small local CPU model. Thresholds are read from gate.yaml, not embedded in the API image. A deliberately poor candidate is retained as a failing example and a passing candidate is also retained with its evidence. The gate exits with status one on failure.\n\n[Evidence 2; Document Verification Standard v2.2; page 1]\nQuality verification rejects empty text, garbled extraction, or an extraction failure. The checker requires readable text and rejects documents when replacement characters or non-printing characters dominate. A text file ending halfway through a sentence is incomplete when the manifest also marks it truncated. The verifier records a separate pass or fail for quality, completeness, recency, and uniqueness, with a concise reason for each result.\n\n[Evidence 3; Human Review Register v1.0; page 1]\nA reviewer checks the wording, answerability, source id, page number, and expected behavior for each proposed golden question. A second reviewer checks a sample of synthetic questions and records whether the judge agrees with the human faithfulness label. The review record names the question id and status without storing personal data."
+        },
+        {
+          "id": "human-q03",
+          "question": "What release responsibilities belong to the service owner?",
+          "type": "answerable",
+          "source": "human",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "The service owner is accountable for the collection name, embedding model, language model, retrieval limit, and release decision. [RAG Service Charter v1.0, p. 3]",
+          "citations": [
+            {
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "title": "RAG Service Charter",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "service-charter-1.0-0003-1d911d61b21a9ad2",
+              "inline": "[RAG Service Charter v1.0, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "service-charter-1.0-0003-1d911d61b21a9ad2",
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "score": 0.499912
+            },
+            {
+              "chunk_id": "release-gate-1.1-0003-dcbb2d33f5f8537e",
+              "doc_id": "release-gate",
+              "doc_version": "1.1",
+              "score": 0.387608
+            },
+            {
+              "chunk_id": "service-charter-1.0-0001-fe52b8bafc92a0f3",
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "score": 0.327858
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "service-charter-1.0-0003-1d911d61b21a9ad2",
+              "doc_id": "service-charter",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 8235.385,
+          "judge_latency_ms": 3713.012,
+          "trace_id": "ebf5a5c6-c6c2-49a8-83d0-48d2dd730a43",
+          "context_excerpt": "[Evidence 1; RAG Service Charter v1.0; page 3]\nThe service owner is accountable for the collection name, embedding model, language model, retrieval limit, and release decision. Operators record those values with evaluation results. A model change is a candidate until the evaluation gate passes. If the candidate fails, the previous collection remains active. Users should report missing or misleading evidence through the feedback register, not by asking the model to invent a policy answer.\n\n[Evidence 2; Candidate Release Gate v1.1; page 3]\nA passing local gate is necessary but not sufficient for deployment. Member 2 owns Kubernetes rollout and rollback evidence. The candidate collection remains isolated until the Kubernetes evaluation Job passes. Operators record the chosen release or rejection, the exact baseline and candidate file names, and the relevant result paths. A rollback must make the previous collection and embedding version visible in a new trace.\n\n[Evidence 3; RAG Service Charter v1.0; page 1]\nThe Aster Research Lab assistant answers operational questions from the controlled policy archive. It returns the source title, document version, and page with each supported answer. The service does not treat a fluent answer as evidence. A response without a supporting passage must be marked as an abstention. This charter applies to the sample deployment and does not establish policy for any real university or employer. The service owner reviews the source list before each release."
+        },
+        {
+          "id": "human-q04",
+          "question": "Which prompt, model, and evidence details are preserved in each trace?",
+          "type": "answerable",
+          "source": "human",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "[{'trace_id': 'example_trace_id', 'prompt': 'Prompt 1', 'model': 'Model 1'}, {'trace_id': 'example_trace_id', 'prompt': 'Prompt 2', 'model': 'Model 2'}] [Trace and Observability Standard v2.0, p. 3]",
+          "citations": [
+            {
+              "doc_id": "trace-observability",
+              "doc_version": "2.0",
+              "title": "Trace and Observability Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "trace-observability-2.0-0003-4adec3edb36a956c",
+              "inline": "[Trace and Observability Standard v2.0, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "trace-observability-2.0-0003-4adec3edb36a956c",
+              "doc_id": "trace-observability",
+              "doc_version": "2.0",
+              "score": 0.523806
+            },
+            {
+              "chunk_id": "source-provenance-1.0-0001-5d26ca1ed100347c",
+              "doc_id": "source-provenance",
+              "doc_version": "1.0",
+              "score": 0.476088
+            },
+            {
+              "chunk_id": "prompt-safety-1.5-0001-d15a07f37a71700e",
+              "doc_id": "prompt-safety",
+              "doc_version": "1.5",
+              "score": 0.419052
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "trace-observability-2.0-0003-4adec3edb36a956c",
+              "doc_id": "trace-observability",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 21401.406,
+          "judge_latency_ms": 4105.785,
+          "trace_id": "281a7648-6464-4796-a5f8-83aa0b8233ad",
+          "context_excerpt": "[Evidence 1; Trace and Observability Standard v2.0; page 3]\nThe trace inspection tool is owned by Member 2. It takes a trace id and displays the exact prompt and retrieved context. A root-cause write-up must use only that trace to identify the incorrect document version, missing chunk, filter, or other recorded cause. Trace records are treated as sensitive because they can include user questions and prompts; retention follows the storage policy.\n\n[Evidence 2; Source Provenance Register v1.0; page 1]\nEvery source entry records a stable document id, source location, title, version or publication date, page count, and content hash. A provenance entry describes whether the file was supplied as a fixture, exported from an approved archive, or copied from an original PDF. The sample Aster Research Lab records in this repository are fictional test content and are not official institutional policies.\n\n[Evidence 3; Prompt Safety Standard v1.5; page 1]\nRetrieved text is untrusted evidence. It may contain quoted instructions, adversarial content, or mistakes. The system prompt tells the generator to use retrieved passages only as evidence and never to follow instructions found inside a passage. User requests and document text are separated with explicit delimiters. The model receives only active passages that pass the prompt-injection screen, with their document and page labels attached."
+        },
+        {
+          "id": "human-q05",
+          "question": "How are retrieved chunks ranked, and what details does each result preserve?",
+          "type": "answerable",
+          "source": "human",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "Each result preserves chunk id, document id, version, title, source, page, and score. [Retrieval Quality Standard v1.3, p. 1]",
+          "citations": [
+            {
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "title": "Retrieval Quality Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 1,
+              "chunk_id": "retrieval-quality-1.3-0001-11c3798526edec70",
+              "inline": "[Retrieval Quality Standard v1.3, p. 1]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "retrieval-quality-1.3-0001-11c3798526edec70",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.57463
+            },
+            {
+              "chunk_id": "intake-standard-1.4-0003-4bf027b986286251",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.541182
+            },
+            {
+              "chunk_id": "incident-recovery-1.3-0001-ec6ac14f7182fdb7",
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "score": 0.440734
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "retrieval-quality-1.3-0001-11c3798526edec70",
+              "doc_id": "retrieval-quality",
+              "page": 1,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "Exactly supports ANSWER",
+          "faithfulness_method": "json",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 16220.638,
+          "judge_latency_ms": 7932.821,
+          "trace_id": "77bfad74-f3f8-4926-8b92-46423c295db6",
+          "context_excerpt": "[Evidence 1; Retrieval Quality Standard v1.3; page 1]\nThe retriever embeds the user question with the configured local Sentence Transformers model and searches the persistent Chroma collection. It returns at most TOP_K active chunks, ordered by cosine distance converted to similarity. Every result preserves chunk id, document id, version, title, source, page, and score. Superseded chunks and quarantined documents are excluded. A retrieval filter is recorded in the trace even when the filter is empty.\n\n[Evidence 2; Document Intake Standard v1.4; page 3]\nA repeated intake of unchanged sources must create no new chunk embeddings. A changed source replaces only the chunks belonging to that document. A full snapshot run removes chunks for a document that has been deleted from that snapshot. Incremental batch imports leave unrelated documents in place. The result file records discovered files, verified files, quarantined files, inserted chunks, replaced chunks, skipped chunks, and deleted chunks.\n\n[Evidence 3; Incident and Recovery Runbook v1.3; page 1]\nA retrieval incident begins when the API is healthy but returns missing evidence, stale versions, invalid citations, or unexpected abstentions. The operator captures the trace id, checks the collection and embedding version, and reads the exact retrieval filter and ranked chunks. If the source is stale, the ingestion job is run against a reviewed batch. If a document is corrupt or incomplete, it stays in quarantine until corrected."
+        },
+        {
+          "id": "human-q06",
+          "question": "What happens to a file that fails verification in a new intake batch?",
+          "type": "answerable",
+          "source": "human",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "passed files proceed to the chunker [Document Intake Standard v1.4, p. 2]",
+          "citations": [
+            {
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "title": "Document Intake Standard",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 2,
+              "chunk_id": "intake-standard-1.4-0002-a36d146788329262",
+              "inline": "[Document Intake Standard v1.4, p. 2]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "intake-standard-1.4-0002-a36d146788329262",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.696739
+            },
+            {
+              "chunk_id": "intake-standard-1.4-0001-0f08c5234e52aee2",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.61119
+            },
+            {
+              "chunk_id": "intake-standard-1.4-0003-4bf027b986286251",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.530605
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "intake-standard-1.4-0002-a36d146788329262",
+              "doc_id": "intake-standard",
+              "page": 2,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The answer directly supports the information given in the retrieved context.",
+          "faithfulness_method": "json",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 12720.368,
+          "judge_latency_ms": 9457.854,
+          "trace_id": "f7164246-fa6e-44a4-a0d7-3fd02eaeb201",
+          "context_excerpt": "[Evidence 1; Document Intake Standard v1.4; page 2]\nThe intake job reads files in stable path order and never follows symbolic links outside the selected data directory. It ignores the archive, quarantine, and vector-store directories. A new batch is verified before chunking. A file that fails verification is moved to quarantine with its report record; passing files proceed to the chunker. Operators compare the batch manifest with the last successful run before they publish a collection.\n\n[Evidence 2; Document Intake Standard v1.4; page 1]\nAn intake batch is a dated set of source files supplied to the Aster Research Lab assistant. Accepted formats are UTF-8 Markdown, UTF-8 text, and searchable PDF. Each file carries a stable document identifier, a title, a date or version, a source description, and a page count. The manifest records the SHA-256 hash of the extracted body, the original filename, and the batch label. The batch operator preserves original source files until verification finishes.\n\n[Evidence 3; Document Intake Standard v1.4; page 3]\nA repeated intake of unchanged sources must create no new chunk embeddings. A changed source replaces only the chunks belonging to that document. A full snapshot run removes chunks for a document that has been deleted from that snapshot. Incremental batch imports leave unrelated documents in place. The result file records discovered files, verified files, quarantined files, inserted chunks, replaced chunks, skipped chunks, and deleted chunks."
+        },
+        {
+          "id": "human-q07",
+          "question": "After a repaired source passes, which chunks are replaced and what does the query owner verify?",
+          "type": "hard",
+          "source": "human",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "Only the document's chunks are replaced. [Document Repair Procedure v1.0, p. 3]",
+          "citations": [
+            {
+              "doc_id": "document-repair",
+              "doc_version": "1.0",
+              "title": "Document Repair Procedure",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "document-repair-1.0-0003-ac0683ddc5dcf969",
+              "inline": "[Document Repair Procedure v1.0, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "document-repair-1.0-0003-ac0683ddc5dcf969",
+              "doc_id": "document-repair",
+              "doc_version": "1.0",
+              "score": 0.69077
+            },
+            {
+              "chunk_id": "document-repair-1.0-0002-adfd541733272c30",
+              "doc_id": "document-repair",
+              "doc_version": "1.0",
+              "score": 0.619896
+            },
+            {
+              "chunk_id": "document-repair-1.0-0001-87e6eb282078e2d6",
+              "doc_id": "document-repair",
+              "doc_version": "1.0",
+              "score": 0.55631
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "document-repair-1.0-0003-ac0683ddc5dcf969",
+              "doc_id": "document-repair",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 12132.882,
+          "judge_latency_ms": 4393.17,
+          "trace_id": "e0af8e62-58ec-4b41-854a-45e5bafb78e5",
+          "context_excerpt": "[Evidence 1; Document Repair Procedure v1.0; page 3]\nOnce the document passes, the ingestion writer replaces only that document's chunks and records the inserted and removed chunk counts. The query owner then runs a targeted question and checks the retrieved page and document version. If the repair changes an answer, the evaluation result records the change and the trace shows the supporting passage.\n\n[Evidence 2; Document Repair Procedure v1.0; page 2]\nThe operator reruns verification on the repaired document before it reaches chunking. Quality checks readable extraction, completeness checks required metadata and truncation, recency checks active revisions, and uniqueness checks exact and near copies. A single failed check is enough to keep the source out of the active collection.\n\n[Evidence 3; Document Repair Procedure v1.0; page 1]\nA quarantined source is repaired from a trusted original, not reconstructed from a generated answer. The curator compares its title, source, version, page count, and extracted pages with that original. A corrected source receives a new hash and an updated verification record. The original failed copy stays in quarantine for audit until the corrected version passes intake."
+        },
+        {
+          "id": "human-q08",
+          "question": "How is a rollback performed and confirmed after a regression?",
+          "type": "hard",
+          "source": "human",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "I don't know based on the documents",
+          "citations": [],
+          "retrieved": [
+            {
+              "chunk_id": "incident-recovery-1.3-0002-7729137733046acd",
+              "doc_id": "incident-recovery",
+              "doc_version": "1.3",
+              "score": 0.537979
+            },
+            {
+              "chunk_id": "versioning-standard-1.3-0003-d7945a01b0e19ff0",
+              "doc_id": "versioning-standard",
+              "doc_version": "1.3",
+              "score": 0.491467
+            },
+            {
+              "chunk_id": "source-provenance-1.0-0003-7b1bc0f0e3ae0dd4",
+              "doc_id": "source-provenance",
+              "doc_version": "1.0",
+              "score": 0.394759
+            }
+          ],
+          "citation_location_checks": [],
+          "citation_valid": false,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The canonical abstention contains no factual claims.",
+          "faithfulness_method": "vacuous_truth_abstention",
+          "citation_supported_by_judge": false,
+          "abstention_correct": false,
+          "false_abstention": true,
+          "latency_ms": 34300.99,
+          "judge_latency_ms": 0.0,
+          "trace_id": "713ed62f-bef4-459e-a55d-227f03f0db96",
+          "context_excerpt": "[Evidence 1; Incident and Recovery Runbook v1.3; page 2]\nIf a new document revision causes a regression, the operator restores the last known good version by document id and version. The ingestion job is the only writer and records the rollback. The operator then submits a test question that targets the affected clause and checks that the returned trace shows the expected active version. A successful health check alone does not prove that retrieval has recovered.\n\n[Evidence 2; Version and Archive Standard v1.3; page 3]\nA rollback names the stable document id and archived version. The ingestion writer marks the active revision superseded and restores the selected archived source. The rollback event records who initiated the request, the previous active version, the restored version, and the reason. The new retrieval trace must show the restored version. The archived newer file remains available for a later corrected release.\n\n[Evidence 3; Source Provenance Register v1.0; page 3]\nWhen a source is replaced, the manifest links the new version to the previous version and the verification report for that run. Archived versions keep their original hashes. Restoring an older version adds a rollback event without deleting the newer provenance record."
+        },
+        {
+          "id": "human-q09",
+          "question": "Why must the evaluation suite be rerun after increasing TOP_K?",
+          "type": "hard",
+          "source": "human",
+          "reviewed": true,
+          "expected_behavior": "answer",
+          "answer": "Any candidate change must rerun the same suite so the quality and latency trade-off is visible. [Latency and Load Runbook v1.0, p. 3]",
+          "citations": [
+            {
+              "doc_id": "latency-runbook",
+              "doc_version": "1.0",
+              "title": "Latency and Load Runbook",
+              "source": "Aster Research Lab policy archive (fictional test corpus)",
+              "page": 3,
+              "chunk_id": "latency-runbook-1.0-0003-bf903381f66923f8",
+              "inline": "[Latency and Load Runbook v1.0, p. 3]"
+            }
+          ],
+          "retrieved": [
+            {
+              "chunk_id": "latency-runbook-1.0-0003-bf903381f66923f8",
+              "doc_id": "latency-runbook",
+              "doc_version": "1.0",
+              "score": 0.514389
+            },
+            {
+              "chunk_id": "retrieval-quality-1.3-0002-a3930b97e192f16b",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.395343
+            },
+            {
+              "chunk_id": "retrieval-quality-1.3-0003-1c31d249d7d97509",
+              "doc_id": "retrieval-quality",
+              "doc_version": "1.3",
+              "score": 0.370882
+            }
+          ],
+          "citation_location_checks": [
+            {
+              "chunk_id": "latency-runbook-1.0-0003-bf903381f66923f8",
+              "doc_id": "latency-runbook",
+              "page": 3,
+              "retrieved_location_matches": true,
+              "present_in_safe_prompt": true
+            }
+          ],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The local judge found the answer supported by the cited passage.",
+          "faithfulness_method": "bare_numeric_score",
+          "citation_supported_by_judge": true,
+          "abstention_correct": false,
+          "false_abstention": false,
+          "latency_ms": 13193.349,
+          "judge_latency_ms": 6277.406,
+          "trace_id": "c852950a-142d-497b-8f72-0730a3187ecc",
+          "context_excerpt": "[Evidence 1; Latency and Load Runbook v1.0; page 3]\nWhen latency exceeds the threshold, the operator checks model load time, request queueing, retrieved context size, and per-stage trace values. Increasing TOP_K can improve recall but also increases prompt length and generation time. Any candidate change must rerun the same suite so the quality and latency trade-off is visible.\n\n[Evidence 2; Retrieval Quality Standard v1.3; page 2]\nRecall at k measures whether at least one relevant document and page appears among the first k results. Mean reciprocal rank rewards a relevant item appearing near the top. Normalized discounted cumulative gain gives more credit to relevant results at earlier ranks. The evaluation reports recall at three and five, MRR, and nDCG at five. Each metric includes its query count and relevance definition so an operator can reproduce the calculation.\n\n[Evidence 3; Retrieval Quality Standard v1.3; page 3]\nThe noise check adds three unrelated test passages to a copy of the candidate ranking and measures the same retrieval metrics again. It does not write those passages to the production Chroma collection. A second check introduces deterministic query typos. The report records the absolute change from the clean run and keeps the random seed with the result file. A failed retrieval metric blocks candidate release even if generated answers sound convincing."
+        },
+        {
+          "id": "human-q10",
+          "question": "What is the current electricity consumption of the lab today?",
+          "type": "unanswerable",
+          "source": "human",
+          "reviewed": true,
+          "expected_behavior": "abstain",
+          "answer": "I don't know based on the documents",
+          "citations": [],
+          "retrieved": [
+            {
+              "chunk_id": "service-charter-1.0-0001-fe52b8bafc92a0f3",
+              "doc_id": "service-charter",
+              "doc_version": "1.0",
+              "score": 0.162112
+            },
+            {
+              "chunk_id": "intake-standard-1.4-0001-0f08c5234e52aee2",
+              "doc_id": "intake-standard",
+              "doc_version": "1.4",
+              "score": 0.124194
+            },
+            {
+              "chunk_id": "latency-runbook-1.0-0002-28560aa3e3564720",
+              "doc_id": "latency-runbook",
+              "doc_version": "1.0",
+              "score": 0.119223
+            }
+          ],
+          "citation_location_checks": [],
+          "citation_valid": true,
+          "faithfulness_score": 1.0,
+          "faithfulness_reason": "The canonical abstention contains no factual claims.",
+          "faithfulness_method": "vacuous_truth_abstention",
+          "citation_supported_by_judge": false,
+          "abstention_correct": true,
+          "false_abstention": false,
+          "latency_ms": 108.814,
+          "judge_latency_ms": 0.0,
+          "trace_id": "dfc9ed50-42ac-4c94-b592-20dda68dfb46",
+          "context_excerpt": ""
+        }
+      ]
+    }
+  },
+  "metrics": {
+    "embedding": {
+      "timestamp": "2026-11-26T11:00:49.973301+00:00",
+      "seed": 4032,
+      "collection": "e3-before-b-500",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_version": "sentence-transformers/all-MiniLM-L6-v2; sentence-transformers=3.4.1",
+      "paraphrase_pairs": 15,
+      "unrelated_pairs": 15,
+      "mean_paraphrase_cosine": 0.48697,
+      "mean_unrelated_cosine": 0.01636,
+      "similarity_gap": 0.47061,
+      "embedding_time_per_chunk_ms": 39.752011,
+      "timed_active_chunks": 54,
+      "pair_embedding_elapsed_ms": 408.563,
+      "determinism_largest_absolute_difference": 0.0
+    },
+    "retrieval": {
+      "recall_at_3": 0.861111,
+      "recall_at_5": 0.958333,
+      "mrr": 0.83287,
+      "ndcg_at_5": 0.853492
+    },
+    "end_to_end": {
+      "faithfulness": 1.0,
+      "faithfulness_scored_questions": 43,
+      "faithfulness_answered_only": 1.0,
+      "abstention_correctness": 1.0,
+      "correct_abstentions": 7,
+      "unanswerable_count": 7,
+      "false_abstention_rate": 0.111111,
+      "false_abstentions": 4,
+      "answer_expected_count": 36,
+      "citation_validity": 0.888889,
+      "citation_valid_count": 32,
+      "citation_evaluable_count": 36,
+      "p50_latency_ms": 12132.882,
+      "p95_latency_ms": 30392.909,
+      "mean_judge_latency_ms": 6020.72,
+      "llm_judge_calls": 32,
+      "vacuous_truth_abstentions": 11,
+      "query_count": 43
+    }
+  },
+  "gate": {
+    "passed": true,
+    "skipped": true,
+    "checks": {},
+    "values": {},
+    "rationale": "Gate skipped by --no-gate."
+  },
+  "result_file": "D:\\SCD\\ragops\\eval\\results\\suite_20261126T155753Z.json",
+  "summary_file": "D:\\SCD\\ragops\\eval\\results\\suite_20261126T155753Z.md"
+}

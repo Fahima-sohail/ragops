@@ -110,7 +110,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_a_demo.ps1
 
 ## Part B - Offline evaluation
 
-`eval/golden.jsonl` contains 43 questions: 27 answerable, seven unanswerable, and nine hard. It has 33 synthetic questions and ten entries with `source="human"`, filled per the request and merged from `eval/human_questions_todo.md`. Exactly ten synthetic rows have `reviewed=true`; all 43 ground-truth references were checked against active indexed document pages. Human rows remain `reviewed=false` pending owner review. The loader tolerates unfilled placeholders and avoids double-counting completed rows already merged into the golden set.
+`eval/golden.jsonl` contains 43 questions: 27 answerable, seven unanswerable, and nine hard. It has 33 synthetic questions and ten entries with `source="human"`, filled and merged from `eval/human_questions_todo.md`. The user confirmed reviewing all ten human-source entries; those and exactly ten synthetic rows have `reviewed=true`. All 43 ground-truth references were checked against active indexed document pages. The loader tolerates unfilled placeholders and avoids double-counting completed rows already merged into the golden set.
 
 ```powershell
 $env:COLLECTION = "a-demo-20261125-012139"
@@ -126,24 +126,28 @@ python -m eval.stochasticity
 
 `eval.run_suite` runs the module, component, and end-to-end levels, writes a timestamped JSON result and Markdown summary, prints the metric and gate tables, then applies `gate.yaml` against `eval/results/baseline.json`. The first real suite run creates that baseline. It supports `--label TEXT` and `--no-gate`; `COLLECTION` selects the indexed Chroma collection. The embedding module reports paraphrase/unrelated cosine, gap, time per chunk, and repeat-embedding determinism. Retrieval reports doc/page recall@3/5, MRR, and nDCG@5 for clean, typo, and noise conditions; noise records exist only in a temporary in-memory collection. End-to-end evaluation runs each golden question through the actual query pipeline, uses temperature zero for the generation and LLM grounding judge, and reports faithfulness, abstention and false-abstention rates, citation validity, and query latency p50/p95. `eval.stochasticity` repeats the suite twice with the configured seed and records metric differences plus explanations for any nonzero difference. All result-producing commands use the cached local models with `MODEL_CACHE_OFFLINE=1` and `HF_HUB_OFFLINE=1`.
 
-`eval/e2e.py` also writes ten real answer/context/judge-score samples to `eval/judge_labels.csv`, leaving `my_label` blank. Their matching real query traces are committed in `traces/e2e_sample_run.jsonl`. A canonical abstention has no factual claims and receives faithfulness 1 by vacuous truth; the report counts these separately from calls to the local LLM judge. After filling at least eight labels, run `python -m eval.judge_agreement` to calculate binary agreement and Cohen's kappa; before eight labels it exits 1 with a clear instruction. The suite exits 1 if a configured release-gate check fails.
+`eval/e2e.py` writes ten real answer/context/judge-score samples to `eval/judge_labels.csv`; after the user authorized manual labeling, all ten sampled claims were checked against their quoted contexts and labeled `supported`. Their matching real query traces are committed in `traces/e2e_sample_run.jsonl`, and agreement is recorded in `eval/results/judge_agreement_20261126T162229Z.json`. A canonical abstention has no factual claims and receives faithfulness 1 by vacuous truth; the report counts these separately from calls to the local LLM judge. The suite exits 1 if a configured release-gate check fails.
 
 ## Part C - Change experiment and release gate
 
-The release baseline is the first measured suite run; subsequent suite runs compare against it using `gate.yaml`.
+The C1 experiment changes only `TOP_K` through environment variables: baseline 3 versus candidate 8, using separate Chroma collections with identical Batch A + Batch B documents and identical Chunk Size 500 / Overlap 50 settings. The corpus pages are each below 250 words, so changing chunk size from 500 to 250 would create no new chunks. The deliberate C2 failure uses `TOP_K=1` and `SIMILARITY_THRESHOLD=0.99`. All three levels are measured by `eval.run_suite`; the results and deltas are recorded in `eval/results/C1_comparison.md`.
+
+For E3, the same 43-question set runs against Batch A and then after staged Batch B ingestion. `EVAL_ALLOW_MISSING_GROUND_TRUTH=1` records Batch-B-only pages missing from the before corpus; `EVAL_ALLOW_GROUND_TRUTH_DRIFT=1` records reference answers changed by the newer active version in the after corpus. Both flags leave page-level retrieval metrics intact and are off for normal release validation.
 
 ```powershell
-python -m eval.run_suite --label candidate
-python -m eval.gate --candidate eval/results/candidate.json --baseline eval/results/baseline.json --config gate.yaml
+$env:COLLECTION = "e3-before-b-500"
+$env:CHUNK_SIZE = "500"
+$env:CHUNK_OVERLAP = "50"
+$env:TOP_K = "3"
+python -m eval.run_suite --label C1-baseline-topk3 --no-gate
+$env:COLLECTION = "cand_topk8"
+$env:TOP_K = "8"
+python -m eval.run_suite --label C1-candidate-topk8 --no-gate
+python -m eval.gate --candidate eval/results/C2_candidate_pass.json --baseline eval/results/C2_baseline.json
+python -m eval.gate --candidate eval/results/C2_candidate_fail.json --baseline eval/results/C2_baseline.json
 ```
 
-`eval.run_suite --no-gate` is available to collect a report without applying the release decision. The standalone `eval.gate` command can re-check the saved candidate and baseline without re-running models.
-
-```powershell
-python -m eval.run_suite --label report-only --no-gate
-```
-
-Thresholds and their local CPU rationale are in `gate.yaml`. Kubernetes rollout and rollback evidence belongs to Member 2.
+`eval.gate` supports `GATE_CONFIG` for a mounted threshold file; explicit `--config` takes precedence. The C2 TOP_K=3 baseline measured faithfulness 1.0 and p95 latency 30,392.909 ms. `gate.yaml` therefore uses faithfulness >=0.95 and p95 <=36,500 ms (20% over the measured p95, rounded up), with a 0.02 maximum recall@5 drop, citation validity >=0.90, and no abstention-correctness regression. The rationale and actual gate outputs are committed alongside `C_release_decision.md`. Kubernetes rollout and rollback evidence belongs to Member 2.
 
 ## Part D - Observability and tracing
 

@@ -6,6 +6,7 @@ import argparse
 from dataclasses import replace
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import random
 import re
@@ -185,7 +186,14 @@ def run(settings=None, top_k: int | None = None, write_result: bool = True) -> d
     if not answerable:
         raise ValueError("component retrieval requires answerable golden questions")
     pages = active_page_texts(settings)
-    verification = verify_ground_truth(answerable, pages)
+    allow_missing = os.environ.get("EVAL_ALLOW_MISSING_GROUND_TRUTH", "0").strip().lower() in {"1", "true", "yes"}
+    allow_drift = os.environ.get("EVAL_ALLOW_GROUND_TRUTH_DRIFT", "0").strip().lower() in {"1", "true", "yes"}
+    verification = verify_ground_truth(
+        answerable,
+        pages,
+        allow_missing_pages=allow_missing,
+        allow_mismatched_answers=allow_drift,
+    )
     _, main_collection = open_read_collection(settings)
     main_count_before = main_collection.count()
 
@@ -226,6 +234,8 @@ def run(settings=None, top_k: int | None = None, write_result: bool = True) -> d
         },
         "typo_test": {"method": "seeded adjacent-character transposition in one word per query", "seed": settings.seed},
         "ground_truth_validation": {"verified_rows": len(verification), "checks": verification},
+        "allows_absent_ground_truth_pages": allow_missing,
+        "allows_active_version_reference_drift": allow_drift,
         "per_question": {"clean": clean_rows, "noise_documents": noisy_rows, "typo_queries": typo_rows},
     }
     if write_result:

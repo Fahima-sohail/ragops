@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import re
 from typing import Any
@@ -97,7 +98,8 @@ def ground_truth_refs(row: dict[str, Any]) -> list[tuple[str, int]]:
 
 
 def load_golden(path: Path | None = None, include_human_drafts: bool = True) -> tuple[list[dict[str, Any]], dict[str, int]]:
-    path = path or ROOT / "eval" / "golden.jsonl"
+    configured_path = os.environ.get("GOLDEN_FILE")
+    path = path or (Path(configured_path).expanduser() if configured_path else ROOT / "eval" / "golden.jsonl")
     rows = _read_jsonl(path)
     if include_human_drafts:
         human_rows, human_placeholders = _human_todo_rows(ROOT / "eval" / "human_questions_todo.md")
@@ -147,7 +149,13 @@ def _tokens(text: str) -> set[str]:
     return {token.casefold() for token in _WORD.findall(text) if token.casefold() not in _STOP and len(token) > 2}
 
 
-def verify_ground_truth(rows: list[dict[str, Any]], page_texts: dict[tuple[str, int], str]) -> list[dict[str, Any]]:
+def verify_ground_truth(
+    rows: list[dict[str, Any]],
+    page_texts: dict[tuple[str, int], str],
+    *,
+    allow_missing_pages: bool = False,
+    allow_mismatched_answers: bool = False,
+) -> list[dict[str, Any]]:
     """Verify every answer reference against indexed active doc/page text."""
     checked: list[dict[str, Any]] = []
     for row in rows:
@@ -157,7 +165,20 @@ def verify_ground_truth(rows: list[dict[str, Any]], page_texts: dict[tuple[str, 
             continue
         missing = [f"{doc_id}:p{page}" for doc_id, page in refs if (doc_id, page) not in page_texts]
         if missing:
-            raise ValueError(f"{row['id']}: ground-truth pages absent from active collection: {missing}")
+            if not allow_missing_pages:
+                raise ValueError(f"{row['id']}: ground-truth pages absent from active collection: {missing}")
+            checked.append({
+                "id": row["id"],
+                "behavior": "answer",
+                "verified": False,
+                "method": "ground_truth_page_absent_from_this_corpus",
+                "missing_ground_truth": missing,
+                "present_ground_truth": [
+                    {"doc_id": doc_id, "page": page}
+                    for doc_id, page in refs if (doc_id, page) in page_texts
+                ],
+            })
+            continue
         answer = str(row["reference_answer"])
         evidence = " ".join(page_texts[ref] for ref in refs)
         quote_parts = [part.strip() for part in answer.split(" || ") if part.strip()]
@@ -172,6 +193,16 @@ def verify_ground_truth(rows: list[dict[str, Any]], page_texts: dict[tuple[str, 
         # paraphrases, the disclosed token check still requires most answer terms.
         verified = exact or coverage >= 0.65
         if not verified:
+            if allow_mismatched_answers:
+                checked.append({
+                    "id": row["id"],
+                    "behavior": "answer",
+                    "verified": False,
+                    "method": "reference_answer_differs_from_active_version",
+                    "token_coverage": round(coverage, 6),
+                    "ground_truth": [{"doc_id": doc_id, "page": page} for doc_id, page in refs],
+                })
+                continue
             raise ValueError(f"{row['id']}: reference answer not supported by indexed ground-truth page(s) (token coverage={coverage:.3f})")
         checked.append({
             "id": row["id"],

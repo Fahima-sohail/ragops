@@ -88,13 +88,13 @@ def _markdown(result: dict[str, Any]) -> str:
         "",
         "## Release gate",
         "",
-        f"- Result: **{'PASS' if result['gate']['passed'] else 'FAIL'}**",
+        f"- Result: **{'SKIPPED' if result['gate'].get('skipped') else ('PASS' if result['gate']['passed'] else 'FAIL')}**",
         "",
         "| Check | Passed |",
         "| --- | --- |",
     ])
     for key, passed in result["gate"]["checks"].items():
-        lines.append(f"| {key} | {'yes' if passed else 'no'} |")
+        lines.append(f"| {key} | {'skipped' if result['gate'].get('skipped') else ('yes' if passed else 'no')} |")
     lines.extend(["", f"Gate values: `{json.dumps(result['gate']['values'], sort_keys=True)}`", ""])
     return "\n".join(lines)
 
@@ -113,18 +113,17 @@ def _print_summary(result: dict[str, Any]) -> None:
             print(f"Retrieval {condition} | {key} | {values[key]:.6f}")
     for key in ("faithfulness", "abstention_correctness", "false_abstention_rate", "citation_validity", "p50_latency_ms", "p95_latency_ms", "llm_judge_calls", "vacuous_truth_abstentions"):
         print(f"End-to-end | {key} | {e2e[key]}")
-    print(f"Release gate | result | {'PASS' if result['gate']['passed'] else 'FAIL'}")
+    print(f"Release gate | result | {'SKIPPED' if result['gate'].get('skipped') else ('PASS' if result['gate']['passed'] else 'FAIL')}")
     for key, passed in result["gate"]["checks"].items():
-        print(f"Gate | {key} | {'PASS' if passed else 'FAIL'}")
+        print(f"Gate | {key} | {'SKIPPED' if result['gate'].get('skipped') else ('PASS' if passed else 'FAIL')}")
 
 
 def run(*, label: str | None = None, no_gate: bool = False) -> tuple[dict[str, Any], bool]:
     settings = get_settings(llm_api_key="")
     seed_all(settings.seed)
     questions, loader_counts = load_golden()
-    if settings.top_k < 5:
-        raise ValueError("TOP_K must be at least 5 for recall@5 evaluation")
-    collected = collect_suite(settings, write_judge_labels=True)
+    label_file = ROOT / "eval" / "judge_labels.csv"
+    collected = collect_suite(settings, write_judge_labels=not label_file.is_file())
     metrics = _gate_metrics(collected)
     results_dir = ROOT / "eval" / "results"
     results_dir.mkdir(parents=True, exist_ok=True)

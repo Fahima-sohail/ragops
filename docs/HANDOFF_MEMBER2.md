@@ -39,6 +39,30 @@ python scripts/download_models.py
 
 Additional local controls are `LLM_DEVICE` (defaults to CPU) and `NEAR_DUPLICATE_THRESHOLD` (defaults to `0.94`). The prompt temperature is fixed to zero.
 
+## C1/C2 release candidates
+
+The measured baseline and candidate collections are persistent Chroma collections under the same PVC. In each Deployment/Job, set the following exact environment values. Baseline and candidate versions must use the same `VECTOR_DIR`, corpus snapshot, embedding/model settings, chunk size/overlap, similarity threshold, and seed. C1 changes `TOP_K` from 3 to 8 and selects the corresponding collection. Keep the API volume mount read-only and give ingestion Jobs read-write access.
+
+| Role | `COLLECTION` | `CHUNK_SIZE` | `CHUNK_OVERLAP` | `TOP_K` | `SIMILARITY_THRESHOLD` |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Baseline after Batch B | `e3-before-b-500` | `500` | `50` | `3` | `0.28` |
+| Passing candidate | `cand_topk8` | `500` | `50` | `8` | `0.28` |
+| Deliberate failing candidate | `cand_topk1` | `500` | `50` | `1` | `0.99` |
+
+Shared settings are `VECTOR_DIR=/app/data/vector_store`, `CHUNK_SIZE=500`, `CHUNK_OVERLAP=50`, `EMBED_MODEL=sentence-transformers/all-MiniLM-L6-v2`, `LLM_MODEL=Qwen/Qwen2.5-0.5B-Instruct`, `SEED=4032`, `TRACE_DIR=/app/traces`, `MODEL_CACHE_OFFLINE=1`, and `HF_HUB_OFFLINE=1`. Set `LLM_API_KEY` empty for the local model; if using a hosted LLM, supply it from a Kubernetes Secret. Set `DATA_DIR=/app/data/batch_a` for the first ingestion Job and `/app/data/batch_b` for the incremental Batch B Job. The corpus and chunk settings are identical in each collection; C1 changes only `COLLECTION` and `TOP_K`. The deliberate fail uses `TOP_K=1` and raises `SIMILARITY_THRESHOLD` to 0.99. Create each collection by running the Batch A and Batch B ingestion Jobs with the same chunk settings, then evaluate it.
+
+The C2 TOP_K=3 baseline (`suite_20261126T155753Z.json`) measured faithfulness `1.0`, p95 latency `30,392.909 ms`, and recall@5 `0.958333`. The gate accepts faithfulness down to `0.95`, recall@5 loss up to `0.02`, citation validity at least `0.90`, abstention correctness no lower than baseline, and p95 up to `36,500 ms` (20% over measured baseline, rounded up). Thresholds can be mounted and selected without rebuilding the image by setting `GATE_CONFIG=/app/config/gate.yaml` on the gate Job.
+
+Use these commands as the `command` / `args` inside Member 2's Kubernetes Jobs; put each role's environment table values in that Job's Pod spec:
+
+```sh
+python -m rag.ingest --data "$DATA_DIR" --collection "$COLLECTION"
+python -m eval.run_suite --label "$CANDIDATE_LABEL" --no-gate
+python -m eval.gate --candidate "$CANDIDATE_JSON" --baseline "$BASELINE_JSON"
+```
+
+The candidate suite Job must preserve its `suite_<timestamp>.json` output and copy the metric payload to the candidate JSON path used by the gate Job. The gate Job mounts the baseline JSON, candidate JSON, and `$GATE_CONFIG` read-only and propagates the command's exit code. `C2_gate_pass.txt`, `C2_gate_fail.txt`, and `C_release_decision.md` show the recorded local outcomes. Kubernetes rollout and rollback manifests remain Member 2 work under `k8s/`.
+
 ## Commands and ownership
 
 Member 1 commands:

@@ -1,0 +1,440 @@
+{
+  "run_id": "20261126T105908Z-215100",
+  "timestamp": "2026-11-26T10:59:49.485382+00:00",
+  "data_dir": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8",
+  "collection": "cand_topk8",
+  "verification": [
+    {
+      "doc_id": "corrupt-extraction",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\corrupt-extraction.txt",
+      "title": "",
+      "doc_version": "unknown",
+      "sha256": "",
+      "checks": {
+        "quality": false,
+        "completeness": false,
+        "recency": true,
+        "uniqueness": false
+      },
+      "reasons": {
+        "quality": "extraction failed: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte",
+        "completeness": "missing or incomplete: source, title, date or version, page_count",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "cannot calculate a content hash"
+      },
+      "supersedes_version": null,
+      "passed": false,
+      "quarantine_path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\corrupt-extraction.txt"
+    },
+    {
+      "doc_id": "document-repair",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\document-repair-v1.0.md",
+      "title": "Document Repair Procedure",
+      "doc_version": "1.0",
+      "sha256": "52f7c5e7b80704902db2b677385f93448d448120dc29197a03dab953b03d1b04",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.7856 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.7856,
+      "near_duplicate_match": "incident-recovery"
+    },
+    {
+      "doc_id": "charter-copy-two",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\duplicate-charter.md",
+      "title": "RAG Service Charter",
+      "doc_version": "1.0",
+      "sha256": "3b7be47f0b1dd0edfc712701b400389173ed59e19a2fbc7a6f1bf36f66d498c6",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": false
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "exact duplicate of existing document service-charter by SHA-256"
+      },
+      "supersedes_version": null,
+      "passed": false,
+      "quarantine_path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\duplicate-charter.md"
+    },
+    {
+      "doc_id": "intake-copy-one",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\duplicate-intake.md",
+      "title": "Document Intake Standard",
+      "doc_version": "1.4",
+      "sha256": "c2cbdd652ccaf57b356e1a78fcf411dfecc69fc172e18d5cdbcd81ae2805220c",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": false
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "exact duplicate of existing document intake-standard by SHA-256"
+      },
+      "supersedes_version": null,
+      "passed": false,
+      "quarantine_path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\duplicate-intake.md"
+    },
+    {
+      "doc_id": "feedback-loop",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\feedback-loop-v1.0.md",
+      "title": "Evaluation Feedback Loop",
+      "doc_version": "1.0",
+      "sha256": "dfe07e7c8ae61fb0acba1610e2b197a1ec6aa193dc3def258f6c1ccd3d554ac1",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.6126 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.612645,
+      "near_duplicate_match": "incident-recovery"
+    },
+    {
+      "doc_id": "injection-test-record",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\injection-test-record-v1.0.md",
+      "title": "Prompt Injection Test Record",
+      "doc_version": "1.0",
+      "sha256": "9d73c8c28b8e99770350e2898b1a146cad6d9a1b4424072f76a98d7c81c7bee1",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.7474 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.747374,
+      "near_duplicate_match": "prompt-safety"
+    },
+    {
+      "doc_id": "latency-runbook",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\latency-runbook-v1.0.md",
+      "title": "Latency and Load Runbook",
+      "doc_version": "1.0",
+      "sha256": "bd04fb1a36fc18423cfe1ea308c3b1f9e0a7111e4d901dbafe0d40d23d9dab2d",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.7185 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.718513,
+      "near_duplicate_match": "release-gate"
+    },
+    {
+      "doc_id": "missing-metadata",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\missing-metadata.md",
+      "title": "Unregistered operations note",
+      "doc_version": "unknown",
+      "sha256": "c31d90b1ef9eb656f3e667d32e90df9c3ea01f2b495d659b790ec3e4304706fb",
+      "checks": {
+        "quality": true,
+        "completeness": false,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "missing or incomplete: source, date or version, page_count",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.4459 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": false,
+      "near_duplicate_score": 0.445892,
+      "near_duplicate_match": "document-repair",
+      "quarantine_path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\missing-metadata.md"
+    },
+    {
+      "doc_id": "intake-near-copy",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\near-duplicate-intake.md",
+      "title": "Document Intake Standard",
+      "doc_version": "1.4",
+      "sha256": "db1de07a413bbcc5859266abc90ab6d21b59705c9dc692a1cfced34f87ebcce0",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": false
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "near duplicate of intake-standard: cosine=0.9982 >= 0.94"
+      },
+      "supersedes_version": null,
+      "passed": false,
+      "near_duplicate_score": 0.998212,
+      "near_duplicate_match": "intake-standard",
+      "quarantine_path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\near-duplicate-intake.md"
+    },
+    {
+      "doc_id": "review-register",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\review-register-v1.0.md",
+      "title": "Human Review Register",
+      "doc_version": "1.0",
+      "sha256": "349761650fac8ec32b7e429bd2783f36fa3594864778aa7cdbe86feadc46165c",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.6064 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.60639,
+      "near_duplicate_match": "feedback-loop"
+    },
+    {
+      "doc_id": "source-provenance",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\source-provenance-v1.0.md",
+      "title": "Source Provenance Register",
+      "doc_version": "1.0",
+      "sha256": "8e4dc9eb1b19e25e5eda163f1ba868afd81ee02e43a95b8fdf9e944a98167d89",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.6629 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": true,
+      "near_duplicate_score": 0.662875,
+      "near_duplicate_match": "versioning-standard"
+    },
+    {
+      "doc_id": "truncated-intake",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\truncated-fragment.md",
+      "title": "Truncated Intake Fragment",
+      "doc_version": "0.1",
+      "sha256": "d1170fe77df577be8c2f15c9eeea9a1f488a2564365954b9b4fae41c19e99ff7",
+      "checks": {
+        "quality": true,
+        "completeness": false,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "missing or incomplete: page_count mismatch (declared 3, extracted 4), text is marked truncated",
+        "recency": "no prior active version for this document id",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.6285 < 0.94"
+      },
+      "supersedes_version": null,
+      "passed": false,
+      "near_duplicate_score": 0.628491,
+      "near_duplicate_match": "document-repair",
+      "quarantine_path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\truncated-fragment.md"
+    },
+    {
+      "doc_id": "verification-standard",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\verification-standard-v2.2.md",
+      "title": "Document Verification Standard",
+      "doc_version": "2.2",
+      "sha256": "83648029bd599651e4772238e71e8501dc14348c98e99e8dde70a382d491c107",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "newer version 2.2 detected; prior 2.1 will be archived and superseded",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.6224 < 0.94"
+      },
+      "supersedes_version": "2.1",
+      "passed": true,
+      "near_duplicate_score": 0.62238,
+      "near_duplicate_match": "document-repair"
+    },
+    {
+      "doc_id": "versioning-standard",
+      "path": "D:\\SCD\\ragops\\tmp\\c1-batch-b-topk8\\versioning-standard-v1.3.md",
+      "title": "Version and Archive Standard",
+      "doc_version": "1.3",
+      "sha256": "d240ccb0fd350c6de621d4508f9c90aeb157959bab5d9fda1f5c06f3ddba3a83",
+      "checks": {
+        "quality": true,
+        "completeness": true,
+        "recency": true,
+        "uniqueness": true
+      },
+      "reasons": {
+        "quality": "readable extracted text",
+        "completeness": "all required metadata and complete text are present",
+        "recency": "newer version 1.3 detected; prior 1.2 will be archived and superseded",
+        "uniqueness": "no exact or near duplicate detected; closest cosine=0.6874 < 0.94"
+      },
+      "supersedes_version": "1.2",
+      "passed": true,
+      "near_duplicate_score": 0.687434,
+      "near_duplicate_match": "incident-recovery"
+    }
+  ],
+  "counts": {
+    "discovered_docs": 14,
+    "passed_docs": 8,
+    "quarantined_docs": 6,
+    "indexed_docs": 8,
+    "added_chunks": 24,
+    "replaced_chunks": 0,
+    "embedded_chunks": 24,
+    "skipped_unchanged_chunks": 0,
+    "deleted_chunks": 0,
+    "new_docs": 6,
+    "updated_docs": 2,
+    "unchanged_docs": 0,
+    "deleted_docs": 0,
+    "new_chunks": 18,
+    "updated_chunks": 6,
+    "unchanged_chunks": 0,
+    "archived_versions": [
+      {
+        "doc_id": "verification-standard",
+        "version": "2.1",
+        "path": "D:\\SCD\\ragops\\data\\archive\\verification-standard\\2.1__verification-standard-v2.1.md"
+      },
+      {
+        "doc_id": "versioning-standard",
+        "version": "1.2",
+        "path": "D:\\SCD\\ragops\\data\\archive\\versioning-standard\\1.2__versioning-standard-v1.2.md"
+      }
+    ],
+    "by_doc_id": {
+      "document-repair": {
+        "added_chunks": 3,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 0,
+        "deleted_chunks": 0
+      },
+      "feedback-loop": {
+        "added_chunks": 3,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 0,
+        "deleted_chunks": 0
+      },
+      "injection-test-record": {
+        "added_chunks": 3,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 0,
+        "deleted_chunks": 0
+      },
+      "latency-runbook": {
+        "added_chunks": 3,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 0,
+        "deleted_chunks": 0
+      },
+      "review-register": {
+        "added_chunks": 3,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 0,
+        "deleted_chunks": 0
+      },
+      "source-provenance": {
+        "added_chunks": 3,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 0,
+        "deleted_chunks": 0
+      },
+      "verification-standard": {
+        "added_chunks": 3,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 0,
+        "deleted_chunks": 0
+      },
+      "versioning-standard": {
+        "added_chunks": 3,
+        "replaced_chunks": 0,
+        "skipped_unchanged_chunks": 0,
+        "deleted_chunks": 0
+      }
+    },
+    "embedding_ms": 770.427,
+    "index_generation": "1795690789459098200"
+  },
+  "quarantine": [
+    {
+      "doc_id": "corrupt-extraction",
+      "path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\corrupt-extraction.txt"
+    },
+    {
+      "doc_id": "charter-copy-two",
+      "path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\duplicate-charter.md"
+    },
+    {
+      "doc_id": "intake-copy-one",
+      "path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\duplicate-intake.md"
+    },
+    {
+      "doc_id": "missing-metadata",
+      "path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\missing-metadata.md"
+    },
+    {
+      "doc_id": "intake-near-copy",
+      "path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\near-duplicate-intake.md"
+    },
+    {
+      "doc_id": "truncated-intake",
+      "path": "D:\\SCD\\ragops\\data\\quarantine\\20261126T105908Z-215100\\truncated-fragment.md"
+    }
+  ],
+  "deleted_chunks_by_doc_id": {},
+  "manifest_path": "D:\\SCD\\ragops\\data\\vector_store\\cand_topk8.manifest.json"
+}

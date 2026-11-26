@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-11-26T08:45:15.627743+00:00",
+  "seed": 4032,
+  "csv": "D:\\SCD\\ragops\\eval\\judge_labels.csv",
+  "filled_labels": 10,
+  "minimum_required": 8,
+  "threshold_for_binary_agreement": 0.5,
+  "agreement_rate": 1.0,
+  "cohen_kappa": 1.0,
+  "numeric_label_mean_absolute_error": null,
+  "numeric_manual_scores": 0,
+  "result_file": "D:\\SCD\\ragops\\eval\\results\\judge_agreement_20261126T084515Z.json"
+}

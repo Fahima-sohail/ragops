@@ -6,7 +6,7 @@ Once the document passes, the ingestion writer replaces only that document's chu
 The operator reruns verification on the repaired document before it reaches chunking. Quality checks readable extraction, completeness checks required metadata and truncation, recency checks active revisions, and uniqueness checks exact and near copies. A single failed check is enough to keep the source out of the active collection.
 
 [Evidence 3; Document Repair Procedure v1.0; page 1]
-A quarantined source is repaired from a trusted original, not reconstructed from a generated answer. The curator compares its title, source, version, page count, and extracted pages with that original. A corrected source receives a new hash and an updated verification record. The original failed copy stays in quarantine for audit until the corrected v",1.000000,
+A quarantined source is repaired from a trusted original, not reconstructed from a generated answer. The curator compares its title, source, version, page count, and extracted pages with that original. A corrected source receives a new hash and an updated verification record. The original failed copy stays in quarantine for audit until the corrected v",1.000000,supported
 human-q01,Which file formats can the intake process accept?,"['UTF-8 Markdown', 'UTF-8 text', 'searchable PDF'] [Document Intake Standard v1.4, p. 1]","[Evidence 1; Document Intake Standard v1.4; page 2]
 The intake job reads files in stable path order and never follows symbolic links outside the selected data directory. It ignores the archive, quarantine, and vector-store directories. A new batch is verified before chunking. A file that fails verification is moved to quarantine with its report record; passing files proceed to the chunker. Operators compare the batch manifest with the last successful run before they publish a collection.
 
@@ -14,7 +14,7 @@ The intake job reads files in stable path order and never follows symbolic links
 An intake batch is a dated set of source files supplied to the Aster Research Lab assistant. Accepted formats are UTF-8 Markdown, UTF-8 text, and searchable PDF. Each file carries a stable document identifier, a title, a date or version, a source description, and a page count. The manifest records the SHA-256 hash of the extracted body, the original filename, and the batch label. The batch operator preserves original source files until verification finishes.
 
 [Evidence 3; Document Intake Standard v1.4; page 3]
-A repeated intake of unchanged sources must create no new chunk embeddings. A changed source replaces only the chunks belonging to that do",1.000000,
+A repeated intake of unchanged sources must create no new chunk embeddings. A changed source replaces only the chunks belonging to that do",1.000000,supported
 q09,What should the guardrail do when a retrieved passage asks the model to ignore earlier instructions?,"The guardrail should act as a guardrail and ensure that it does not repeat any previously hidden prompts or secrets. [Prompt Injection Test Record v1.0, p. 3]","[Evidence 1; Prompt Injection Test Record v1.0; page 3]
 The incident reviewer checks that the generator did not repeat hidden prompt text or secrets. The reviewer opens the recorded trace, confirms the flagged chunk was excluded from the final prompt, and verifies that a guardrail action was recorded. The test is repeated after a prompt or model change.
 
@@ -22,7 +22,7 @@ The incident reviewer checks that the generator did not repeat hidden prompt tex
 After an incident, the owner updates the verification report, the evaluation result, and the decision record. A source-specific extraction problem needs a fixture or a parser correction. A prompt-injection event needs a guardrail test. A missing coverage topic becomes a proposed golden question only after review. The incident record identifies the observed symptom, trace evidence, repair, and regression check.
 
 [Evidence 3; Prompt Safety Standard v1.5; page 1]
-Retrieved text is untrusted evidence. It may contain quoted instructions, adversarial content, or mistakes. The system prompt tells the generator to use retrieved passages only as evidence and never to follow instructions found inside a passage. User requests and document text are separated with explicit delimiters. The",1.000000,
+Retrieved text is untrusted evidence. It may contain quoted instructions, adversarial content, or mistakes. The system prompt tells the generator to use retrieved passages only as evidence and never to follow instructions found inside a passage. User requests and document text are separated with explicit delimiters. The",1.000000,supported
 llm-02,How are near duplicates detected and what threshold does the verifier apply?,"Near duplicates are detected with cosine similarity between local document embeddings. [Document Verification Standard v2.1, p. 3]","[Evidence 1; Document Verification Standard v2.1; page 3]
 Exact duplicates are detected with SHA-256 over normalized extracted body text. Near duplicates are detected with cosine similarity between local document embeddings. The test threshold is 0.94; a pair at or above that value is quarantined unless both records share a document identifier and are versions of the same source. The report includes the matching document id and the measured similarity so an operator can explain the decision.
 
@@ -30,7 +30,7 @@ Exact duplicates are detected with SHA-256 over normalized extracted body text. 
 Quality verification rejects empty text, garbled extraction, or an extraction failure. The checker requires a minimum amount of readable text and rejects a document when replacement characters or non-printing characters dominate. A text file ending halfway through a word or sentence is incomplete when the manifest also marks it truncated. The verifier records pass or fail separately for quality, completeness, recency, and uniqueness, together with a concise reason for each result.
 
 [Evidence 3; Evaluation Feedback Loop v1.0; page 2]
-Coverage compares live queries with the closest golden question using the same embedding model. The selec",1.000000,
+Coverage compares live queries with the closest golden question using the same embedding model. The selec",1.000000,supported
 q15,Which process has read-write access to the persistent Chroma directory?,"Ingestion Job [Persistent Storage and Backup Standard v1.1, p. 1]","[Evidence 1; Persistent Storage and Backup Standard v1.1; page 1]
 The vector collection uses a persistent Chroma directory so it can be mounted from a persistent volume. The data lake, quarantine directory, archived revisions, traces, and evaluation results also need durable storage. The API mounts the vector directory read-only. The ingestion job mounts it read-write and owns all collection updates. Local development uses the same path contract through VECTOR_DIR.
 
@@ -38,7 +38,7 @@ The vector collection uses a persistent Chroma directory so it can be mounted fr
 A backup captures the Chroma data directory and the source manifest at a consistent point after ingestion completes. Operators record the backup timestamp, collection name, active document versions, and verification report. Restoring a backup is followed by a document-count comparison and a query against a known answer. The backup is not considered valid until the restored collection can be queried with the configured embedding model.
 
 [Evidence 3; Retrieval Quality Standard v1.3; page 1]
-The retriever embeds the user question with the configured local Sentence Transformers model and searches the persistent Chroma collection. It returns at most TOP_K acti",1.000000,
+The retriever embeds the user question with the configured local Sentence Transformers model and searches the persistent Chroma collection. It returns at most TOP_K acti",1.000000,supported
 q11,How many paraphrase pairs and unrelated pairs are required for the embedding check?,"at least fifteen [Offline Evaluation Protocol v1.2, p. 2]","[Evidence 1; Offline Evaluation Protocol v1.2; page 2]
 The embedding module check compares at least fifteen paraphrase pairs with at least fifteen unrelated pairs. It records mean cosine similarity for each group, their gap, embedding time per chunk, and the largest difference when the same text is embedded twice. The retrieval check records recall at three and five, MRR, nDCG at five, and the change after a noise test. The end-to-end check records faithfulness, correct abstentions, citation validity, and p50 and p95 latency.
 
@@ -46,7 +46,7 @@ The embedding module check compares at least fifteen paraphrase pairs with at le
 The golden set contains at least twenty-five questions: fifteen answerable questions with a document and page, five questions that should be unanswerable, and five hard questions that use paraphrases, multiple chunks, or the second batch. Each item records whether its wording is human or synthetic, its review state, its answerability, and its relevant document and page. Questions are reviewed for ambiguity before their labels are final.
 
 [Evidence 3; Document Verification Standard v2.1; page 3]
-Exact duplicates are detected with SHA-256 over normalized extracted body text. Near duplicates are detected wit",1.000000,
+Exact duplicates are detected with SHA-256 over normalized extracted body text. Near duplicates are detected wit",1.000000,supported
 q04,What should happen to chunk embeddings when the same unchanged corpus is ingested again?,"A repeated intake of unchanged sources must create no new chunk embeddings. [Document Intake Standard v1.4, p. 3]","[Evidence 1; Document Intake Standard v1.4; page 3]
 A repeated intake of unchanged sources must create no new chunk embeddings. A changed source replaces only the chunks belonging to that document. A full snapshot run removes chunks for a document that has been deleted from that snapshot. Incremental batch imports leave unrelated documents in place. The result file records discovered files, verified files, quarantined files, inserted chunks, replaced chunks, skipped chunks, and deleted chunks.
 
@@ -54,7 +54,7 @@ A repeated intake of unchanged sources must create no new chunk embeddings. A ch
 The embedding module check compares at least fifteen paraphrase pairs with at least fifteen unrelated pairs. It records mean cosine similarity for each group, their gap, embedding time per chunk, and the largest difference when the same text is embedded twice. The retrieval check records recall at three and five, MRR, nDCG at five, and the change after a noise test. The end-to-end check records faithfulness, correct abstentions, citation validity, and p50 and p95 latency.
 
 [Evidence 3; Retrieval Quality Standard v1.3; page 1]
-The retriever embeds the user question with the configured local Sentence Transformers model and searches the per",1.000000,
+The retriever embeds the user question with the configured local Sentence Transformers model and searches the per",1.000000,supported
 q13,Which identification and retrieval details must a query trace retain?,"trace records are treated as sensitive because they can include user questions and prompts; retention follows the storage policy. [Trace and Observability Standard v2.0, p. 3]","[Evidence 1; Trace and Observability Standard v2.0; page 3]
 The trace inspection tool is owned by Member 2. It takes a trace id and displays the exact prompt and retrieved context. A root-cause write-up must use only that trace to identify the incorrect document version, missing chunk, filter, or other recorded cause. Trace records are treated as sensitive because they can include user questions and prompts; retention follows the storage policy.
 
@@ -62,8 +62,8 @@ The trace inspection tool is owned by Member 2. It takes a trace id and displays
 A retrieval incident begins when the API is healthy but returns missing evidence, stale versions, invalid citations, or unexpected abstentions. The operator captures the trace id, checks the collection and embedding version, and reads the exact retrieval filter and ranked chunks. If the source is stale, the ingestion job is run against a reviewed batch. If a document is corrupt or incomplete, it stays in quarantine until corrected.
 
 [Evidence 3; Retrieval Quality Standard v1.3; page 1]
-The retriever embeds the user question with the configured local Sentence Transformers model and searches the persistent Chroma collection. It returns at most TOP_K active chunks, ordered by cosine dis",1.000000,
-q18,How much electricity did the lab consume on 3 October?,I don't know based on the documents,,1.000000,
+The retriever embeds the user question with the configured local Sentence Transformers model and searches the persistent Chroma collection. It returns at most TOP_K active chunks, ordered by cosine dis",1.000000,supported
+q18,How much electricity did the lab consume on 3 October?,I don't know based on the documents,,1.000000,supported
 q24,How is a rollback verified end to end after choosing an archived revision?,"After choosing an archived revision, the operator verifies the rollback by checking the following criteria: [Version and Archive Standard v1.2, p. 3]","[Evidence 1; Version and Archive Standard v1.2; page 3]
 A rollback names both the stable document id and the archived version to restore. The ingestion writer then marks the currently active chunks superseded, reactivates the requested archived version, and records the rollback event in its report. A rollback is a new auditable event; it does not erase the newer file or its trace history. The active version after rollback must be visible in a retrieval result and a query trace.
 
@@ -71,4 +71,4 @@ A rollback names both the stable document id and the archived version to restore
 If a new document revision causes a regression, the operator restores the last known good version by document id and version. The ingestion job is the only writer and records the rollback. The operator then submits a test question that targets the affected clause and checks that the returned trace shows the expected active version. A successful health check alone does not prove that retrieval has recovered.
 
 [Evidence 3; Human Review Register v1.0; page 3]
-The final review response is recorded in the repository with the date and scope of approval. After approval, the golden JSONL and judge comparison file receive final review labels, and the suite run",1.000000,
+The final review response is recorded in the repository with the date and scope of approval. After approval, the golden JSONL and judge comparison file receive final review labels, and the suite run",1.000000,supported

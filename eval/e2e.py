@@ -21,6 +21,8 @@ from rag.generate import ABSTENTION, _CACHE, run_query
 from rag.llm import generate as generate_text
 from rag.store import open_read_collection
 
+LABEL_FIELDS = ["id", "question", "answer", "context_excerpt", "judge_score", "my_label"]
+
 JUDGE_SYSTEM_PROMPT = (
     "You are a strict evidence judge. Decide whether every factual claim in ANSWER is supported by CONTEXT. "
     "If ANSWER is exactly 'I don't know based on the documents', return score 1, reason 'Abstention makes no "
@@ -172,27 +174,28 @@ def _citation_checks(citations: list[dict[str, Any]], retrieved: dict[str, dict[
 
 def _write_judge_labels(answers: list[dict[str, Any]], seed: int) -> Path:
     path = ROOT / "eval" / "judge_labels.csv"
-    preserved: dict[str, str] = {}
+    preserved: dict[str, dict[str, str]] = {}
     if path.is_file():
         with path.open("r", encoding="utf-8-sig", newline="") as handle:
             for row in csv.DictReader(handle):
                 if row.get("id"):
-                    preserved[str(row["id"])] = str(row.get("my_label", ""))
+                    preserved[str(row["id"])] = {key: str(row.get(key, "")) for key in LABEL_FIELDS}
     rng = random.Random(seed)
     sampled = rng.sample(answers, min(10, len(answers)))
-    fields = ["id", "question", "answer", "context_excerpt", "judge_score", "my_label"]
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=LABEL_FIELDS)
         writer.writeheader()
         for row in sampled:
-            writer.writerow({
+            current = {
                 "id": row["id"],
                 "question": row["question"],
                 "answer": row["answer"],
                 "context_excerpt": row["context_excerpt"][:1200],
                 "judge_score": f"{row['faithfulness_score']:.6f}",
-                "my_label": preserved.get(str(row["id"]), ""),
-            })
+            }
+            prior = preserved.get(str(row["id"]), {})
+            unchanged_sample = all(prior.get(key, "") == value for key, value in current.items())
+            writer.writerow({**current, "my_label": prior.get("my_label", "") if unchanged_sample else ""})
     return path
 
 
