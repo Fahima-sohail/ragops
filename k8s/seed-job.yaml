@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ragops-seed-data
+  namespace: ragops
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: seed
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command: ["python", "/app/scripts/initialize_pvc.py"]
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/persist
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data

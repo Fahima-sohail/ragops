@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ragops-ingest
+  namespace: ragops
+spec:
+  schedule: "17 */6 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: ingest
+              image: ragops:v1
+              imagePullPolicy: IfNotPresent
+              command: ["python", "-m", "rag.ingest", "--data", "/app/data/batch_a", "--collection", "ragops"]
+              envFrom:
+                - configMapRef:
+                    name: ragops-config
+              volumeMounts:
+                - name: persistent
+                  mountPath: /app/data/batch_a
+                  subPath: batch_a
+                  readOnly: true
+                - name: persistent
+                  mountPath: /app/data/vector_store
+                  subPath: vector_store
+                - name: persistent
+                  mountPath: /app/persist/quarantine
+                  subPath: quarantine
+                - name: persistent
+                  mountPath: /app/persist/archive
+                  subPath: archive
+          volumes:
+            - name: persistent
+              persistentVolumeClaim:
+                claimName: ragops-data

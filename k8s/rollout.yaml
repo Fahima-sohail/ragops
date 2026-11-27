@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ragops-api
+  namespace: ragops
+spec:
+  template:
+    spec:
+      containers:
+        - name: api
+          image: ragops:candidate

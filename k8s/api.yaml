@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ragops-api
+  namespace: ragops
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: ragops-api
+  template:
+    metadata:
+      labels:
+        app: ragops-api
+    spec:
+      initContainers:
+        - name: wait-for-index
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c", "until test -f /app/data/vector_store/ragops.manifest.json; do echo waiting for ingestion Job; sleep 3; done"]
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/data/vector_store
+              subPath: vector_store
+              readOnly: true
+      containers:
+        - name: api
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: ragops-config
+            - secretRef:
+                name: ragops-secrets
+                optional: true
+          env:
+            - name: TRACE_DIR
+              value: /app/traces
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/data/vector_store
+              subPath: vector_store
+              readOnly: true
+            - name: persistent
+              mountPath: /app/traces
+              subPath: traces
+            - name: persistent
+              mountPath: /app/data/batch_a
+              subPath: batch_a
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: "2"
+              memory: 6Gi
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ragops-api
+  namespace: ragops
+spec:
+  selector:
+    app: ragops-api
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http
+  type: ClusterIP

@@ -1,0 +1,40 @@
+{"id":"live01","query":"Which file types can I send to intake?","topic":"intake formats","expected_domain":true}
+{"id":"live02","query":"How do I prepare a searchable PDF for processing?","topic":"intake formats","expected_domain":true}
+{"id":"live03","query":"Does intake accept plain text files?","topic":"intake formats","expected_domain":true}
+{"id":"live04","query":"What happens if an uploaded document is unreadable?","topic":"verification and quarantine","expected_domain":true}
+{"id":"live05","query":"Which checks are run before a file gets indexed?","topic":"verification and quarantine","expected_domain":true}
+{"id":"live06","query":"Where does a failed document go?","topic":"verification and quarantine","expected_domain":true}
+{"id":"live07","query":"How can I tell if required metadata is missing?","topic":"verification and quarantine","expected_domain":true}
+{"id":"live08","query":"How are duplicate documents detected?","topic":"verification and quarantine","expected_domain":true}
+{"id":"live09","query":"What does the verifier do with a newer document version?","topic":"versioning and rollback","expected_domain":true}
+{"id":"live10","query":"Can an old document version be restored?","topic":"versioning and rollback","expected_domain":true}
+{"id":"live11","query":"How do I roll back a bad document update?","topic":"versioning and rollback","expected_domain":true}
+{"id":"live12","query":"Does replacing one document rebuild every vector?","topic":"incremental ingestion","expected_domain":true}
+{"id":"live13","query":"What happens to vectors after a source document is deleted?","topic":"incremental ingestion","expected_domain":true}
+{"id":"live14","query":"How can I confirm that an unchanged batch embeds zero chunks?","topic":"incremental ingestion","expected_domain":true}
+{"id":"live15","query":"Which collection does the query API read?","topic":"retrieval and collections","expected_domain":true}
+{"id":"live16","query":"How many passages can retrieval return?","topic":"retrieval and collections","expected_domain":true}
+{"id":"live17","query":"What does the similarity threshold control?","topic":"retrieval and collections","expected_domain":true}
+{"id":"live18","query":"Are archived chunks included in search results?","topic":"retrieval and collections","expected_domain":true}
+{"id":"live19","query":"How are retrieved passages ranked?","topic":"retrieval and collections","expected_domain":true}
+{"id":"live20","query":"What should I do when the answer is not in the indexed material?","topic":"abstention and citations","expected_domain":true}
+{"id":"live21","query":"How do I check which source supports an answer?","topic":"abstention and citations","expected_domain":true}
+{"id":"live22","query":"What citation details are returned by the API?","topic":"abstention and citations","expected_domain":true}
+{"id":"live23","query":"When should the system abstain instead of guessing?","topic":"abstention and citations","expected_domain":true}
+{"id":"live24","query":"What information is saved in a query trace?","topic":"tracing and observability","expected_domain":true}
+{"id":"live25","query":"Can I see the prompt that produced a response?","topic":"tracing and observability","expected_domain":true}
+{"id":"live26","query":"How do I inspect a particular trace ID?","topic":"tracing and observability","expected_domain":true}
+{"id":"live27","query":"Which latency measurements are exposed?","topic":"tracing and observability","expected_domain":true}
+{"id":"live28","query":"How are prompt injection attempts handled?","topic":"guardrails","expected_domain":true}
+{"id":"live29","query":"What is the capital of Iceland?","topic":"geography","expected_domain":false}
+{"id":"live30","query":"When is the next lunar eclipse visible in Islamabad?","topic":"astronomy","expected_domain":false}
+{"id":"live31","query":"What is the current exchange rate for the euro?","topic":"finance","expected_domain":false}
+{"id":"live32","query":"How many goals did Pakistan score in yesterday's match?","topic":"sports","expected_domain":false}
+{"id":"live33","query":"What temperature should chicken reach when cooked?","topic":"cooking","expected_domain":false}
+{"id":"live34","query":"Which laptop should I buy for video editing?","topic":"consumer technology","expected_domain":false}
+{"id":"live35","query":"What is the weather forecast for Islamabad this weekend?","topic":"weather","expected_domain":false}
+{"id":"live36","query":"How do I renew a passport in Pakistan?","topic":"travel documents","expected_domain":false}
+{"id":"live37","query":"What are the symptoms of seasonal allergies?","topic":"health","expected_domain":false}
+{"id":"live38","query":"Can you recommend a beginner guitar practice schedule?","topic":"music","expected_domain":false}
+{"id":"live39","query":"How do I make a sourdough starter?","topic":"cooking","expected_domain":false}
+{"id":"live40","query":"What is the population of Nairobi?","topic":"geography","expected_domain":false}

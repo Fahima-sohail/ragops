@@ -5,8 +5,8 @@ __pycache__
 .env
 .env.*
 !.env.example
-data/vector_store
-data/model_cache
-data/quarantine
-data/archive
+data/vector_store/
+data/quarantine/
+data/archive/
+traces/
 eval/results/*.tmp

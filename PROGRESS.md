@@ -102,3 +102,14 @@
 - Added `scripts/audit.py`, which checks corpus and planted problems, A2 idempotency/replacement/deletion/restore, golden counts and review labels, embedding/component/e2e evidence, judge agreement, stochasticity explanations, C1/C2 gate outputs, trace fields/prompt hashes, D4/D5, E3, committed evidence, and credential hygiene. It reports Member 2-owned trace inspection and E1/E2/E4 as M2.
 - `python scripts/audit.py`: **34 PASS, 0 FAIL, 4 M2-owned items**. The M2 items are the D2 trace inspection tool plus E1, E2, and E4 live-query coverage work.
 - The shell's global Python lacked ChromaDB; reran tests in the project virtual environment with model offline mode enabled: `.venv/Scripts/python.exe -m pytest -q`: **28 passed**. No model downloads were attempted.
+# Member 2 implementation log
+
+## 2026-11-27 — M0 Docker image foundation
+
+- Checked Docker Desktop, Minikube, and kubectl. Docker Desktop was initially stopped; started Minikube with the Docker driver, 4 CPUs, and 6 GiB RAM. `minikube status` reported host, kubelet, and apiserver `Running`; current context is `minikube`.
+- Added `k8s/00-namespace.yaml` for namespace `ragops` and started `k8s/README.md` with prerequisites and the Minikube image build command.
+- Updated the Docker build to use Python 3.13 (matching the pinned requirements), include `rag/`, `eval/`, `scripts/`, `gate.yaml`, both data batches, and model files under `/models`. The image defaults to offline Hugging Face and Transformers operation. `.dockerignore` excludes local virtual environments, credentials, vector data, and traces while retaining `data/model_cache/` in the build context.
+- First build found an ARM64 CPU-cluster issue: PyPI selected a CUDA-enabled PyTorch wheel and `pip check` failed on `nvidia-cusparselt-cu13`. Changed the image install to PyTorch's pinned CPU wheel index and added a persistent BuildKit model cache. Retry output: `No broken requirements found.` and `CPU PyTorch: 2.12.1+cpu`.
+- Built `ragops:v1` inside Minikube. `minikube image ls` output: `docker.io/library/ragops:v1`; Minikube CRI image listing reported `2.08GB`.
+- One-off pod acceptance checks passed: `python -m rag.ingest --help` exited 0 and printed the CLI usage; `python -c "import rag.api; print('rag.api import succeeded')"` printed `rag.api import succeeded` and exited 0.
+- Screenshot note: M0 has no required assignment screenshot; keep the build and acceptance command outputs. Assignment screenshot evidence is listed by A1, A2, B, C2, D1/D2, E2/E4, and F1-F5 in `k8s/README.md`. No cluster/report screenshots have been fabricated.

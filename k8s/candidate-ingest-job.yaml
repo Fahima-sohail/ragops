@@ -1,0 +1,61 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ragops-candidate-ingest
+  namespace: ragops
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: ingest-batch-a
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "rag.ingest", "--data", "/app/data/batch_a", "--collection", "cand_topk8"]
+          envFrom:
+            - configMapRef:
+                name: ragops-config
+          env:
+            - name: VECTOR_DIR
+              value: /app/data/vector_store
+            - name: TOP_K
+              value: "8"
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/data/batch_a
+              subPath: batch_a
+              readOnly: true
+            - name: persistent
+              mountPath: /app/data/vector_store
+              subPath: vector_store
+        - name: ingest-batch-b
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c", "while [ ! -f /app/data/vector_store/cand_topk8.manifest.json ]; do sleep 2; done; python -m rag.ingest --data /app/data/batch_b --collection cand_topk8"]
+          envFrom:
+            - configMapRef:
+                name: ragops-config
+          env:
+            - name: VECTOR_DIR
+              value: /app/data/vector_store
+            - name: TOP_K
+              value: "8"
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/data/batch_b
+              subPath: batch_b
+              readOnly: true
+            - name: persistent
+              mountPath: /app/data/vector_store
+              subPath: vector_store
+            - name: persistent
+              mountPath: /app/persist/quarantine
+              subPath: quarantine
+            - name: persistent
+              mountPath: /app/persist/archive
+              subPath: archive
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data

@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ragops-candidate-eval
+  namespace: ragops
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: evaluation
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "eval.run_suite", "--label", "candidate-topk8", "--no-gate"]
+          envFrom:
+            - configMapRef:
+                name: ragops-config
+          env:
+            - name: COLLECTION
+              value: cand_topk8
+            - name: TOP_K
+              value: "8"
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/data/vector_store
+              subPath: vector_store
+              readOnly: true
+            - name: persistent
+              mountPath: /app/eval/results
+              subPath: results
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data
