@@ -234,7 +234,23 @@ curl.exe -sS -X POST http://127.0.0.1:8000/query -H "Content-Type: application/j
 curl.exe -sS http://127.0.0.1:8000/metrics
 ```
 
-Every query is appended as one JSON line to `$TRACE_DIR/traces.jsonl` and the same line is printed to stdout. Traces include the full prompt and its SHA-256 hash, retrieved chunk ids, citations, structured guardrail actions, cache state, and latency for each stage. The API abstains with `I don't know based on the documents` when similarity is below `SIMILARITY_THRESHOLD` (default `0.28`) or the safe context does not support the question. `/metrics` returns Prometheus text with request counters and latency / similarity histograms. Member 2 fills the trace inspection command.
+Every query is appended as one JSON line to `$TRACE_DIR/traces.jsonl` and the same line is printed to stdout. Traces include the full prompt and its SHA-256 hash, retrieved chunk ids, citations, structured guardrail actions, cache state, and latency for each stage. The API abstains with `I don't know based on the documents` when similarity is below `SIMILARITY_THRESHOLD` (default `0.28`) or the safe context does not support the question. `/metrics` returns Prometheus text with request counters and latency / similarity histograms.
+
+On Kubernetes, inspect the most recent persisted trace with:
+
+```sh
+kubectl apply -f k8s/trace-inspect-job.yaml
+kubectl -n ragops wait --for=condition=complete job/ragops-trace-inspect --timeout=2m
+kubectl -n ragops logs job/ragops-trace-inspect
+```
+
+To inspect a specific trace locally, run `python scripts/inspect_trace.py <trace_id> --file traces/k8s_traces_20261127.jsonl`. For a 24-hour trace metrics summary in Kubernetes:
+
+```sh
+kubectl apply -f k8s/metrics-window-job.yaml
+kubectl -n ragops wait --for=condition=complete job/ragops-metrics-window --timeout=2m
+kubectl -n ragops logs job/ragops-metrics-window
+```
 
 ## Part E - Live-query coverage and drift
 
@@ -257,12 +273,28 @@ python -m eval.run_suite --label E3-after-Batch-B --no-gate
 
 Expected outputs: the ingestion report `eval/results/verification_<run-id>.json`, two `eval/results/suite_<timestamp>.json`/`.md` pairs, and the comparison `eval/results/E3_drift.md`. The committed before/after runs are `suite_20261126T102138Z` and `suite_20261126T105501Z`.
 
-Member 2 fills the exact commands and output paths for E1, E2, and E4, because the live-query and coverage scripts are Member 2-owned. Those steps require at least 40 live queries (about 28 in-domain and 12 outside coverage), similarity coverage plus uncovered-topic groups, then at least six added golden questions and a before/after coverage result. No live-query log or coverage percentage is claimed here. The metrics-summary script and trace inspection tool are also Member 2-owned.
+On Kubernetes, E1 runs the 40-query workload (28 in-domain and 12 out-of-domain) and records query/trace IDs:
+
+```sh
+kubectl apply -f k8s/live-query-job.yaml
+kubectl -n ragops wait --for=condition=complete job/ragops-live-queries --timeout=90m
+kubectl -n ragops logs job/ragops-live-queries
+```
+
+E2/E4 score each query against the golden questions, group uncovered topics, append the six E4 additions, and report the before/after coverage. The threshold is cosine 0.55; the post-addition acceptance floor is 35% to verify the measured increase, while the assignment's 85% example remains the drift alert:
+
+```sh
+kubectl apply -f k8s/coverage-job.yaml
+kubectl -n ragops wait --for=condition=complete job/ragops-coverage --timeout=30m
+kubectl -n ragops logs job/ragops-coverage
+```
+
+The live query log is saved at `eval/results/live_query_log_k8s_20261127.jsonl`; before/after coverage and uncovered-topic evidence are in `eval/results/coverage_k8s_20261127.json`.
 
 ## Part F - Kubernetes
 
-The demo must run on Kubernetes; running only Docker containers receives zero. `k8s/` is reserved for Member 2 and was not edited by Member 1. Member 2 fills the [Kubernetes README](k8s/README.md) with the apply, Job, rollout, rollback, PVC, and port-forward commands. The local API Dockerfile is provided for building an image, not as a substitute for the Kubernetes demo.
+The demo must run on Kubernetes; running only Docker containers receives zero. The Kubernetes apply, Job, rollout, rollback, PVC, and port-forward commands are documented in the [Kubernetes runbook](k8s/README.md). The local API Dockerfile is used to build the image consumed by Minikube; Docker-only execution is not a substitute for the Kubernetes demo.
 
 ## Part G - Report evidence
 
-Use only real results from `eval/results/` and real JSONL records under `traces/`. The user confirmed review of the human questions and judge labels; remaining live-query coverage and Kubernetes measurements/screenshots are Member 2 work. See [`report/member1_sections.md`](report/member1_sections.md) for Member 1's drafted report sections and [`report/README.md`](report/README.md) for the evidence map.
+Use only real results from `eval/results/` and real JSONL records under `traces/`. The completed submission report is available as [PDF](report/Assignment_03_RAGOps_Report.pdf) and [editable DOCX](report/Assignment_03_RAGOps_Report.docx); it includes the required results, lifecycle and quality-attribute tables, short answers, contributions, AI statement, and screenshot appendix. Supporting results and traces are committed alongside the report.
