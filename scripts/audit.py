@@ -92,7 +92,12 @@ def main() -> int:
     batch_b_report: dict[str, Any] = {}
     try:
         batch_b_report = read_json(batch_b_report_path)
-        records = {Path(x.get("path", "")).name: x for x in batch_b_report["verification"]}
+        # Reports may be produced on Windows and audited on POSIX (or vice
+        # versa). Normalize separators before extracting the basename.
+        records = {
+            Path(str(x.get("path", "")).replace("\\", "/")).name: x
+            for x in batch_b_report["verification"]
+        }
         planted_checks = {
             "duplicate-intake.md": ("uniqueness", False),
             "duplicate-charter.md": ("uniqueness", False),
