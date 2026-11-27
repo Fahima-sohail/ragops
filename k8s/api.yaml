@@ -22,7 +22,7 @@ spec:
         - name: wait-for-index
           image: ragops:v1
           imagePullPolicy: IfNotPresent
-          command: ["/bin/sh", "-c", "until test -f /app/data/vector_store/ragops.manifest.json; do echo waiting for ingestion Job; sleep 3; done"]
+          command: ["/bin/sh", "-c", "until test -f /app/data/vector_store/e3-before-b-500.manifest.json; do echo waiting for ingestion Job; sleep 3; done"]
           volumeMounts:
             - name: persistent
               mountPath: /app/data/vector_store
@@ -42,16 +42,22 @@ spec:
                 name: ragops-secrets
                 optional: true
           env:
+            - name: COLLECTION
+              value: e3-before-b-500
+            - name: TOP_K
+              value: "3"
             - name: TRACE_DIR
               value: /app/traces
           volumeMounts:
             - name: persistent
               mountPath: /app/data/vector_store
               subPath: vector_store
-              readOnly: true
             - name: persistent
               mountPath: /app/traces
               subPath: traces
+            - name: persistent
+              mountPath: /app/eval/results
+              subPath: results
             - name: persistent
               mountPath: /app/data/batch_a
               subPath: batch_a
@@ -70,11 +76,11 @@ spec:
             periodSeconds: 20
           resources:
             requests:
-              cpu: 500m
+              cpu: "1"
               memory: 2Gi
             limits:
               cpu: "2"
-              memory: 6Gi
+              memory: 5Gi
       volumes:
         - name: persistent
           persistentVolumeClaim:

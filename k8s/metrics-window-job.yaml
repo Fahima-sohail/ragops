@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ragops-metrics-window
+  namespace: ragops
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: metrics-summary
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command: ["python", "/app/scripts/summarize_metrics.py", "--last-hours", "24", "--trace-dir", "/app/traces"]
+          env:
+            - name: PYTHONPATH
+              value: /app
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/traces
+              subPath: traces
+              readOnly: true
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data

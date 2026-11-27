@@ -8,18 +8,19 @@ from pathlib import Path
 
 def copy_if_empty(source: Path, destination: Path) -> int:
     destination.mkdir(parents=True, exist_ok=True)
-    if any(destination.iterdir()):
-        print(f"preserved existing {destination}; no fixture files overwritten")
-        return 0
     copied = 0
+    preserved = 0
     for child in source.iterdir():
         target = destination / child.name
+        if target.exists():
+            preserved += 1
+            continue
         if child.is_dir():
             shutil.copytree(child, target)
         elif child.is_file():
             shutil.copy2(child, target)
         copied += 1
-    print(f"initialized {destination} with {copied} top-level entries")
+    print(f"initialized {destination}; copied {copied} missing entries, preserved {preserved}")
     return copied
 
 
@@ -38,6 +39,11 @@ def main() -> int:
         if source.is_file() and not target.exists():
             shutil.copy2(source, target)
             print(f"seeded gate fixture {target.name}")
+    measured_baseline = results / "C2_baseline.json"
+    stable_baseline = results / "baseline.json"
+    if measured_baseline.is_file() and not stable_baseline.exists():
+        shutil.copy2(measured_baseline, stable_baseline)
+        print("seeded baseline.json from the measured TOP_K=3 baseline")
     return 0
 
 

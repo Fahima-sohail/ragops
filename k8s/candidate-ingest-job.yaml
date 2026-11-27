@@ -45,7 +45,6 @@ spec:
             - name: persistent
               mountPath: /app/data/batch_b
               subPath: batch_b
-              readOnly: true
             - name: persistent
               mountPath: /app/data/vector_store
               subPath: vector_store
@@ -55,6 +54,9 @@ spec:
             - name: persistent
               mountPath: /app/persist/archive
               subPath: archive
+            - name: persistent
+              mountPath: /app/eval/results
+              subPath: results
       volumes:
         - name: persistent
           persistentVolumeClaim:

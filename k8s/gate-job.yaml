@@ -12,7 +12,7 @@ spec:
         - name: gate
           image: ragops:v1
           imagePullPolicy: IfNotPresent
-          command: ["python", "-m", "eval.gate", "--candidate", "/app/eval/results/C2_candidate_pass.json", "--baseline", "/app/eval/results/C2_baseline.json", "--config", "/app/config/gate.yaml"]
+          command: ["python", "-m", "eval.gate", "--candidate", "/app/eval/results/candidate.json", "--baseline", "/app/eval/results/baseline-k8s.json", "--config", "/app/config/gate.yaml"]
           volumeMounts:
             - name: persistent
               mountPath: /app/eval/results

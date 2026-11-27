@@ -47,10 +47,19 @@ spec:
             - name: persistent
               mountPath: /app/data/vector_store
               subPath: vector_store
-              readOnly: true
             - name: persistent
               mountPath: /app/traces
               subPath: traces
+            - name: persistent
+              mountPath: /app/eval/results
+              subPath: results
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+            limits:
+              cpu: "2"
+              memory: 5Gi
       volumes:
         - name: persistent
           persistentVolumeClaim:

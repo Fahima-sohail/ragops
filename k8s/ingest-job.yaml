@@ -12,7 +12,7 @@ spec:
         - name: ingest
           image: ragops:v1
           imagePullPolicy: IfNotPresent
-          command: ["python", "-m", "rag.ingest", "--data", "/app/data/batch_a", "--collection", "ragops"]
+          command: ["python", "-m", "rag.ingest", "--data", "/app/data/batch_a", "--collection", "e3-before-b-500"]
           envFrom:
             - configMapRef:
                 name: ragops-config
@@ -30,6 +30,16 @@ spec:
             - name: persistent
               mountPath: /app/persist/archive
               subPath: archive
+            - name: persistent
+              mountPath: /app/eval/results
+              subPath: results
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi
       volumes:
         - name: persistent
           persistentVolumeClaim:

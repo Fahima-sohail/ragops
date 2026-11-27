@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ragops-snapshot-k8s-baseline
+  namespace: ragops
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: snapshot
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - -c
+            - |
+              import json, shutil
+              from pathlib import Path
+              root = Path('/app/eval/results')
+              candidates = []
+              for path in root.glob('suite_*.json'):
+                  try:
+                      row = json.loads(path.read_text(encoding='utf-8'))
+                  except (OSError, ValueError):
+                      continue
+                  if row.get('collection') == 'e3-before-b-500' and row.get('label') is None and row.get('runs'):
+                      candidates.append((str(row.get('timestamp', '')), path))
+              if not candidates:
+                  raise SystemExit('no completed baseline suite result for e3-before-b-500')
+              timestamp, source = max(candidates)
+              target = root / 'baseline-k8s.json'
+              shutil.copy2(source, target)
+              print(f'Baseline snapshot: {source.name} -> {target.name}; timestamp={timestamp}')
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/eval/results
+              subPath: results
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data

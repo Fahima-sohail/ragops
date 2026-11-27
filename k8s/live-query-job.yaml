@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ragops-live-queries
+  namespace: ragops
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: live-queries
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "eval.run_live_queries", "--url", "http://ragops-api:8000"]
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/eval/results
+              subPath: results
+          resources:
+            requests:
+              cpu: "250m"
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data

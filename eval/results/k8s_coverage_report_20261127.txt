@@ -1,0 +1,8 @@
+/usr/local/lib/python3.13/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Coverage threshold: 0.55; required overall: 35%
+Before: 8/40 (20.0%)
+Uncovered queries: 32; topics: {'abstention and citations': 4, 'astronomy': 1, 'consumer technology': 1, 'cooking': 2, 'finance': 1, 'geography': 2, 'guardrails': 1, 'health': 1, 'incremental ingestion': 3, 'intake formats': 1, 'music': 1, 'retrieval and collections': 2, 'sports': 1, 'tracing and observability': 3, 'travel documents': 1, 'verification and quarantine': 3, 'versioning and rollback': 3, 'weather': 1}
+After: 14/40 (35.0%)
+Uncovered queries: 26; topics: {'abstention and citations': 4, 'consumer technology': 1, 'cooking': 1, 'geography': 1, 'guardrails': 1, 'health': 1, 'incremental ingestion': 3, 'intake formats': 1, 'music': 1, 'retrieval and collections': 2, 'tracing and observability': 3, 'travel documents': 1, 'verification and quarantine': 3, 'versioning and rollback': 3}
+Coverage report: /app/eval/results/coverage.json

@@ -1,0 +1,2 @@
+POD                           NAME   CPU(cores)   MEMORY(bytes)
+ragops-api-78956f9d66-nldz5   api    3m           2984Mi

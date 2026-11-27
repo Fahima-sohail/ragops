@@ -1,0 +1,35 @@
+72:        resources:
+73-          limits:
+74-            cpu: "2"
+75-            memory: 5Gi
+76-          requests:
+77-            cpu: "1"
+78-            memory: 2Gi
+79-        terminationMessagePath: /dev/termination-log
+80-        terminationMessagePolicy: File
+81-        volumeMounts:
+82-        - mountPath: /app/data/vector_store
+83-          name: persistent
+84-          subPath: vector_store
+85-        - mountPath: /app/traces
+86-          name: persistent
+87-          subPath: traces
+88-        - mountPath: /app/eval/results
+--
+105:        resources: {}
+106-        terminationMessagePath: /dev/termination-log
+107-        terminationMessagePolicy: File
+108-        volumeMounts:
+109-        - mountPath: /app/data/vector_store
+110-          name: persistent
+111-          readOnly: true
+112-          subPath: vector_store
+113-      restartPolicy: Always
+114-      schedulerName: default-scheduler
+115-      securityContext: {}
+116-      terminationGracePeriodSeconds: 30
+117-      volumes:
+118-      - name: persistent
+119-        persistentVolumeClaim:
+120-          claimName: ragops-data
+121-status:

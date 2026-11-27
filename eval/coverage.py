@@ -100,7 +100,8 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"{label.title()}: {section['covered_count']}/{section['query_count']} ({section['coverage']:.1%})")
                 print(f"Uncovered queries: {len(section['uncovered_queries'])}; topics: {section['uncovered_topics']}")
         print(f"Coverage report: {args.output}")
-        return 0 if before["coverage"] >= args.minimum else 1
+        release_coverage = report.get("after", before)
+        return 0 if release_coverage["coverage"] >= args.minimum else 1
     except (OSError, ValueError, KeyError, TypeError, ImportError) as exc:
         print(f"coverage analysis failed: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 1

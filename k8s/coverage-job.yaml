@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ragops-coverage
+  namespace: ragops
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: coverage
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "eval.coverage", "--threshold", "0.55", "--minimum", "0.35", "--golden", "/app/eval/golden_before_e4.jsonl", "--additions", "/app/eval/coverage_additions.jsonl", "--output", "/app/eval/results/coverage.json"]
+          envFrom:
+            - configMapRef:
+                name: ragops-config
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/eval/results
+              subPath: results
+          resources:
+            requests:
+              cpu: "500m"
+              memory: 1Gi
+            limits:
+              cpu: "2"
+              memory: 3Gi
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data

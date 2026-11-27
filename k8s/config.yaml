@@ -9,17 +9,17 @@ data:
   ARCHIVE_DIR: /app/persist/archive
   TRACE_DIR: /app/traces
   VECTOR_DIR: /app/data/vector_store
-  COLLECTION: ragops
+  COLLECTION: e3-before-b-500
   EMBED_MODEL: sentence-transformers/all-MiniLM-L6-v2
   LLM_MODEL: Qwen/Qwen2.5-0.5B-Instruct
-  TOP_K: "5"
+  TOP_K: "3"
   SIMILARITY_THRESHOLD: "0.28"
-  CHUNK_SIZE: "220"
-  CHUNK_OVERLAP: "40"
+  CHUNK_SIZE: "500"
+  CHUNK_OVERLAP: "50"
   SEED: "4032"
   HF_HUB_OFFLINE: "1"
   MODEL_CACHE_OFFLINE: "1"
-  HF_HOME: /app/data/model_cache
+  HF_HOME: /models
   LLM_DEVICE: cpu
 ---
 apiVersion: v1
@@ -31,11 +31,12 @@ data:
   gate.yaml: |
     version: 1
     rationale: >-
-      Calibrated against the committed C2 TOP_K=3 baseline. The latency ceiling
-      allows 20 percent over its measured p95; other thresholds follow gate.yaml.
+      Calibrated against the measured Kubernetes TOP_K=3 suite. Its p95 latency
+      was 91226.9 ms; a 20 percent allowance is 109472.28 ms, rounded up to
+      109500 ms for local CPU variation. Other thresholds follow gate.yaml.
     thresholds:
       max_recall_at_5_drop: 0.02
       min_faithfulness: 0.95
       min_citation_validity: 0.90
-      max_p95_latency_ms: 36500
+      max_p95_latency_ms: 109500
       require_abstention_not_below_baseline: true

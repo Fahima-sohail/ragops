@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ragops-verification-report
+  namespace: ragops
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: report
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - -c
+            - |
+              import json
+              from pathlib import Path
+              matches = sorted(Path('/app/eval/results').glob('verification_*.json'))
+              if not matches:
+                  raise SystemExit('Batch B verification report is missing')
+              report = json.loads(matches[-1].read_text(encoding='utf-8'))
+              print(f"run={report['run_id']} collection={report['collection']} quarantined={report['counts']['quarantined_docs']}")
+              print('doc_id | passed | quality | completeness | recency | uniqueness | reasons')
+              for item in report['verification']:
+                  checks = item['checks']
+                  reasons = item['reasons']
+                  states = ', '.join(f"{name}={'PASS' if checks[name] else 'FAIL'}" for name in ('quality', 'completeness', 'recency', 'uniqueness'))
+                  details = ' | '.join(f"{name}: {reasons[name]}" for name in ('quality', 'completeness', 'recency', 'uniqueness'))
+                  print(f"{item['doc_id']} | {'PASS' if item['passed'] else 'FAIL'} | {states} | {details}")
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/eval/results
+              subPath: results
+              readOnly: true
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data

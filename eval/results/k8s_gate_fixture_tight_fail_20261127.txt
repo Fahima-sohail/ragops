@@ -1,0 +1,40 @@
+Config: /app/config/..2026_11_27_06_15_05.303356784/gate.yaml
+Rule | Value / threshold | Result
+--- | --- | ---
+recall_at_5_drop_within_limit | drop=0.0000; max drop 0.0200 | PASS
+faithfulness_at_least_minimum | 1.0000; minimum 0.9500 | PASS
+citation_validity_at_least_minimum | 0.9722; minimum 0.9900 | FAIL
+p95_latency_within_limit | 27204.3 ms; maximum 36500.0 ms | PASS
+abstention_correctness_not_below_baseline | candidate=1.0000; baseline 1.0000 | PASS
+Overall |  | FAIL
+{
+  "passed": false,
+  "checks": {
+    "recall_at_5_drop_within_limit": true,
+    "faithfulness_at_least_minimum": true,
+    "citation_validity_at_least_minimum": false,
+    "p95_latency_within_limit": true,
+    "abstention_correctness_not_below_baseline": true
+  },
+  "thresholds": {
+    "recall_at_5_drop_within_limit": "max drop 0.0200",
+    "faithfulness_at_least_minimum": "minimum 0.9500",
+    "citation_validity_at_least_minimum": "minimum 0.9900",
+    "p95_latency_within_limit": "maximum 36500.0 ms",
+    "abstention_correctness_not_below_baseline": "baseline 1.0000"
+  },
+  "values": {
+    "baseline_recall_at_5": 0.958333,
+    "candidate_recall_at_5": 0.958333,
+    "recall_drop": 0.0,
+    "faithfulness": 1.0,
+    "minimum_faithfulness": 0.95,
+    "citation_validity": 0.972222,
+    "minimum_citation_validity": 0.99,
+    "p95_latency_ms": 27204.269,
+    "maximum_p95_latency_ms": 36500.0,
+    "baseline_abstention_correctness": 1.0,
+    "candidate_abstention_correctness": 1.0
+  },
+  "rationale": "Deliberately tightened citation floor for the ConfigMap-only release gate demonstration."
+}

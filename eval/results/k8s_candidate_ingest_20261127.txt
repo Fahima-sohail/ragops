@@ -1,0 +1,6 @@
+/usr/local/lib/python3.13/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+ingest collection=cand_topk8 new_docs=12 updated_docs=0 unchanged_docs=0 deleted_docs=0 new_chunks=36 updated_chunks=0 unchanged_chunks=0 deleted_chunks=0 embedded_chunks=36 quarantined_docs=0 report=/app/eval/results/verification_20261127T070311Z-917547.json manifest=/app/data/vector_store/cand_topk8.manifest.json
+/usr/local/lib/python3.13/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+ingest collection=cand_topk8 new_docs=6 updated_docs=2 unchanged_docs=0 deleted_docs=0 new_chunks=18 updated_chunks=6 unchanged_chunks=0 deleted_chunks=0 embedded_chunks=24 quarantined_docs=0 report=/app/eval/results/verification_20261127T070317Z-452925.json manifest=/app/data/vector_store/cand_topk8.manifest.json

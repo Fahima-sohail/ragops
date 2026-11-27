@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ragops-gate-tight
+  namespace: ragops
+data:
+  gate.yaml: |
+    version: 1
+    rationale: >-
+      Deliberately tightened citation floor for the ConfigMap-only release gate demonstration.
+    thresholds:
+      max_recall_at_5_drop: 0.02
+      min_faithfulness: 0.95
+      min_citation_validity: 0.99
+      max_p95_latency_ms: 36500
+      require_abstention_not_below_baseline: true

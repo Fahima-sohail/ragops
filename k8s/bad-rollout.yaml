@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ragops-api
+  namespace: ragops
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: ragops-api
+  template:
+    metadata:
+      labels:
+        app: ragops-api
+    spec:
+      initContainers:
+        - name: wait-for-candidate-index
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c", "until test -f /app/data/vector_store/cand_topk8.manifest.json; do echo waiting for candidate ingestion; sleep 3; done"]
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/data/vector_store
+              subPath: vector_store
+              readOnly: true
+      containers:
+        - name: api
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: ragops-config
+            - secretRef:
+                name: ragops-secrets
+                optional: true
+          env:
+            - name: COLLECTION
+              value: cand_topk8
+            - name: TOP_K
+              value: "1"
+            - name: SIMILARITY_THRESHOLD
+              value: "0.99"
+            - name: TRACE_DIR
+              value: /app/traces
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/data/vector_store
+              subPath: vector_store
+            - name: persistent
+              mountPath: /app/traces
+              subPath: traces
+            - name: persistent
+              mountPath: /app/eval/results
+              subPath: results
+            - name: persistent
+              mountPath: /app/data/batch_a
+              subPath: batch_a
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+            limits:
+              cpu: "2"
+              memory: 5Gi
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data

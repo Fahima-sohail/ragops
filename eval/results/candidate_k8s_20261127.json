@@ -1,0 +1,47 @@
+{
+  "name": "candidate-topk8",
+  "metrics": {
+    "embedding": {
+      "timestamp": "2026-11-27T07:03:53.830245+00:00",
+      "seed": 4032,
+      "collection": "cand_topk8",
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_version": "sentence-transformers/all-MiniLM-L6-v2; sentence-transformers=3.4.1",
+      "paraphrase_pairs": 15,
+      "unrelated_pairs": 15,
+      "mean_paraphrase_cosine": 0.48697,
+      "mean_unrelated_cosine": 0.01636,
+      "similarity_gap": 0.47061,
+      "embedding_time_per_chunk_ms": 33.09658,
+      "timed_active_chunks": 54,
+      "pair_embedding_elapsed_ms": 415.363,
+      "determinism_largest_absolute_difference": 0.0
+    },
+    "retrieval": {
+      "recall_at_3": 0.861111,
+      "recall_at_5": 0.958333,
+      "mrr": 0.83287,
+      "ndcg_at_5": 0.853492
+    },
+    "end_to_end": {
+      "faithfulness": 1.0,
+      "faithfulness_scored_questions": 49,
+      "faithfulness_answered_only": 1.0,
+      "abstention_correctness": 1.0,
+      "correct_abstentions": 13,
+      "unanswerable_count": 13,
+      "false_abstention_rate": 0.027778,
+      "false_abstentions": 1,
+      "answer_expected_count": 36,
+      "citation_validity": 0.972222,
+      "citation_valid_count": 35,
+      "citation_evaluable_count": 36,
+      "p50_latency_ms": 32239.514,
+      "p95_latency_ms": 70173.7,
+      "mean_judge_latency_ms": 10836.023,
+      "llm_judge_calls": 35,
+      "vacuous_truth_abstentions": 14,
+      "query_count": 49
+    }
+  }
+}

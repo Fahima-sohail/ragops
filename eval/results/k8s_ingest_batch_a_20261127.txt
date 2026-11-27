@@ -1,0 +1,3 @@
+/usr/local/lib/python3.13/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+ingest collection=e3-before-b-500 new_docs=0 updated_docs=0 unchanged_docs=12 deleted_docs=0 new_chunks=0 updated_chunks=0 unchanged_chunks=36 deleted_chunks=0 embedded_chunks=0 quarantined_docs=0 report=/app/eval/results/verification_20261127T053440Z-759507.json manifest=/app/data/vector_store/e3-before-b-500.manifest.json

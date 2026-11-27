@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ragops-trace-inspect
+  namespace: ragops
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: trace-inspector
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - -c
+            - |
+              import json
+              import subprocess
+              from pathlib import Path
+              trace_file = Path('/app/traces/traces.jsonl')
+              records = [json.loads(line) for line in trace_file.read_text(encoding='utf-8').splitlines() if line.strip()]
+              if not records:
+                  raise SystemExit('no persisted query traces found')
+              trace_id = str(records[-1]['trace_id'])
+              print(f'inspecting latest trace_id={trace_id}', flush=True)
+              subprocess.run(['python', '/app/scripts/inspect_trace.py', trace_id, '--file', str(trace_file)], check=True)
+          envFrom:
+            - configMapRef:
+                name: ragops-config
+          env:
+            - name: PYTHONPATH
+              value: /app
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/data/vector_store
+              subPath: vector_store
+            - name: persistent
+              mountPath: /app/traces
+              subPath: traces
+              readOnly: true
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data

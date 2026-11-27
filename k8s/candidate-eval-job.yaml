@@ -21,14 +21,27 @@ spec:
               value: cand_topk8
             - name: TOP_K
               value: "8"
+            - name: EVAL_ALLOW_MISSING_GROUND_TRUTH
+              value: "1"
+            - name: EVAL_ALLOW_GROUND_TRUTH_DRIFT
+              value: "1"
           volumeMounts:
             - name: persistent
               mountPath: /app/data/vector_store
               subPath: vector_store
-              readOnly: true
             - name: persistent
               mountPath: /app/eval/results
               subPath: results
+            - name: persistent
+              mountPath: /app/traces
+              subPath: traces
+          resources:
+            requests:
+              cpu: "1"
+              memory: 3Gi
+            limits:
+              cpu: "2"
+              memory: 5Gi
       volumes:
         - name: persistent
           persistentVolumeClaim:

@@ -1,0 +1,74 @@
+NAME                                     READY   STATUS      RESTARTS   AGE     IP               NODE       NOMINATED NODE   READINESS GATES
+pod/ragops-api-78956f9d66-nldz5          1/1     Running     0          12m     10.244.120.78    minikube   <none>           <none>
+pod/ragops-candidate-eval-srd59          0/1     Completed   0          50m     10.244.120.124   minikube   <none>           <none>
+pod/ragops-candidate-ingest-xt6b4        0/2     Completed   0          51m     10.244.120.122   minikube   <none>           <none>
+pod/ragops-coverage-278cn                0/1     Completed   0          103m    10.244.120.111   minikube   <none>           <none>
+pod/ragops-cron-validation-pxlz9         0/1     Completed   0          51m     10.244.120.121   minikube   <none>           <none>
+pod/ragops-eval-8m8dz                    0/1     Error       0          87m     10.244.120.119   minikube   <none>           <none>
+pod/ragops-gate-fail-fixture-glhs9       0/1     Error       0          99m     10.244.120.112   minikube   <none>           <none>
+pod/ragops-gate-initial-sqsqr            0/1     Error       0          8m20s   10.244.120.71    minikube   <none>           <none>
+pod/ragops-gate-pass-fixture-857f7       0/1     Completed   0          99m     10.244.120.113   minikube   <none>           <none>
+pod/ragops-gate-r9qvm                    0/1     Completed   0          18m     10.244.120.127   minikube   <none>           <none>
+pod/ragops-gate-tight-fixture-vlhdb      0/1     Error       0          99m     10.244.120.114   minikube   <none>           <none>
+pod/ragops-ingest-29929337-p68qr         0/1     Error       0          97m     10.244.120.115   minikube   <none>           <none>
+pod/ragops-ingest-29929337-pk7b6         0/1     Error       0          96m     10.244.120.116   minikube   <none>           <none>
+pod/ragops-ingest-b-lmq7b                0/1     Completed   0          128m    10.244.120.101   minikube   <none>           <none>
+pod/ragops-ingest-sjwsr                  0/1     Completed   0          139m    10.244.120.95    minikube   <none>           <none>
+pod/ragops-live-queries-nchg5            0/1     Completed   0          112m    10.244.120.109   minikube   <none>           <none>
+pod/ragops-metrics-window-vrxrg          0/1     Completed   0          9m47s   10.244.120.77    minikube   <none>           <none>
+pod/ragops-seed-data-nx2hq               0/1     Completed   0          51m     10.244.120.120   minikube   <none>           <none>
+pod/ragops-snapshot-k8s-baseline-bthjb   0/1     Completed   0          19m     10.244.120.125   minikube   <none>           <none>
+pod/ragops-trace-inspect-8jk29           0/1     Completed   0          9m44s   10.244.120.76    minikube   <none>           <none>
+pod/ragops-verification-report-8gk82     0/1     Completed   0          126m    10.244.120.103   minikube   <none>           <none>
+
+NAME                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE    SELECTOR
+service/ragops-api         ClusterIP   10.106.220.178   <none>        8000/TCP   123m   app=ragops-api
+service/ragops-candidate   ClusterIP   10.100.210.241   <none>        8000/TCP   50m    app=ragops-candidate
+
+NAME                               READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS   IMAGES      SELECTOR
+deployment.apps/ragops-api         1/1     1            1           123m   api          ragops:v1   app=ragops-api
+deployment.apps/ragops-candidate   0/0     0            0           50m    api          ragops:v1   app=ragops-candidate
+
+NAME                                          DESIRED   CURRENT   READY   AGE    CONTAINERS   IMAGES      SELECTOR
+replicaset.apps/ragops-api-5495cdc7c9         0         0         0       12m    api          ragops:v1   app=ragops-api,pod-template-hash=5495cdc7c9
+replicaset.apps/ragops-api-557958df68         0         0         0       122m   api          ragops:v1   app=ragops-api,pod-template-hash=557958df68
+replicaset.apps/ragops-api-744576c57c         0         0         0       116m   api          ragops:v1   app=ragops-api,pod-template-hash=744576c57c
+replicaset.apps/ragops-api-764d7fcdb7         0         0         0       123m   api          ragops:v1   app=ragops-api,pod-template-hash=764d7fcdb7
+replicaset.apps/ragops-api-78956f9d66         1         1         1       17m    api          ragops:v1   app=ragops-api,pod-template-hash=78956f9d66
+replicaset.apps/ragops-api-c8bbb5b95          0         0         0       115m   api          ragops:v1   app=ragops-api,pod-template-hash=c8bbb5b95
+replicaset.apps/ragops-api-fcc9c488c          0         0         0       17m    api          ragops:v1   app=ragops-api,pod-template-hash=fcc9c488c
+replicaset.apps/ragops-candidate-85556755d6   0         0         0       50m    api          ragops:v1   app=ragops-candidate,pod-template-hash=85556755d6
+
+NAME                          SCHEDULE       TIMEZONE   SUSPEND   ACTIVE   LAST SCHEDULE   AGE    CONTAINERS   IMAGES      SELECTOR
+cronjob.batch/ragops-ingest   17 */6 * * *   <none>     False     0        97m             108m   ingest       ragops:v1   <none>
+
+NAME                                     STATUS     COMPLETIONS   DURATION   AGE     CONTAINERS                      IMAGES                SELECTOR
+job.batch/ragops-candidate-eval          Complete   1/1           30m        50m     evaluation                      ragops:v1             batch.kubernetes.io/controller-uid=706676e5-6f56-4f3e-af30-b4cbfa10e975
+job.batch/ragops-candidate-ingest        Complete   1/1           15s        51m     ingest-batch-a,ingest-batch-b   ragops:v1,ragops:v1   batch.kubernetes.io/controller-uid=1feba824-37cc-421a-a347-bd793942ee52
+job.batch/ragops-coverage                Complete   1/1           21s        103m    coverage                        ragops:v1             batch.kubernetes.io/controller-uid=a050d91d-e4c6-40f4-b58d-b3cc7dc6a0a5
+job.batch/ragops-cron-validation         Complete   1/1           14s        51m     ingest                          ragops:v1             batch.kubernetes.io/controller-uid=817d19a3-d736-4865-84d1-ed87fabc3e51
+job.batch/ragops-eval                    Failed     0/1           87m        87m     evaluation                      ragops:v1             batch.kubernetes.io/controller-uid=6dea8597-25ca-43ac-a002-9ab454d9e3f9
+job.batch/ragops-gate                    Complete   1/1           3s         18m     gate                            ragops:v1             batch.kubernetes.io/controller-uid=f7ae275e-4c97-42a5-9544-457eeb3def87
+job.batch/ragops-gate-fail-fixture       Failed     0/1           99m        99m     gate                            ragops:v1             batch.kubernetes.io/controller-uid=76e9a9c6-46f4-4bc5-8d71-ee68d962a9e6
+job.batch/ragops-gate-initial            Failed     0/1           8m20s      8m20s   gate                            ragops:v1             batch.kubernetes.io/controller-uid=6c111af7-2df2-40d1-95b7-9d4640b87045
+job.batch/ragops-gate-pass-fixture       Complete   1/1           7s         99m     gate                            ragops:v1             batch.kubernetes.io/controller-uid=605f47c6-1175-420e-b8a1-c1570613cd8c
+job.batch/ragops-gate-tight-fixture      Failed     0/1           99m        99m     gate                            ragops:v1             batch.kubernetes.io/controller-uid=bdffc1b7-43f5-421c-b5e9-be32672184fc
+job.batch/ragops-ingest                  Complete   1/1           9s         139m    ingest                          ragops:v1             batch.kubernetes.io/controller-uid=317a9017-b7e7-49a0-8eb1-2c64de7343f1
+job.batch/ragops-ingest-29929337         Failed     0/1           97m        97m     ingest                          ragops:v1             batch.kubernetes.io/controller-uid=9dbb41d0-4ccc-4caf-a0cd-7b27f06f2361
+job.batch/ragops-ingest-b                Complete   1/1           12s        128m    ingest-batch-b                  ragops:v1             batch.kubernetes.io/controller-uid=70ccc48e-26ec-40a6-a4ae-8cc878e91686
+job.batch/ragops-live-queries            Complete   1/1           17m        112m    live-queries                    ragops:v1             batch.kubernetes.io/controller-uid=6bfafa35-6474-44e2-a920-b018197f07a1
+job.batch/ragops-metrics-window          Complete   1/1           3s         9m47s   metrics-summary                 ragops:v1             batch.kubernetes.io/controller-uid=fa200035-f96a-4621-bbdc-94385871d204
+job.batch/ragops-seed-data               Complete   1/1           3s         51m     seed                            ragops:v1             batch.kubernetes.io/controller-uid=533b933e-7129-4229-81b4-305726bd922f
+job.batch/ragops-snapshot-k8s-baseline   Complete   1/1           3s         19m     snapshot                        ragops:v1             batch.kubernetes.io/controller-uid=3ebd5796-6d4f-45dc-bb92-b482bcbcd7a0
+job.batch/ragops-trace-inspect           Complete   1/1           4s         9m44s   trace-inspector                 ragops:v1             batch.kubernetes.io/controller-uid=b9409305-6151-4741-aebb-af27b6ecb5d9
+job.batch/ragops-verification-report     Complete   1/1           3s         126m    report                          ragops:v1             batch.kubernetes.io/controller-uid=b235e30e-4630-43ec-b8e7-704cec9cc88e
+
+NAME                                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE    VOLUMEMODE
+persistentvolumeclaim/ragops-data   Bound    pvc-6406cbb4-d8c9-44c5-9fcb-a5e53dd41550   12Gi       RWO            standard       <unset>                 143m   Filesystem
+
+NAME                            DATA   AGE
+configmap/kube-root-ca.crt      1      143m
+configmap/ragops-config         17     143m
+configmap/ragops-gate           1      143m
+configmap/ragops-gate-initial   1      8m20s
+configmap/ragops-gate-tight     1      99m

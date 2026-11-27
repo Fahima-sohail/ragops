@@ -1,0 +1,37 @@
+{
+  "abstention_rate": 0.4195804195804196,
+  "cache_hit_rate": 0.0,
+  "injection_attempts_flagged": 3,
+  "p95_latency_ms": {
+    "embed": {
+      "count": 143,
+      "p95": 167.111
+    },
+    "generate": {
+      "count": 143,
+      "p95": 91606.249
+    },
+    "rerank": {
+      "count": 143,
+      "p95": 0.0
+    },
+    "retrieve": {
+      "count": 143,
+      "p95": 23.595
+    },
+    "total": {
+      "count": 143,
+      "p95": 91754.626
+    }
+  },
+  "top1_similarity_distribution": {
+    "count": 143,
+    "max": 0.75165,
+    "mean": 0.455927,
+    "min": 0.064578,
+    "p50": 0.521428,
+    "p95": 0.729602
+  },
+  "trace_count": 143,
+  "window_start": "2026-11-26T07:44:28.748574+00:00"
+}

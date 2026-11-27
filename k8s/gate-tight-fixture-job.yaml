@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ragops-gate-tight-fixture
+  namespace: ragops
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: gate
+          image: ragops:v1
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "eval.gate", "--candidate", "/app/eval/results/C2_candidate_pass.json", "--baseline", "/app/eval/results/baseline.json", "--config", "/app/config/gate.yaml"]
+          volumeMounts:
+            - name: persistent
+              mountPath: /app/eval/results
+              subPath: results
+              readOnly: true
+            - name: gate
+              mountPath: /app/config
+              readOnly: true
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: ragops-data
+        - name: gate
+          configMap:
+            name: ragops-gate-tight
